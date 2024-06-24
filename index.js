@@ -1,13 +1,13 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = 8000;
 
 
 const mongoose = require('mongoose')
 
 // • Declare variables
-const MONGO_DB = 'mongodb://127.0.0.1/hote-app'
+const MONGO_DB = 'mongodb://127.0.0.1/hotel-mgmt-app'
 //const PORT = 8000
 
 
@@ -70,6 +70,8 @@ app.get('*', (req, res) => {
 
   // • Start listening on port {{PORT}} for requests.
   app.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
-} catch (error) {
+  console.log("hello world");
+} 
+catch (error) {
   console.log(error)
 }
