@@ -26,7 +26,7 @@ try {
   //app.use(express.static(path.join(__dirname, 'dist')))
 
   // Serve Angular app
-  app.use(express.static(path.join(__dirname, 'angular-app/dist/angular-app/browser')));
+  app.use(express.static(path.join(__dirname, 'dist/browser')));
 
 // app.listen(port, () => {
 // console.log(`Server is running on port ${port}`);
@@ -65,12 +65,11 @@ try {
 //   })
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'angular-app/dist/angular-app/browser/index.html'));
+    res.sendFile(path.join(__dirname, 'dist/browser/index.html'));
 });
 
   // • Start listening on port {{PORT}} for requests.
   app.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
-  console.log("hello world");
 } 
 catch (error) {
   console.log(error)
