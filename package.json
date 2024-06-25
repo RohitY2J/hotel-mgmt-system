@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-server": "start http://localhost:8000 && npx nodemon index.js",
+    "start-server": "start http://localhost:8000 && npx nodemon server/index.js",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

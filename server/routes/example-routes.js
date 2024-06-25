@@ -8,7 +8,7 @@
 // more clean and simple to read.
 // -----------------------------------------------------------------------------
 
-const Example = require('../../repo/model/example')
+const Example = require('../model/example')
 const express = require('express')
 const router = express.Router()
 

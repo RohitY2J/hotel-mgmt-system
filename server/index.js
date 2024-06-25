@@ -8,7 +8,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
 const port = 8000;
-const User = require('./repo/model/user');
+const User = require('./model/user');
 
 // • Declare variables
 const MONGO_DB = 'mongodb://127.0.0.1/hotel-mgmt-app'
@@ -22,7 +22,7 @@ try {
 
   console.log(__dirname);
   //serve static page build from the location 
-  app.use(express.static(path.join(__dirname, 'dist/browser')));
+  app.use(express.static(path.join(__dirname, '../dist/browser')));
 
 
   /** ============== Defining passport for authentication and session management **/
@@ -71,7 +71,7 @@ try {
     next()
   })
 
-  app.use('/api/example', require('./server/routes/example-routes'))
+  app.use('/api/example', require('./routes/example-routes'))
 
   app.get('/api/*', (req, res) => {
     res.send({
@@ -81,7 +81,7 @@ try {
   })
 
   app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, 'dist/browser/index.html'));
+      res.sendFile(path.join(__dirname, '../dist/browser/index.html'));
   });
 
   // • Start listening on port {{PORT}} for requests.
