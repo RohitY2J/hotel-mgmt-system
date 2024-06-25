@@ -8,7 +8,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
 const port = 8000;
-const User = require('./repo/Model/user');
+const User = require('./repo/model/user');
 
 // • Declare variables
 const MONGO_DB = 'mongodb://127.0.0.1/hotel-mgmt-app'
@@ -38,23 +38,7 @@ try {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  passport.use('local', new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password'
-  }, async (email , password, done) => {
-    try{
-      let user = await User.findOne({ email });
-
-      if (!user || !user.validatePassword(password)) {
-        return done(null, false, { message: 'Incorrect email or password' });
-      }
-
-      return done(null, user);
-    }
-    catch(err){
-      return done(err);
-    }
-  }))
+  
 
   app.post('/login', passport.authenticate('local', {
     successRedirect: '/dashboard',
@@ -75,18 +59,6 @@ try {
     res.redirect('/login');
   }
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id); // Serialize user id into the session
-  });
-  
-  passport.deserializeUser(async (id, done) => {
-    try {
-      const user = await User.findById(id); // Deserialize user id from the session
-      done(null, user);
-    } catch (err) {
-      done(err);
-    }
-  });
 
   /** ======================================================== */
 
