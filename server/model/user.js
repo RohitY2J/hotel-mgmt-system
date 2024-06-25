@@ -2,7 +2,6 @@ const crypto = require('crypto'); //for cryptographic functions.
 const mongoose = require('mongoose'); //library to create a MongoDB schema.
 
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId; // to add reference to other objects
 
 //defines the datatype and structure for user
 const CustomSchema = new Schema({
@@ -45,6 +44,18 @@ CustomSchema.methods.validatePassword = function(password) {
   else {
     return false;
   }
+};
+
+
+CustomSchema.methods.userSimplified = function(){
+  return {
+    _id: this._id,
+    email: this.email,
+    userName: this.userName,
+    fullName: this.fullName,
+    roleID: this.roleID,
+    profilePic: this.profilePic || '/static/img/profile.png'
+  };
 };
 
 module.exports = mongoose.model('User', CustomSchema);
