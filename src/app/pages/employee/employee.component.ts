@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoaderComponent } from '../shared/loader/loader.component';
+import { HttpService } from '../../services/http-service.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-employee',
@@ -12,7 +14,8 @@ import { LoaderComponent } from '../shared/loader/loader.component';
     CommonModule,
     ReactiveFormsModule, 
     SidebarComponent,
-    LoaderComponent
+    LoaderComponent,
+    HttpClientModule
   ],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.scss'
@@ -22,7 +25,7 @@ export class EmployeeComponent {
   isLoading: boolean = false;
   myForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private httpClient: HttpClient) { }
 
   ngOnInit(): void {
     this.myForm = this.fb.group({
@@ -35,12 +38,24 @@ export class EmployeeComponent {
     });
   }
 
-  submitForm() {
+  async submitForm() {
+    debugger;
     console.log("submitting form");
     if (this.myForm.valid) {
+      //this.isLoading = true;
       // Perform actions with form data here (e.g., submit to backend)
-      this.isLoading = true;
       console.log(this.myForm.value);
+      this.httpClient.post("http://localhost:8000/api/admin/createEmployee",this.myForm.value)
+      .subscribe(
+        (response)=>{
+          console.log("Response received");
+        },
+        (error) => {
+          debugger;
+          console.log("Error caught");
+        }
+      );
+      //this.isLoading = false;
     } else {
       // Optionally, mark all fields as touched to trigger validation messages
       this.markFormGroupTouched(this.myForm);

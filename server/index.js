@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const path = require('path');
+const cors = require('cors');
 const cookieSession = require('cookie-session');
 const passport = require("passport");
 const bodyParser = require("body-parser");
@@ -15,9 +16,25 @@ try {
   mongoose.connect(MONGO_DB)
     .catch(() => { console.log('Could not connect to mongodb'); })
 
-  console.log(__dirname);
-  //serve static page build from the location 
+  /** ==========serve static page build from the location =======*/
+  
   app.use(express.static(path.join(__dirname, '../dist/browser')));
+  console.log(__dirname);
+
+  /** ============ */
+
+  /** === defining cors for running angular and node server separately. */
+  
+  const corsOptions = {
+    origin: 'http://localhost:4200', // Allow only this origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  };
+  
+  app.use(cors(corsOptions));
+
+  /** ============= */
 
 
   /** ============== Defining passport for authentication and session management **/

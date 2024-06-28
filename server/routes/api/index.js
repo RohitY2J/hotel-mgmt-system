@@ -118,6 +118,8 @@ router.post('/login/create', async function (req, res) {
     }
 })
 
+router.use('/admin',require('./admin'));
+
 // Function to check if a user with given email exists
 async function checkIfUserExists(email) {
     const user = await dbContext.User.findOne({ email: email });
