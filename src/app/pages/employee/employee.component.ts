@@ -42,17 +42,19 @@ export class EmployeeComponent {
     debugger;
     console.log("submitting form");
     if (this.myForm.valid) {
-      //this.isLoading = true;
+      this.isLoading = true;
       // Perform actions with form data here (e.g., submit to backend)
       console.log(this.myForm.value);
       this.httpClient.post("http://localhost:8000/api/admin/createEmployee",this.myForm.value)
       .subscribe(
         (response)=>{
           console.log("Response received");
+          this.isLoading = false;
+          this.closeModal();
         },
         (error) => {
-          debugger;
           console.log("Error caught");
+          this.isLoading = false;
         }
       );
       //this.isLoading = false;
@@ -78,6 +80,7 @@ export class EmployeeComponent {
   }
   closeModal() {
     this.isOpen = false;
+    this.myForm.reset();
   }
 
 

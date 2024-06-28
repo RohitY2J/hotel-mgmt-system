@@ -8,7 +8,6 @@ const CustomSchema = new Schema({
     meta: {
         isDeleted: { type: Boolean, default: false }
     },
-    _id: ObjectId,
     employeeId: String,
     firstName: String,
     lastName: String,
