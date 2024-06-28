@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'); //library to create a MongoDB schema.
 
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const CustomSchema = new Schema(
     {

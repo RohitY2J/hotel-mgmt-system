@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'); //library to create a MongoDB schema.
 
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 //defines the datatype and structure for user
 const CustomSchema = new Schema({
@@ -24,7 +25,7 @@ const CustomSchema = new Schema({
     documents: [
         {
             documentType: String, //Profile Pic, Citizenship, liscensce
-            fileObject: File,
+            fileObject: String,
         }
     ],
     roles: [ObjectId], // multiple roles
