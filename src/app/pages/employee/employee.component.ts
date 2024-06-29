@@ -28,8 +28,8 @@ export class EmployeeComponent {
   isLoading: boolean = false;
   myForm: FormGroup = new FormGroup({});
   myRoleForm: FormGroup = new FormGroup({});
-
-
+  selectedFile: File | undefined;
+  
   roles: any[] = [];
   employees: any[] = [];
 
@@ -76,6 +76,12 @@ export class EmployeeComponent {
     });
   }
 
+  onFileSelect(event: any) {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+      this.myForm.get('file')?.setValue(event.target.files[0]);
+    }
+  }
 
   async submitRoleForm(){
     this.isLoading = true;
@@ -98,13 +104,48 @@ export class EmployeeComponent {
     }
   }
 
+  
+  async submitImage(){
+    const formData = new FormData();
+    formData.append('file', 'anything');
+
+    this.httpService.httpPost("upload", formData)
+      .subscribe(response => {
+        //this.uploadResponse = 'File uploaded successfully!';
+        console.log('Upload response:', response);
+      },
+      error => {
+        //this.uploadResponse = 'Upload failed.';
+        console.error('Upload error:', error);
+      });
+  }
+
   async submitForm() {
     console.log("submitting form");
+    debugger;
+
     if (this.myForm.valid) {
       this.isLoading = true;
       // Perform actions with form data here (e.g., submit to backend)
       console.log(this.myForm.value);
-      this.httpClient.post("http://localhost:8000/api/admin/createEmployee",this.myForm.value)
+      let formData = new FormData();
+      formData.append('file', this.selectedFile!);
+
+      // this.httpService.httpPost("admin/upload", formData).subscribe(
+      //   (response) => {
+      //       this.createEmployee();
+      //   },
+      //   (error) => {
+      //       this.createEmployee();
+      //   }
+      // )
+
+      Object.keys(this.myForm.value).forEach(key => {
+        if(key !== "file")
+          formData.append(key, this.myForm.value[key]);
+      });
+
+      this.httpClient.post("http://localhost:8000/api/admin/createEmployee",formData)
       .subscribe(
         (response)=>{
           console.log("Response received");
@@ -116,6 +157,8 @@ export class EmployeeComponent {
           this.isLoading = false;
         }
       );
+
+      
       //this.isLoading = false;
     } else {
       // Optionally, mark all fields as touched to trigger validation messages

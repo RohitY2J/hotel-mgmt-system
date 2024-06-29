@@ -16,7 +16,7 @@ export class HttpService {
       return this._httpClient.get(`${ApiURL}/${path}`);
   }
   httpPost(path: string, request: any){
-    return this._httpClient.post(`${ApiURL}/${path}`, request);
+    return this._httpClient.post(`${ApiURL}/${path}`, request, { withCredentials: true });
   }
 }
 export const ApiURL = "http://localhost:8000/api"

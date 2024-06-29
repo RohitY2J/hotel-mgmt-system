@@ -3,6 +3,10 @@
 
     <app-sidebar></app-sidebar>
 
+    <!-- <form [formGroup]="fileUploadForm" (ngSubmit)="submitImage()">
+        
+        <button type="submit" [disabled]="!fileUploadForm.valid">Upload File</button>
+      </form> -->
     <!-- Content Area -->
     <div class="flex-1 p-4">
         <span class="text-xs">Home / Employee</span>
@@ -111,7 +115,8 @@
                                         <select formControlName="role" id="role"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="" disabled selected>Select a role</option>
-                                            <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}</option>
+                                            <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                                            </option>
                                         </select>
                                         <div
                                             *ngIf="myForm.get('role')?.invalid && (myForm.get('role')?.dirty || myForm.get('role')?.touched)">
@@ -119,6 +124,17 @@
                                                 class="text-red-500 text-xs italic">Role is required.</div>
                                         </div>
                                     </div>
+
+                                    <!-- Upload -->
+                                    <div class="col-span-2">
+
+                                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            for="file_input">Upload file</label>
+                                        <input
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            id="file_input" type="file" formControlName="file" (change)="onFileSelect($event)">
+                                    </div>
+
                                 </div>
                                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
                                     style="margin: -1.25rem; margin-top: 0.5rem">
@@ -174,7 +190,8 @@
                                 </h5>
 
                                 <div class="my-2">
-                                    <span *ngFor="let role of roles" class="bg-gray-600 text-white text-xs me-2 rounded-full px-3 py-1">
+                                    <span *ngFor="let role of roles"
+                                        class="bg-gray-600 text-white text-xs me-2 rounded-full px-3 py-1">
                                         {{ role.roleName }}
                                     </span>
                                 </div>

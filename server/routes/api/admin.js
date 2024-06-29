@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router()
+const multer = require('multer')
 
 const dbContext = require('../../model');
 const role = require('../../model/role');
 const conversion = require('../../helper/conversion');
+const { FileUpload } = require('../../helper/file_upload');
 
-router.post('/createEmployee', async (req, res, next) => {
+
+router.post('/createEmployee', FileUpload.single('file'), async (req, res, next) => {
     let user = req.body;
 
     var errorMessage = [];
@@ -26,7 +29,7 @@ router.post('/createEmployee', async (req, res, next) => {
     }
 
     if(!user.role){
-        error.push("Role is needed")
+        errorMessage.push("Role is needed")
     }
 
     if (errorMessage.length > 0) {
@@ -58,6 +61,15 @@ router.post('/createEmployee', async (req, res, next) => {
             },
             role: conversion.ToObjectId(user.role)
         });
+
+        if(req.file){
+            newEmployee.documents = [
+                {
+                    documentType: "ProfilePic",
+                    fileObject: req.file.filename
+                }
+            ]
+        }
 
         await newEmployee.save();
         console.log('employee created successfully:', newEmployee);
