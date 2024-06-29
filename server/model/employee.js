@@ -27,7 +27,7 @@ const CustomSchema = new Schema({
             fileObject: String,
         }
     ],
-    roles: [ObjectId], // multiple roles
+    role: {type: ObjectId, ref: 'Role'}, // multiple roles
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 

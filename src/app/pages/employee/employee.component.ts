@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 
@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpListResponse } from '../../models/HttpResponse';
+import { Modal } from 'flowbite';
 
 @Component({
   selector: 'app-employee',
@@ -22,24 +24,81 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 })
 export class EmployeeComponent {
   isOpen: boolean = false;
+  isRoleModalOpen: boolean = false;
   isLoading: boolean = false;
   myForm: FormGroup = new FormGroup({});
+  myRoleForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) { }
+
+  roles: any[] = [];
+  employees: any[] = [];
+
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private httpService: HttpService) { }
 
   ngOnInit(): void {
+    this.isLoading = true;
+    this.httpService.httpGet("admin/getEmployees").subscribe(
+      (response) => {
+        let employeeResponse = response as HttpListResponse;
+        console.log('Fetched data:', response);
+        this.employees = employeeResponse.data;
+        this.isLoading = false;
+      },
+      (error) => {
+          console.error('Error fetching users:', error);
+          this.isLoading = false;
+      }
+    );
+
+    this.httpService.httpGet("admin/getRoles").subscribe(
+      (response) => {
+        let roleResponse = response as HttpListResponse;
+        console.log('Fetched data:', roleResponse);
+        this.roles = roleResponse.data;
+      },  
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    )
+
+
     this.myForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
       address: [''],
-      role: ['Default']
+      role: ['', Validators.required]
+    });
+
+    this.myRoleForm = this.fb.group({
+      roleName: ['', Validators.required]
     });
   }
 
+
+  async submitRoleForm(){
+    this.isLoading = true;
+    if(this.myRoleForm.valid){
+      this.httpService.httpPost("admin/createEmployeeRole", this.myRoleForm.value)
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.myRoleForm.reset();
+          this.loadRoles();
+        },
+        (error) => {
+          console.log(error.message);
+          this.isLoading = false;
+        }
+      )
+    }
+    else{
+      this.markFormGroupTouched(this.myRoleForm);
+    }
+  }
+
   async submitForm() {
-    debugger;
     console.log("submitting form");
     if (this.myForm.valid) {
       this.isLoading = true;
@@ -77,11 +136,37 @@ export class EmployeeComponent {
   openModal() {
     console.log("Clicked");
     this.isOpen = true;
+    this.loadRoles();
+
   }
   closeModal() {
     this.isOpen = false;
     this.myForm.reset();
   }
 
+  openRoleModal(){
+    this.isRoleModalOpen = true;
+    this.loadRoles();
+  }
+
+  closeRoleModal(){
+    this.isRoleModalOpen = false;
+  }
+
+  loadRoles(){
+    this.isLoading = true;
+    this.httpService.httpGet("admin/getRoles").subscribe(
+      (response) => {
+        let roleResponse = response as HttpListResponse;
+        console.log('Fetched data:', roleResponse);
+        this.roles = roleResponse.data;
+        this.isLoading = false;
+      },  
+      (error) => {
+        console.error('Error fetching users:', error);
+        this.isLoading = false;
+      }
+    )
+  }
 
 }
