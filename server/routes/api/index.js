@@ -50,7 +50,7 @@ router.post('/login', function (req, res, next) {
             }
             else {
                 return res.status(422).json({
-                    success: success,
+                    success: false,
                     msg: info.message
                 });
             }

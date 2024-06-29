@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieSession = require('cookie-session');
 const passport = require("passport");
 const bodyParser = require("body-parser");
+const flash = require("connect-flash");
 
 const app = express();
 const port = 8000;
@@ -31,7 +32,6 @@ try {
     preflightContinue: false,
     optionsSuccessStatus: 204
   };
-  
   app.use(cors(corsOptions));
 
   /** ============= */
@@ -49,6 +49,7 @@ try {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(flash());
 
   passport.serializeUser(function (user, cb) {
     cb(null, user);
@@ -61,7 +62,7 @@ try {
   require('./config/passport-config');
 
   app.post('/login', passport.authenticate('local', {
-    successRedirect: '/dashboard',
+    successRedirect: '/admin/dashboard',
     failureRedirect: '/login',
     failureFlash: true
   }));
