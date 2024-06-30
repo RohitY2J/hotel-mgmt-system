@@ -8,7 +8,6 @@ const CustomSchema = new Schema({
     meta: {
         isDeleted: { type: Boolean, default: false }
     },
-    _id: ObjectId,
     employeeId: String,
     firstName: String,
     lastName: String,
@@ -28,7 +27,7 @@ const CustomSchema = new Schema({
             fileObject: String,
         }
     ],
-    roles: [ObjectId], // multiple roles
+    role: {type: ObjectId, ref: 'Role'}, // multiple roles
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 

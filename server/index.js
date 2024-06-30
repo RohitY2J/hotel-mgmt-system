@@ -6,6 +6,7 @@ const cookieSession = require('cookie-session');
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
+const multer = require("multer")
 
 const app = express();
 const port = 8000;
@@ -18,14 +19,16 @@ try {
     .catch(() => { console.log('Could not connect to mongodb'); })
 
   /** ==========serve static page build from the location =======*/
-  
+
   app.use(express.static(path.join(__dirname, '../dist/browser')));
+
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   console.log(__dirname);
 
   /** ============ */
 
   /** === defining cors for running angular and node server separately. */
-  
+
   const corsOptions = {
     origin: "http://localhost:4200", // Allow only this origin
     credentials: true
@@ -86,6 +89,10 @@ try {
 
   /** ======================================================== */
 
+  /**========= body parser middleware */
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  /**===================== **/
 
   // • This is a special method called `middleware`. Every request will be
   // executed on each request. If you want to exclude a specific route to make it
