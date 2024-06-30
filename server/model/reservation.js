@@ -1,0 +1,62 @@
+const mongoose = require('mongoose'); //library to create a MongoDB schema.
+
+const Schema = mongoose.Schema;
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
+//defines the datatype and structure for user
+const CustomSchema = new Schema(
+  {
+    meta: {
+      isDeleted: { type: Boolean, default: false },
+    },
+    _id: ObjectId,
+    customerFullName: String,
+    customerContact: {
+      phone: String,
+      email: String, //optional
+      address: String, //optional
+      emergencyContact: {
+        //optional
+        name: String,
+        phone: String,
+      },
+    },
+    numberOfIndividuals: Number, // How many people?
+    checkInDate: { type: Date, default: Date.now }, //required
+    checkOutDate: { type: Date, default: null },
+    billing: {
+      orders: [
+        {
+          summary: String, //Profile Pic, Citizenship, liscensce
+          amount: Number,
+          orderDateTime: { type: Date, default: Date.now },
+        },
+      ],
+      discountPercentage: Number,
+      taxPercentage: Number,
+      totalAmount: Number, //Sum(orders.amount)
+      totalPayableAmount: Number, //totalAmount - discount + tax
+    },
+    rooms: [{ type: ObjectId, ref: "Room" }],
+    status: String, //Booked, CheckedIn (update check in date), CheckedOut(update check out time), Closed, Canceled
+    paymentStatus: String, //Unpaid, PartiallyPaid, Paid
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
+
+CustomSchema.methods.calculateTotalAmount = ()=> {
+    let totalOrderAmt = this.billing.orders.reduce(
+        (a,o)=> a + o.amount, 0
+    );
+    this.orders.totalAmount = totalOrderAmt;
+
+    let discount = (totalOrderAmt / 100) * this.billing.discountPercentage;
+    let tax = (totalOrderAmt / 100) * this.billing.taxPercentage;
+
+    this.orders.totalPayableAmount = totalOrderAmt - discount + tax;
+  };
+
+module.exports = mongoose.model('Reservation', CustomSchema);
