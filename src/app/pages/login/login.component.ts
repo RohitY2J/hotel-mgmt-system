@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpService } from '../../services/http-service.service';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { HttpService } from '../../services/http-service.service';
 
 @Component({
   selector: 'app-login',
@@ -12,25 +12,22 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent  implements OnInit{
-  isFormValid:boolean = true;
+export class LoginComponent implements OnInit {
+  isFormValid: boolean = true;
   loginRequest = new FormGroup({
     email: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required,)
+    password: new FormControl('', Validators.required),
   });
-  constructor(private httpService: HttpService, private router: Router) {
-    
-  }
-  ngOnInit() {
-    
-  }
+  constructor(
+    private httpService: HttpService,
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
-  login(){
-    if(this.loginRequest.invalid) this.isFormValid = false;
-    this.httpService.httpPost('login',this.loginRequest.value).subscribe({
-      next: ()=> this.router.navigateByUrl("/admin/dashboard"),
-      error: (err)=> console.log,
-    
-    })
+  ngOnInit() {}
+
+  login() {
+    if (this.loginRequest.invalid) this.isFormValid = false;
+    this.authService.login(this.loginRequest.value);
   }
 }

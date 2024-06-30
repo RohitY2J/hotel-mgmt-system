@@ -1,22 +1,24 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpService {
 
-  _httpClient: HttpClient;
-  
-  constructor(httpClient: HttpClient) { 
-    this._httpClient = httpClient;
+  constructor(private httpClient: HttpClient) {
   }
 
-  httpGet(path: string){
-      return this._httpClient.get(`${ApiURL}/${path}`);
+  httpGet(path: string) {
+    return this.httpClient.get<any>(`${ApiURL}/${path}`, {
+      withCredentials: true,
+    });
   }
-  httpPost(path: string, request: any){
-    return this._httpClient.post(`${ApiURL}/${path}`, request, { withCredentials: true });
+
+  httpPost(path: string, request: any) {
+    return this.httpClient.post(`${ApiURL}/${path}`, request, {
+      withCredentials: true,
+    });
   }
 }
 export const ApiURL = "http://localhost:8000/api"
