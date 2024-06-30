@@ -132,7 +132,8 @@
                                             for="file_input">Upload file</label>
                                         <input
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                            id="file_input" type="file" formControlName="file" (change)="onFileSelect($event)">
+                                            id="file_input" type="file" formControlName="file"
+                                            (change)="onFileSelect($event)">
                                     </div>
 
                                 </div>
@@ -314,7 +315,14 @@
                         </td>
                         <th scope="row"
                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                            <img class="w-10 h-10 rounded-full" [src]="employee.profilePicture" alt="Profile Picture">
+                            <ng-container *ngIf="employee.profilePicUrl">
+                                <img class="w-10 h-10 rounded-full" [src]="employee.profilePicUrl"
+                                    alt="Profile Picture">
+                            </ng-container>
+                            <ng-container *ngIf="!employee.profilePicUrl">
+                                <i class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
+                                <!-- Assuming you have Font Awesome configured -->
+                            </ng-container>
                             <div class="ps-3">
                                 <div class="text-base font-semibold">{{ employee.firstName + " " + employee.lastName }}
                                 </div>
@@ -347,8 +355,7 @@
                         </td>
                         <th scope="row"
                             class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-3.jpg"
-                                alt="Jese image">
+                            <i class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
                             <div class="ps-3">
                                 <div class="text-base font-semibold">Bonnie Green</div>
                                 <div class="font-normal text-gray-500">bonnie&#64;flowbite.com</div>

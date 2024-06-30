@@ -124,7 +124,22 @@ router.post('/createEmployeeRole', async (req, res, next) => {
 
 router.get('/getEmployees', async(req, res, next) => {
     try {
-        const employees = await dbContext.Employee.find().populate('role');;
+        const employees = await dbContext.Employee.find().populate('role');
+
+        employees.forEach(employee => {
+            let profilePics = employee.documents.find(x => x.documentType === "ProfilePic");
+            if(profilePics ){
+                let fileName = profilePics.fileObject;
+                employee._doc.profilePicUrl = "http://localhost:8000/uploads/"+fileName;
+            }
+            else{
+                employee._doc.profilePicUrl = null;
+            }
+
+            // Convert to plain object with virtuals
+            employee = employee.toObject({ virtuals: true });
+        });
+
         res.status(200).json({
             message: "Successfully retrieved all the employees",
             data: employees
