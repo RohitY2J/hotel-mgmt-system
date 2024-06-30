@@ -122,9 +122,21 @@ router.post('/createEmployeeRole', async (req, res, next) => {
 })
 
 
-router.get('/getEmployees', async(req, res, next) => {
+router.post('/getEmployees', async(req, res, next) => {
     try {
-        const employees = await dbContext.Employee.find().populate('role');
+
+        let params = req.body;
+        let filter = {};
+
+        if(params.searchText){
+            filter.$or = [
+                { firstName: { $regex: new RegExp(params.searchText, 'i') } },
+                { lastName: { $regex: new RegExp(params.searchText, 'i') } },
+                { 'contactInfo.email': { $regex: new RegExp(params.searchText, 'i') }}
+              ];
+        }
+
+        const employees = await dbContext.Employee.find(filter).populate('role');
 
         employees.forEach(employee => {
             let profilePics = employee.documents.find(x => x.documentType === "ProfilePic");
