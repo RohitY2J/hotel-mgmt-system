@@ -29,6 +29,7 @@ export class EmployeeComponent {
   myForm: FormGroup = new FormGroup({});
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
+  filter = { searchText: "" }
   
   roles: any[] = [];
   employees: any[] = [];
@@ -37,29 +38,8 @@ export class EmployeeComponent {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.httpService.httpGet("admin/getEmployees").subscribe(
-      (response) => {
-        let employeeResponse = response as HttpListResponse;
-        console.log('Fetched data:', response);
-        this.employees = employeeResponse.data;
-        this.isLoading = false;
-      },
-      (error) => {
-          console.error('Error fetching users:', error);
-          this.isLoading = false;
-      }
-    );
-
-    this.httpService.httpGet("admin/getRoles").subscribe(
-      (response) => {
-        let roleResponse = response as HttpListResponse;
-        console.log('Fetched data:', roleResponse);
-        this.roles = roleResponse.data;
-      },  
-      (error) => {
-        console.error('Error fetching users:', error);
-      }
-    )
+    this.loadRoles();
+    this.loadEmployees();
 
 
     this.myForm = this.fb.group({
@@ -111,11 +91,9 @@ export class EmployeeComponent {
 
     this.httpService.httpPost("upload", formData)
       .subscribe(response => {
-        //this.uploadResponse = 'File uploaded successfully!';
         console.log('Upload response:', response);
       },
       error => {
-        //this.uploadResponse = 'Upload failed.';
         console.error('Upload error:', error);
       });
   }
@@ -130,15 +108,6 @@ export class EmployeeComponent {
       console.log(this.myForm.value);
       let formData = new FormData();
       formData.append('file', this.selectedFile!);
-
-      // this.httpService.httpPost("admin/upload", formData).subscribe(
-      //   (response) => {
-      //       this.createEmployee();
-      //   },
-      //   (error) => {
-      //       this.createEmployee();
-      //   }
-      // )
 
       Object.keys(this.myForm.value).forEach(key => {
         if(key !== "file")
@@ -210,6 +179,30 @@ export class EmployeeComponent {
         this.isLoading = false;
       }
     )
+  }
+
+  loadEmployees(){
+    this.isLoading = true;
+    this.httpService.httpPost("admin/getEmployees", this.filter).subscribe(
+      (response) => {
+        let employeeResponse = response as HttpListResponse;
+        console.log('Fetched data:', response);
+        this.employees = employeeResponse.data;
+        this.isLoading = false;
+      },
+      (error) => {
+          console.error('Error fetching users:', error);
+          this.isLoading = false;
+      }
+    );
+  }
+
+  searchInputChanged(event: any){
+    this.filter.searchText = event.target.value;
+  }
+
+  searchButtonClicked(){
+    this.loadEmployees();
   }
 
 }

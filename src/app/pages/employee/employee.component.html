@@ -225,59 +225,25 @@
         </div>
 
         <div class="overflow-x-auto shadow-md sm:rounded-lg">
-            <div
-                class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
-                <div class="ms-2">
-                    <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                        class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                        type="button">
-                        <span class="sr-only">Action button</span>
-                        Action
-                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 4 4 4-4" />
-                        </svg>
-                    </button>
-                    <!-- Dropdown menu -->
-                    <div id="dropdownAction"
-                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                            aria-labelledby="dropdownActionButton">
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reward</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Promote</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activate
-                                    account</a>
-                            </li>
-                        </ul>
-                        <div class="py-1">
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
-                                User</a>
+            <div class="space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
+
+                <div class="flex items-center max-w-sm ml-auto me-4">
+                    <label for="simple-search" class="sr-only">Search</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <i class="fas fa-user text-white"></i>
                         </div>
+                        <input type="text" id="simple-search" (change)="searchInputChanged($event)"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Search employee name.." required />
                     </div>
+                    <button type="button" (click)="searchButtonClicked()"
+                        class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                        <i class="fas fa-search text-white"></i>
+                        <span class="sr-only">Search</span>
+                    </button>
                 </div>
-                <label for="table-search" class="sr-only">Search</label>
-                <div class="relative me-2">
-                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                        </svg>
-                    </div>
-                    <input type="text" id="table-search-users"
-                        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search for users">
-                </div>
+
             </div>
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -320,7 +286,8 @@
                                     alt="Profile Picture">
                             </ng-container>
                             <ng-container *ngIf="!employee.profilePicUrl">
-                                <i class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
+                                <i
+                                    class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
                                 <!-- Assuming you have Font Awesome configured -->
                             </ng-container>
                             <div class="ps-3">
@@ -355,7 +322,8 @@
                         </td>
                         <th scope="row"
                             class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <i class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
+                            <i
+                                class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
                             <div class="ps-3">
                                 <div class="text-base font-semibold">Bonnie Green</div>
                                 <div class="font-normal text-gray-500">bonnie&#64;flowbite.com</div>
