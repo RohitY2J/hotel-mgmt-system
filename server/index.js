@@ -71,6 +71,11 @@ try {
     failureFlash: true
   }));
   
+  app.get("/api/logout", (req, res) => {
+    req.logOut();
+    res.send({message: "Log out success!"});
+  });
+
   app.get("/api/isAuthenticated", (req, res) => {
     res.send({ isAuthenticated: req.isAuthenticated() });
   });

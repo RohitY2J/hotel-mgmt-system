@@ -16,7 +16,7 @@ export class AuthService {
   }
   logout() {
     this.httpService.httpGet('logout').subscribe({
-      next: (res) => this.router.navigateByUrl('/admin/dashboard'),
+      next: (res) => this.router.navigateByUrl('/login'),
       error: (err) => console.log,
     });
   }
