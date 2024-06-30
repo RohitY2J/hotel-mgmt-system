@@ -3,22 +3,71 @@
 
     <app-sidebar></app-sidebar>
 
-    <div class="flex-1 p-4">
+    <div class="flex-1 p-4 bg-gray-800">
         <!-- <span class="text-xs">Home / Employee-Attendance-And-Shift</span> -->
 
         <div class="flex items-center justify-between mb-2">
-            <h1><b>Attendance and Shift</b></h1>
-
-            
-
+            <div class="text-lg font-semibold dark:text-white">Attendance and Shift</div>
         </div>
 
-        <div class="overflow-x-auto shadow-md sm:rounded-lg">
-            <div class="space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
+        <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-                <div class="flex items-center max-w-sm ml-auto me-4">
-                    <label for="simple-search" class="sr-only">Search</label>
-                    <div class="relative w-full">
+        <!-- <div class="flex items-center mt-6 mb-2">
+
+            <select id="role"
+                class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <option value="" selected>All Role</option>
+                <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                </option>
+            </select>
+
+            <select id="shifts"
+                class="mx-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <option value="" selected>All Shifts</option>
+            </select>
+
+
+            <div class="relative max-w-sm">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <i class="fas fa-calendar text-gray-200"></i>
+                </div>
+                <input [(ngModel)]="filter.date" id="datepicker-custom" datepicker datepicker-buttons datepicker-autoselect-today
+                    type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Select date">
+            </div>
+
+
+        </div> -->
+
+        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="space-y-4 md:space-y-0 py-4">
+
+                <div class="flex me-4">
+                    <select id="role"
+                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="" selected>All Role</option>
+                        <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                        </option>
+                    </select>
+
+                    <select id="shifts"
+                        class="mx-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="" selected>All Shifts</option>
+                    </select>
+
+
+                    <div class="relative max-w-sm mx-2">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <i class="fas fa-calendar text-gray-200"></i>
+                        </div>
+                        <input [(ngModel)]="filter.date" id="datepicker-custom" datepicker datepicker-buttons
+                            datepicker-autoselect-today type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Select date">
+                    </div>
+
+                    <div class="relative w-80 mx-2">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <i class="fas fa-user text-white"></i>
                         </div>
@@ -27,9 +76,9 @@
                             placeholder="Search employee name.." required />
                     </div>
                     <button type="button" (click)="searchButtonClicked()"
-                        class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                        <i class="fas fa-search text-white"></i>
-                        <span class="sr-only">Search</span>
+                        class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                        <!-- <i class="fas fa-search text-white"></i> -->
+                        <span>Apply</span>
                     </button>
                 </div>
 

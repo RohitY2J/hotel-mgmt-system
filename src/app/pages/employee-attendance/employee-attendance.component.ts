@@ -1,20 +1,25 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpListResponse } from '../../models/HttpResponse';
 import { Modal } from 'flowbite';
 
+import { Datepicker } from 'flowbite';
+import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
+import type { InstanceOptions } from 'flowbite';
+
 @Component({
   selector: 'app-employee-attendance',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, 
+    FormsModule,
+    ReactiveFormsModule,
     SidebarComponent,
     LoaderComponent,
     HttpClientModule
@@ -29,8 +34,8 @@ export class EmployeeAttendanceComponent {
   myForm: FormGroup = new FormGroup({});
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
-  filter = { searchText: "" }
-  
+  filter = { searchText: "", date: "" }
+
   roles: any[] = [];
   employees: any[] = [];
 
@@ -41,19 +46,16 @@ export class EmployeeAttendanceComponent {
     this.loadRoles();
     this.loadEmployees();
 
+    this.filter.date = this.getTodayDateString();
 
-    this.myForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],
-      address: [''],
-      role: ['', Validators.required]
-    });
+    //datepicker.
+    // get the currently selected date (undefined if not selected)
+    //datepicker.getDate();
 
-    this.myRoleForm = this.fb.group({
-      roleName: ['', Validators.required]
-    });
+    // set the date (or dates if date range picker)
+    //datepicker.setDate('05/31/2024');
+
+
   }
 
   onFileSelect(event: any) {
@@ -63,29 +65,29 @@ export class EmployeeAttendanceComponent {
     }
   }
 
-  async submitRoleForm(){
+  async submitRoleForm() {
     this.isLoading = true;
-    if(this.myRoleForm.valid){
+    if (this.myRoleForm.valid) {
       this.httpService.httpPost("admin/createEmployeeRole", this.myRoleForm.value)
-      .subscribe(
-        (response) => {
-          console.log(response);
-          this.myRoleForm.reset();
-          this.loadRoles();
-        },
-        (error) => {
-          console.log(error.message);
-          this.isLoading = false;
-        }
-      )
+        .subscribe(
+          (response) => {
+            console.log(response);
+            this.myRoleForm.reset();
+            this.loadRoles();
+          },
+          (error) => {
+            console.log(error.message);
+            this.isLoading = false;
+          }
+        )
     }
-    else{
+    else {
       this.markFormGroupTouched(this.myRoleForm);
     }
   }
 
-  
-  async submitImage(){
+
+  async submitImage() {
     const formData = new FormData();
     formData.append('file', 'anything');
 
@@ -93,9 +95,9 @@ export class EmployeeAttendanceComponent {
       .subscribe(response => {
         console.log('Upload response:', response);
       },
-      error => {
-        console.error('Upload error:', error);
-      });
+        error => {
+          console.error('Upload error:', error);
+        });
   }
 
   async submitForm() {
@@ -110,24 +112,23 @@ export class EmployeeAttendanceComponent {
       formData.append('file', this.selectedFile!);
 
       Object.keys(this.myForm.value).forEach(key => {
-        if(key !== "file")
+        if (key !== "file")
           formData.append(key, this.myForm.value[key]);
       });
 
-      this.httpClient.post("http://localhost:8000/api/admin/createEmployee",formData)
-      .subscribe(
-        (response)=>{
-          console.log("Response received");
-          this.isLoading = false;
-          this.closeModal();
-        },
-        (error) => {
-          console.log("Error caught");
-          this.isLoading = false;
-        }
-      );
+      this.httpClient.post("http://localhost:8000/api/admin/createEmployee", formData)
+        .subscribe(
+          (response) => {
+            console.log("Response received");
+            this.isLoading = false;
+          },
+          (error) => {
+            console.log("Error caught");
+            this.isLoading = false;
+          }
+        );
 
-      
+
       //this.isLoading = false;
     } else {
       // Optionally, mark all fields as touched to trigger validation messages
@@ -145,27 +146,7 @@ export class EmployeeAttendanceComponent {
     });
   }
 
-  openModal() {
-    console.log("Clicked");
-    this.isOpen = true;
-    this.loadRoles();
-
-  }
-  closeModal() {
-    this.isOpen = false;
-    this.myForm.reset();
-  }
-
-  openRoleModal(){
-    this.isRoleModalOpen = true;
-    this.loadRoles();
-  }
-
-  closeRoleModal(){
-    this.isRoleModalOpen = false;
-  }
-
-  loadRoles(){
+  loadRoles() {
     this.isLoading = true;
     this.httpService.httpGet("admin/getRoles").subscribe(
       (response) => {
@@ -173,7 +154,7 @@ export class EmployeeAttendanceComponent {
         console.log('Fetched data:', roleResponse);
         this.roles = roleResponse.data;
         this.isLoading = false;
-      },  
+      },
       (error) => {
         console.error('Error fetching users:', error);
         this.isLoading = false;
@@ -181,7 +162,7 @@ export class EmployeeAttendanceComponent {
     )
   }
 
-  loadEmployees(){
+  loadEmployees() {
     this.isLoading = true;
     this.httpService.httpPost("admin/getEmployees", this.filter).subscribe(
       (response) => {
@@ -191,18 +172,34 @@ export class EmployeeAttendanceComponent {
         this.isLoading = false;
       },
       (error) => {
-          console.error('Error fetching users:', error);
-          this.isLoading = false;
+        console.error('Error fetching users:', error);
+        this.isLoading = false;
       }
     );
   }
 
-  searchInputChanged(event: any){
+  dateSelected(event: any){
+    debugger;
+  }
+
+  searchInputChanged(event: any) {
     this.filter.searchText = event.target.value;
   }
 
-  searchButtonClicked(){
+  searchButtonClicked() {
     this.loadEmployees();
+  }
+
+  getTodayDateString() {
+    let today = new Date();
+
+    // Get day, month, and year from the date object
+    let day = today.getDate().toString().padStart(2, '0'); // Ensure two digits with leading zero if necessary
+    let month = (today.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed, so add 1
+    let year = today.getFullYear();
+
+    // Format the date string as "DD/MM/YYYY"
+    return `${day}/${month}/${year}`;
   }
 
 }
