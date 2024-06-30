@@ -27,10 +27,8 @@ try {
   /** === defining cors for running angular and node server separately. */
   
   const corsOptions = {
-    origin: 'http://localhost:4200', // Allow only this origin
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204
+    origin: "http://localhost:4200", // Allow only this origin
+    credentials: true
   };
   app.use(cors(corsOptions));
 
@@ -40,23 +38,26 @@ try {
   /** ============== Defining passport for authentication and session management **/
   app.use(cookieSession({
     name: 'hotel-mgmt-session',
-    resave: false, // resave cookies even if nothing changed
-    saveUninitialized: false,
-    //keys: [process.env.COOKIE_KEY],
     keys: ["?2!>-/zJ{8okCeMS-M#H=%kjGv=40<biJrCm_Q|qk^<{(nrM_'(hj9!(Jk4e(*$"],
-    maxAge: 100 * 24 * 60 * 60 * 1000 // 100 days
+    maxAge: 100 * 24 * 60 * 60 * 1000, // 100 days,
+    resave: false, // Avoids resaving sessions that haven't changed
+    saveUninitialized: true, // Saves new sessions
   }));
 
+  /**========= body parser middleware */
+  app.use(bodyParser.json());
+  /**===================== **/
+  
+  app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(flash());
 
-  passport.serializeUser(function (user, cb) {
-    cb(null, user);
+  passport.serializeUser(function (user, done) {
+    done(null, user);
   });
 
-  passport.deserializeUser(function (user, cb) {
-    cb(null, user);
+  passport.deserializeUser(function (user, done) {
+    done(null, user);
   });
 
   require('./config/passport-config');
@@ -66,23 +67,25 @@ try {
     failureRedirect: '/login',
     failureFlash: true
   }));
+  
+  app.get("/api/isAuthenticated", (req, res) => {
+    res.send({ isAuthenticated: req.isAuthenticated() });
+  });
 
   app.get('/dashboard', isAuthenticated, (req, res) => {
     res.render('dashboard', { user: req.user });
   });
+  
 
   function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/login');
+    // res.redirect('/login');
   }
 
   /** ======================================================== */
 
-  /**========= body parser middleware */
-  app.use(bodyParser.json());
-  /**===================== **/
 
   // • This is a special method called `middleware`. Every request will be
   // executed on each request. If you want to exclude a specific route to make it
@@ -106,7 +109,6 @@ try {
     res.sendFile(path.join(__dirname, '../dist/browser/index.html'));
   });
 
-  // • Start listening on port {{PORT}} for requests.
   app.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
 }
 catch (error) {
