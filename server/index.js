@@ -6,7 +6,8 @@ const cookieSession = require('cookie-session');
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
-const multer = require("multer")
+const businessLogic = require("./business-logic");
+const cron = require("node-cron");
 
 const app = express();
 const port = 8000;
@@ -16,7 +17,20 @@ const MONGO_DB = 'mongodb://127.0.0.1/hotel-mgmt-app'
 try {
 
   mongoose.connect(MONGO_DB)
-    .catch(() => { console.log('Could not connect to mongodb'); })
+    .then(async () => {
+      console.log('Mongoose connected successfully');
+      // Run the attendance creation function immediately
+      await businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+
+      // runs every 6 hour
+      cron.schedule('0 */6 * * *', () => {
+        console.log('Running daily attendance creation script at 12 AM');
+        businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+      });
+    })
+    .catch((error) => { 
+      console.log('Could not connect to mongodb'); 
+    })
 
   /** ==========serve static page build from the location =======*/
 

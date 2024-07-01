@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const multer = require('multer')
 
 const dbContext = require('../../model');
-const role = require('../../model/role');
 const conversion = require('../../helper/conversion');
 const { FileUpload } = require('../../helper/file_upload');
+
+const businessLogic = require('../../business-logic');
 
 
 router.post('/createEmployee', FileUpload.single('file'), async (req, res, next) => {
@@ -124,7 +124,6 @@ router.post('/createEmployeeRole', async (req, res, next) => {
 
 router.post('/getEmployees', async(req, res, next) => {
     try {
-
         let params = req.body;
         let filter = {};
 
@@ -170,6 +169,21 @@ router.get('/getRoles', async(req, res, next) => {
         });
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+})
+
+router.post('/getEmployeeSchedule', async(req, res, next) => {
+    try{
+        filterParams = req.body;
+        schedules = await businessLogic.EmployeeDailyActivityLogic.getEmployeeSchedules(filterParams);
+        res.status(200).json({
+            success: true,
+            message: "Successfully retrieved schedules",
+            data: schedules
+        })
+    }
+    catch(err){
+        res.status(500).json({ message: err.message, success: false });
     }
 })
 

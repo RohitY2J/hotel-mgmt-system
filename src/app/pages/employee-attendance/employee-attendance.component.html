@@ -12,34 +12,6 @@
 
         <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-        <!-- <div class="flex items-center mt-6 mb-2">
-
-            <select id="role"
-                class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                <option value="" selected>All Role</option>
-                <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
-                </option>
-            </select>
-
-            <select id="shifts"
-                class="mx-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                <option value="" selected>All Shifts</option>
-            </select>
-
-
-            <div class="relative max-w-sm">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <i class="fas fa-calendar text-gray-200"></i>
-                </div>
-                <input [(ngModel)]="filter.date" id="datepicker-custom" datepicker datepicker-buttons datepicker-autoselect-today
-                    type="text"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Select date">
-            </div>
-
-
-        </div> -->
-
         <div class="overflow-x-auto shadow-md sm:rounded-lg">
             <div class="space-y-4 md:space-y-0 py-4">
 
@@ -86,21 +58,20 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="p-4">
-                            <div class="flex items-center">
-                                <input id="checkbox-all-search" type="checkbox"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox-all-search" class="sr-only">checkbox</label>
-                            </div>
-                        </th>
                         <th scope="col" class="px-6 py-3">
-                            Name
+                            Employee
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Position
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Status
+                            Employee Status
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Shift
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Shift Status
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Action
@@ -108,56 +79,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let employee of employees"
+                    <tr *ngFor="let schedule of schedules"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="w-4 p-4">
-                            <div class="flex items-center">
-                                <input id="checkbox-table-search-{{ employee.id }}" type="checkbox"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox-table-search-{{ employee.id }}" class="sr-only">checkbox</label>
-                            </div>
-                        </td>
                         <th scope="row"
                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                            <ng-container *ngIf="employee.profilePicUrl">
-                                <img class="w-10 h-10 rounded-full" [src]="employee.profilePicUrl"
+                            <ng-container *ngIf="schedule.employee.profilePicUrl">
+                                <img class="w-10 h-10 rounded-full" [src]="schedule.employee.profilePicUrl"
                                     alt="Profile Picture">
                             </ng-container>
-                            <ng-container *ngIf="!employee.profilePicUrl">
+                            <ng-container *ngIf="!schedule.employee.profilePicUrl">
                                 <i
                                     class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
                                 <!-- Assuming you have Font Awesome configured -->
                             </ng-container>
                             <div class="ps-3">
-                                <div class="text-base font-semibold">{{ employee.firstName + " " + employee.lastName }}
+                                <div class="text-base font-semibold">{{ schedule.employee.firstName + " " + schedule.employee.lastName }}
                                 </div>
-                                <div class="font-normal text-gray-500">{{ employee.contactInfo.email }}</div>
+                                <div class="font-normal text-gray-500">{{ schedule.employee.contactInfo.email }}</div>
                             </div>
                         </th>
                         <td class="px-6 py-4">
-                            {{ employee.role.roleName }}
+                            {{ schedule.employee.role.roleName }}
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
-                            </div>
+                            {{ constantService.getStatusString('attendanceStatus', schedule.attendanceStatus) }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class=""> {{ constantService.getStatusString('shift', schedule.shift) }} </div>
+                            <div class=""> {{ constantService.getStatusString('shiftTiming', schedule.shift) }} </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ constantService.getStatusString('shiftStatus', schedule.shiftStatus ) }}
                         </td>
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
                             <a href="#" type="button"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</a>
                         </td>
                     </tr>
 
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="w-4 p-4">
-                            <div class="flex items-center">
-                                <input id="checkbox-table-search-2" type="checkbox"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox-table-search-2" class="sr-only">checkbox</label>
-                            </div>
-                        </td>
                         <th scope="row"
                             class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             <i
