@@ -9,7 +9,6 @@ const CustomSchema = new Schema(
     meta: {
       isDeleted: { type: Boolean, default: false },
     },
-    _id: ObjectId,
     customerFullName: String,
     customerContact: {
       phone: String,

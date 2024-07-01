@@ -120,6 +120,11 @@ router.post('/login/create', async function (req, res) {
 
 router.use('/admin',require('./admin'));
 
+//reservation api
+router.use("/reservation", require("./reservationController"));
+
+router.use("/room", require("./roomController"));
+
 // Function to check if a user with given email exists
 async function checkIfUserExists(email) {
     const user = await dbContext.User.findOne({ email: email });
