@@ -16,16 +16,17 @@
             <div class="space-y-4 md:space-y-0 py-4">
 
                 <div class="flex me-4">
-                    <select id="role"
+                    <select id="role" [(ngModel)]="filter.role"
                         class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option value="" selected>All Role</option>
                         <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
                         </option>
                     </select>
 
-                    <select id="shifts"
+                    <select id="shifts" [(ngModel)]="filter.shift"
                         class="mx-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option value="" selected>All Shifts</option>
+                        <option *ngFor="let shift of allShifts" value="{{shift.key}}">{{shift.value}}</option>
                     </select>
 
 
@@ -43,7 +44,7 @@
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <i class="fas fa-user text-white"></i>
                         </div>
-                        <input type="text" id="simple-search" (change)="searchInputChanged($event)"
+                        <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Search employee name.." required />
                     </div>
@@ -51,6 +52,11 @@
                         class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
                         <!-- <i class="fas fa-search text-white"></i> -->
                         <span>Apply</span>
+                    </button>
+                    <button type="button" (click)="clearFilter()"
+                        class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                        <!-- <i class="fas fa-search text-white"></i> -->
+                        <span>Clear</span>
                     </button>
                 </div>
 

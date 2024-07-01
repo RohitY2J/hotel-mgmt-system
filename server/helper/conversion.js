@@ -14,3 +14,16 @@ exports.DateToString = (date) =>{
       }
     return dayjs(date).format('YYYY-MM-DD');
 }
+
+exports.ValidateStringDate = (dateStr) => {
+    const date = dayjs(dateStr);
+
+    if (!date.isValid()) {
+        return { isValid: false, formattedDate: null };
+    }
+
+    // Format the date into a specific string format, e.g., YYYY-MM-DD
+    const formattedDate = date.format('YYYY-DD-MM');
+    
+    return { isValid: true, formattedDate };
+}

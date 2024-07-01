@@ -47,4 +47,12 @@ export class ConstantsService {
     return 'Unknown';
   }
 
+  getStatusValuesAsDictionary(mapKey: keyof StatusMaps): { key: number, value: string }[] {
+    const map = this.statusMap[mapKey];
+    return Object.keys(map).map(key => ({
+      key: Number(key),
+      value: map[Number(key)]
+    }));
+  }
+
 }

@@ -34,31 +34,73 @@ exports.createDailyActivityRecord = async () => {
 };
 
 exports.getEmployeeSchedules = async (filterParams) => {
-  let filter = {};
+  let beforeLookUpFilter = {};
+  let afterLookUpFilter = {};
+  
+  if (filterParams.shift) {
+    beforeLookUpFilter.shift = filterParams.shift;
+  }
+  if (filterParams.date && (validationDateResult = conversion.ValidateStringDate(filterParams.date)).isValid) {
+    beforeLookUpFilter.date = validationDateResult.formattedDate;
+  }
   if (filterParams.searchText) {
+    const searchTextRegex = new RegExp(filterParams.searchText, 'i'); // 'i' for case-insensitive
 
+    // Modify the filter to include the search condition
+    afterLookUpFilter.$or = [
+      { 'employee.firstName': searchTextRegex },
+      { 'employee.lastName': searchTextRegex },
+      { 'employee.contactInfo.email': searchTextRegex }
+    ];
   }
 
-  const employeeSchedule = await dbContext.ExployeeDailyActivity.find(filter).populate({
-    path: 'employee',
-    populate: {
-      path: 'role'
-    }
-  });
+  if (filterParams.role) {
+    afterLookUpFilter.$and = [
+      { 'employee.role._id': conversion.ToObjectId(filterParams.role) }
+    ];
+  }
 
-  
+
+  const pipeline = [
+    { $match: beforeLookUpFilter }, // Match initial filter conditions
+    {
+      $lookup: {
+        from: 'employees', // Assuming 'employees' is the collection name
+        localField: 'employee',
+        foreignField: '_id',
+        as: 'employee'
+      }
+    },
+    { $unwind: '$employee' }, // Deconstruct the 'employee' array
+    {
+      $lookup: {
+        from: 'roles', // Assuming 'roles' is the collection name
+        localField: 'employee.role',
+        foreignField: '_id',
+        as: 'employee.role'
+      }
+    },
+    { $unwind: '$employee.role' }, // Deconstruct the 'role' array
+    {
+      $match: afterLookUpFilter // Use the afterLookupFilter variable for $match stage
+    }
+  ];
+
+  const employeeSchedule = await dbContext.ExployeeDailyActivity.aggregate(pipeline).exec();
+
+
   employeeSchedule.forEach(schedule => {
     let profilePics = schedule.employee.documents.find(x => x.documentType === "ProfilePic");
     if (profilePics) {
       let fileName = profilePics.fileObject;
-      schedule._doc.employee._doc.profilePicUrl = "http://localhost:8000/uploads/" + fileName;
+      schedule.employee.profilePicUrl = "http://localhost:8000/uploads/" + fileName;
     }
     else {
-      schedule._doc.employee._doc.profilePicUrl = null;
+      schedule.employee.profilePicUrl = null;
     }
   })
-  
+
   return employeeSchedule;
-    
-  
+
+
 }

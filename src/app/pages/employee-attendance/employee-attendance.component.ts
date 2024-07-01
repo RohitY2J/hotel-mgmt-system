@@ -29,7 +29,12 @@ export class EmployeeAttendanceComponent {
   myForm: FormGroup = new FormGroup({});
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
-  filter = { searchText: "", date: "" }
+  filter = { 
+    searchText: "",
+    role: "",
+    shift: "", 
+    date: "" }
+  allShifts: { key: number, value: string }[] = [];
 
   roles: any[] = [];
   employees: any[] = [];
@@ -42,10 +47,10 @@ export class EmployeeAttendanceComponent {
   ngOnInit(): void {
     this.isLoading = true;
     this.loadRoles();
-    this.loadEmployees();
     this.loadEmployeeSchedules();
 
     this.filter.date = this.getTodayDateString();
+    this.allShifts = this.constantService.getStatusValuesAsDictionary("shift");
 
   }
 
@@ -63,22 +68,6 @@ export class EmployeeAttendanceComponent {
         this.isLoading = false;
       }
     )
-  }
-
-  loadEmployees() {
-    this.isLoading = true;
-    this.httpService.httpPost("admin/getEmployees", this.filter).subscribe(
-      (response) => {
-        let employeeResponse = response as HttpListResponse;
-        console.log('Fetched data:', response);
-        this.employees = employeeResponse.data;
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching users:', error);
-        this.isLoading = false;
-      }
-    );
   }
 
   loadEmployeeSchedules(){
@@ -100,12 +89,17 @@ export class EmployeeAttendanceComponent {
     
   }
 
-  searchInputChanged(event: any) {
-    this.filter.searchText = event.target.value;
+  searchButtonClicked() {
+    this.loadEmployeeSchedules();
   }
 
-  searchButtonClicked() {
-    this.loadEmployees();
+  clearFilter(){
+    this.filter = { 
+      searchText: "",
+      role: "",
+      shift: "", 
+      date: this.getTodayDateString() }
+    this.loadEmployeeSchedules();
   }
 
   getTodayDateString() {
