@@ -1,4 +1,4 @@
 export interface HttpListResponse{
-    message: String,
+    message: string,
     data: any[]
 }

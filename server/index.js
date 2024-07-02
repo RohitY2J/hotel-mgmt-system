@@ -118,7 +118,7 @@ try {
   // not enter on this middleware, simply declare that route before this function
   app.use('/', function (req, res, next) {
     // • Implement your logic here.
-    console.log('Time:', Date.now())
+    //console.log('Time:', Date.now())
     next()
   })
 
