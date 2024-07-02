@@ -3,7 +3,7 @@ const conversion = require('../helper/conversion');
 
 exports.createDailyActivityRecord = async () => {
   try {
-    const employees = await dbContext.Employee.find();
+    const employees = await dbContext.Employee.find({"meta.isDeleted": false});
 
     let today = conversion.DateToString(new Date());
     for (const employee of employees) {
@@ -34,7 +34,7 @@ exports.createDailyActivityRecord = async () => {
 
 exports.getEmployeeSchedules = async (filterParams) => {
   let beforeLookUpFilter = {};
-  let afterLookUpFilter = {};
+  let afterLookUpFilter = {'employee.meta.isDeleted': false};
   
   if (filterParams.shift) {
     beforeLookUpFilter.shift = conversion.convertStringToInt(filterParams.shift);
