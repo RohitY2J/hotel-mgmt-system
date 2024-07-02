@@ -63,7 +63,9 @@ exports.getReservationById = async (req, res, next) => {
 
 exports.getReservations = async (req, res, next) => {
   try {
-    var result = await dbContext.Reservation.find(req.body);
+    var result = await dbContext.Reservation.find(req.body)
+    .skip((req.query.pageNo - 1) * req.query.pageSize)
+      .limit(req.query.pageSize);
     return res.status(200).send(result);
   } catch (ex) {
     console.error("Error occurred while getting room!", ex);

@@ -19,8 +19,10 @@ exports.createRoom = async (req, res, next) => {
     }
 
     let room = await dbContext.Room.findOne({ roomNumber: request.roomNumber });
-    if(room){
-      return res.status(400).send(`invalidRequest: Room ${request.roomNumber} already exists`);
+    if (room) {
+      return res
+        .status(400)
+        .send(`invalidRequest: Room ${request.roomNumber} already exists`);
     }
 
     request.createdAt = Date.now();
@@ -46,9 +48,15 @@ exports.updateRoom = async (req, res, next) => {
       request
     );
     if (result.modifiedCount === 0) {
-     return res.status(400).send(`Invalid request. No record found for updated with provided roomId and room number: ${request.roomNumber}`);
+      return res
+        .status(400)
+        .send(
+          `Invalid request. No record found for updated with provided roomId and room number: ${request.roomNumber}`
+        );
     } else console.info("Room updated successfully!");
-    return res.status(200).send({ success: true, message: "Updated successfully" });
+    return res
+      .status(200)
+      .send({ success: true, message: "Updated successfully" });
   } catch (ex) {
     console.error("Error occurred while updating room.");
     return res
@@ -71,7 +79,9 @@ exports.getRoomById = async (req, res, next) => {
 
 exports.getRooms = async (req, res, next) => {
   try {
-    var result = await dbContext.Room.find(req.body);
+    var result = await dbContext.Room.find(req.body)
+      .skip((req.query.pageNo - 1) * req.query.pageSize)
+      .limit(req.query.pageSize);
     return res.status(200).send(result);
   } catch (ex) {
     console.error("Error occurred while getting room!", ex);
