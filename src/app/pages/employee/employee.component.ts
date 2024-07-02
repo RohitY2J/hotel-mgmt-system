@@ -5,9 +5,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpListResponse } from '../../models/HttpResponse';
 import { finalize } from 'rxjs/operators';
+import { NotificationComponent } from '../shared/notification/notification.component';
+import { NotificationParameter } from '../../models/Notification';
 
 @Component({
   selector: 'app-employee',
@@ -17,7 +18,7 @@ import { finalize } from 'rxjs/operators';
     ReactiveFormsModule,
     SidebarComponent,
     LoaderComponent,
-    HttpClientModule
+    NotificationComponent
   ],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.scss'
@@ -27,17 +28,22 @@ export class EmployeeComponent {
   isRoleModalOpen: boolean = false;
   isConfirmDialogOpen: boolean = false;
   isLoading: boolean = false;
+  showNotification: boolean = false;
   myForm: FormGroup = new FormGroup({});
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
   selectedEmployee: any = {};
   filter = { searchText: "" }
+  notificationParams: NotificationParameter = {
+    message: "",
+    error: false
+  }
   createForm: boolean = true;
 
   roles: any[] = [];
   employees: any[] = [];
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private httpService: HttpService) { }
+  constructor(private fb: FormBuilder, private httpService: HttpService) { }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -70,14 +76,22 @@ export class EmployeeComponent {
     this.isLoading = true;
     if (this.myRoleForm.valid) {
       this.httpService.httpPost("admin/createEmployeeRole", this.myRoleForm.value)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+          this.loadRoles();
+          this.showNotification = true;
+        }))
         .subscribe(
           (response) => {
             console.log(response);
             this.myRoleForm.reset();
-            this.loadRoles();
+            this.notificationParams.message = "Role added successfully";
+            this.notificationParams.error = false;
           },
           (error) => {
             console.log(error.message);
+            this.notificationParams.message = error.message;
+            this.notificationParams.error = true;
             this.isLoading = false;
           }
         )
@@ -94,7 +108,7 @@ export class EmployeeComponent {
       // Perform actions with form data here (e.g., submit to backend)
       console.log(this.myForm.value);
       let formData = new FormData();
-      if(this.selectedFile){
+      if (this.selectedFile) {
         formData.append('file', this.selectedFile!);
       }
 
@@ -102,36 +116,48 @@ export class EmployeeComponent {
         formData.append(key, this.myForm.value[key]);
       });
 
-      if(this.createForm){
+      if (this.createForm) {
+        this.showNotification = false;
         this.httpService.httpPost("admin/createEmployee", formData)
           .pipe(finalize(() => {
             this.isLoading = false;
+            this.showNotification = true;
             this.loadEmployees();
           }))
           .subscribe(
             (response) => {
               console.log("Response received");
+              this.notificationParams.message = "Employee added successfully";
+              this.notificationParams.error = false;
               this.closeModal();
             },
             (error) => {
               console.log("Error caught");
+              this.notificationParams.message = error.message;
+              this.notificationParams.error = true;
             }
           );
       }
-      else{
+      else {
+        this.showNotification = false;
         this.httpService.httpPost("admin/updateEmployee", formData)
-        .pipe(finalize(() => {
-          this.isLoading = false;
-          this.loadEmployees();
-        }))
-        .subscribe(
-          (response) =>{
-            this.closeModal();
-          },
-          (error) => {
-            console.log("Error caught", error);
-          }
-        )
+          .pipe(finalize(() => {
+            this.isLoading = false;
+            this.loadEmployees();
+            this.showNotification = true;
+          }))
+          .subscribe(
+            (response) => {
+              this.notificationParams.message = "Employee updated successfully";
+              this.notificationParams.error = false;
+              this.closeModal();
+            },
+            (error) => {
+              this.notificationParams.message = error.message;
+              this.notificationParams.error = true;
+              console.log("Error caught", error);
+            }
+          )
       }
 
       //this.isLoading = false;
@@ -151,7 +177,7 @@ export class EmployeeComponent {
     });
   }
 
-  openModalForCreatingEmployee(){
+  openModalForCreatingEmployee() {
     this.createForm = true;
     this.myForm.reset();
     this.openModal();
@@ -175,7 +201,7 @@ export class EmployeeComponent {
     this.isRoleModalOpen = false;
   }
 
-  closeConfirmDialog(){
+  closeConfirmDialog() {
     this.isConfirmDialogOpen = false;
   }
 
@@ -240,21 +266,21 @@ export class EmployeeComponent {
     this.selectedEmployee = employee;
   }
 
-  confirmButtonClicked(){
+  confirmButtonClicked() {
     this.isLoading = true;
     this.httpService.httpPost('admin/deleteEmployee', this.selectedEmployee)
-    .pipe(finalize(() => {
-      this.isLoading = false;
-      this.loadEmployees();
-    }))
-    .subscribe(
-      (response) => {
-        console.log("Deleted successfully");
-        this.closeConfirmDialog();
-      },
-      (error) => {
-        console.log("Error while deleting", error);
-      });
+      .pipe(finalize(() => {
+        this.isLoading = false;
+        this.loadEmployees();
+      }))
+      .subscribe(
+        (response) => {
+          console.log("Deleted successfully");
+          this.closeConfirmDialog();
+        },
+        (error) => {
+          console.log("Error while deleting", error);
+        });
   }
 
 }

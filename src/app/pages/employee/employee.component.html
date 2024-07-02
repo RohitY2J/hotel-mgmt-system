@@ -1,5 +1,7 @@
 <app-loader *ngIf="isLoading"></app-loader>
 
+<app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
+
 <div *ngIf="isOpen" tabindex="-1" aria-hidden="true"
     class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
     <div class="relative p-4 w-full max-w-md max-h-full">
