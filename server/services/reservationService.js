@@ -1,58 +1,72 @@
 const { OperationCanceledException } = require("typescript");
 const dbContext = require("../model");
 
-exports.createReservation = async (req) => {
+exports.createReservation = async (req, res, next) => {
   try {
+    var request = req.body;
     var errorMessage = [];
-    if (!req.customerFullName)
+    if (!request.customerFullName)
       errorMessage.push("Customer fullname is required");
-    if (!req.customerContact?.phone)
+    if (!request.customerContact?.phone)
       errorMessage.push("Customer phone number is requried");
-    if (!req.checkInDate) errorMessage.push("CheckIn date is requried");
+    if (!request.checkInDate) errorMessage.push("CheckIn date is requried");
 
-    if (errorMessage)
-      throw new OperationCanceledException(
-        "One or more error occurred",
-        errorMessage
-      );
+    if (errorMessage.length > 0) {
+      console.error("validation errors: ", errorMessage);
+      return res.status(400).send(`invalidRequest: ${errorMessage}`);
+    }
 
-    req.createdAt = Date.now();
-    req.updatedAt = Date.now();
+    request.createdAt = Date.now();
+    request.updatedAt = Date.now();
 
-    var reservation = new dbContext.Reservation(req);
+    var reservation = new dbContext.Reservation(request);
     reservation.save();
+    return res
+      .status(200)
+      .send({ success: true, message: "Reservation created successfully" });
   } catch (ex) {
-    throw ex;
+    console.error("Error creating room: ", ex);
+    return res.status(500).send({ error: ex });
   }
 };
 
-exports.updateReservation = async (req) => {
+exports.updateReservation = async (req, res, next) => {
   try {
-    req.updatedAt = Date.now();
-    let result = await dbContext.Reservation.updateOne({ _id: req.id }, req);
-    if (result.modifiedCount === 0) console.warn("No documents updated");
-    else console.info("Room updated successfully!");
-    return result;
+    var request = req.body;
+    request.updatedAt = Date.now();
+    let result = await dbContext.Reservation.updateOne(
+      { _id: request.id },
+      request
+    );
+    if (result.modifiedCount === 0)
+      return res
+        .status(400)
+        .send(`Invalid request. No record found for updated.`);
+    return res
+      .status(200)
+      .send({ success: true, message: "Updated successfully" });
   } catch (ex) {
     console.error("Error updating room: ", ex);
-    throw ex;
+    return res.status(500).send({ error: ex });
   }
 };
 
-exports.getReservationById = async (req) => {
+exports.getReservationById = async (req, res, next) => {
   try {
-    var result = await dbContext.Reservation.findOne(req);
-    return result;
+    var result = await dbContext.Reservation.findById(req.query.id);
+    return res.status(200).send(result);
   } catch (ex) {
-    console.error("Error occurred while getting room!", ex);
+    console.error("Error occurred while getting room", ex);
+    return res.status(500).send({ error: ex });
   }
 };
 
-exports.getReservations = async (req) => {
+exports.getReservations = async (req, res, next) => {
   try {
-    var result = await dbContext.Reservation.find(req);
-    return result;
+    var result = await dbContext.Reservation.find(req.body);
+    return res.status(200).send(result);
   } catch (ex) {
     console.error("Error occurred while getting room!", ex);
+    return res.status(500).send({ error: ex });
   }
 };

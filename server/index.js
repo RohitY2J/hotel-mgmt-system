@@ -100,10 +100,10 @@ try {
   
 
   function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
+    if (req.originalUrl === '/api/login' || req.isAuthenticated()) {
       return next();
     }
-    // res.redirect('/login');
+     res.status(401).send('Un-authorized user.');
   }
 
   /** ======================================================== */
@@ -122,7 +122,7 @@ try {
     next()
   })
 
-  app.use('/api', require('./routes/api'))
+  app.use('/api', isAuthenticated, require('./routes/api'))
 
   app.get('/api/*', (req, res) => {
     res.send({
