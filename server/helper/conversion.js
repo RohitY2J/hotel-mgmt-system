@@ -27,3 +27,8 @@ exports.ValidateStringDate = (dateStr) => {
     
     return { isValid: true, formattedDate };
 }
+
+exports.convertStringToInt = (str) => {
+    const num = parseInt(str, 10);
+    return isNaN(num) ? null : num;
+  }

@@ -1,6 +1,5 @@
 const dbContext = require('../model');
 const conversion = require('../helper/conversion');
-const { schedule } = require('node-cron');
 
 exports.createDailyActivityRecord = async () => {
   try {
@@ -38,7 +37,7 @@ exports.getEmployeeSchedules = async (filterParams) => {
   let afterLookUpFilter = {};
   
   if (filterParams.shift) {
-    beforeLookUpFilter.shift = filterParams.shift;
+    beforeLookUpFilter.shift = conversion.convertStringToInt(filterParams.shift);
   }
   if (filterParams.date && (validationDateResult = conversion.ValidateStringDate(filterParams.date)).isValid) {
     beforeLookUpFilter.date = validationDateResult.formattedDate;
@@ -103,4 +102,15 @@ exports.getEmployeeSchedules = async (filterParams) => {
   return employeeSchedule;
 
 
+}
+
+exports.updateEmployeeSchedule = async(scheduleData) => {
+   employeeSchedule = await dbContext.ExployeeDailyActivity.findOne({_id: scheduleData.scheduleId}).exec();
+
+   employeeSchedule.shift = scheduleData.shift;
+   employeeSchedule.attendanceStatus = scheduleData.attendance;
+   employeeSchedule.shiftStatus = scheduleData.shiftStatus;
+
+   await employeeSchedule.save();
+   return;
 }

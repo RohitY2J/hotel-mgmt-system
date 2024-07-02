@@ -7,7 +7,6 @@ import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpListResponse } from '../../models/HttpResponse';
-import { Modal } from 'flowbite';
 
 @Component({
   selector: 'app-employee',
@@ -99,9 +98,6 @@ export class EmployeeComponent {
   }
 
   async submitForm() {
-    console.log("submitting form");
-    debugger;
-
     if (this.myForm.valid) {
       this.isLoading = true;
       // Perform actions with form data here (e.g., submit to backend)
@@ -114,7 +110,7 @@ export class EmployeeComponent {
           formData.append(key, this.myForm.value[key]);
       });
 
-      this.httpClient.post("http://localhost:8000/api/admin/createEmployee",formData)
+      this.httpService.httpPost("admin/createEmployee",formData)
       .subscribe(
         (response)=>{
           console.log("Response received");

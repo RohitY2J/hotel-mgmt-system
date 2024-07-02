@@ -187,6 +187,19 @@ router.post('/getEmployeeSchedule', async(req, res, next) => {
     }
 })
 
+router.post('/updateEmployeeSchedule', async(req, res, next) => {
+    try{
+        await businessLogic.EmployeeDailyActivityLogic.updateEmployeeSchedule(req.body);
+        res.status(200).json({
+            success: true,
+            message: "Updated employee schedule successfully"
+        })
+    }
+    catch(err){
+
+    }
+})
+
 async function checkIfEmployeeExists(email, firstName, lastName) {
     const user = await dbContext.Employee.findOne({ 
         firstName: firstName, 

@@ -1,4 +1,80 @@
 <app-loader *ngIf="isLoading"></app-loader>
+
+<div *ngIf="isOpen" tabindex="-1" aria-hidden="true"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Update Employee Schedule
+                </h3>
+                <button (click)="closeModal()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form [formGroup]="myForm" class="p-4 md:p-5" (ngSubmit)="submitForm()">
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-2">
+                        <label for="attendance"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attendance</label>
+                        <select formControlName="attendance" id="attendance"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option *ngFor="let attendance of allAttendance" value="{{attendance.key}}">{{attendance.value}}</option>
+                        </select>
+                        <div
+                            *ngIf="myForm.get('attendance')?.invalid && (myForm.get('attendance')?.dirty || myForm.get('attendance')?.touched)">
+                            <div *ngIf="myForm.get('attendance')?.errors?.['required']" class="text-red-500 text-xs italic">
+                                Attendance is required.</div>
+                        </div>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="shift"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shift</label>
+                        <select formControlName="shift" id="shift"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option *ngFor="let shift of allShifts" value="{{shift.key}}">{{shift.value}}</option>
+                        </select>
+                        <div
+                            *ngIf="myForm.get('shift')?.invalid && (myForm.get('shift')?.dirty || myForm.get('shift')?.touched)">
+                            <div *ngIf="myForm.get('shift')?.errors?.['required']" class="text-red-500 text-xs italic">
+                                Shift is required.</div>
+                        </div>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="shiftStatus"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shift Status</label>
+                        <select formControlName="shiftStatus" id="shiftStatus"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option *ngFor="let shiftStatus of allShiftStatus" value="{{shiftStatus.key}}">{{shiftStatus.value}}</option>
+                        </select>
+                        <div
+                            *ngIf="myForm.get('shiftStatus')?.invalid && (myForm.get('shiftStatus')?.dirty || myForm.get('shiftStatus')?.touched)">
+                            <div *ngIf="myForm.get('shiftStatus')?.errors?.['required']" class="text-red-500 text-xs italic">
+                                Shift Status is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+                    style="margin: -1.25rem; margin-top: 0.5rem">
+                    <button type="submit"
+                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
+                    <button (click)="closeModal()" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="flex h-screen">
 
     <app-sidebar></app-sidebar>
@@ -99,7 +175,8 @@
                                 <!-- Assuming you have Font Awesome configured -->
                             </ng-container>
                             <div class="ps-3">
-                                <div class="text-base font-semibold">{{ schedule.employee.firstName + " " + schedule.employee.lastName }}
+                                <div class="text-base font-semibold">{{ schedule.employee.firstName + " " +
+                                    schedule.employee.lastName }}
                                 </div>
                                 <div class="font-normal text-gray-500">{{ schedule.employee.contactInfo.email }}</div>
                             </div>
@@ -119,37 +196,10 @@
                         </td>
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
-                            <a href="#" type="button"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</a>
+                            <button (click)="updateButtonClicked(schedule)" type="button"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
                         </td>
                     </tr>
-
-                    <tr
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row"
-                            class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <i
-                                class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
-                            <div class="ps-3">
-                                <div class="text-base font-semibold">Bonnie Green</div>
-                                <div class="font-normal text-gray-500">bonnie&#64;flowbite.com</div>
-                            </div>
-                        </th>
-                        <td class="px-6 py-4">
-                            Designer
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <!-- Modal toggle -->
-                            <a href="#" type="button"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                        </td>
-                    </tr>
-
                 </tbody>
             </table>
         </div>
