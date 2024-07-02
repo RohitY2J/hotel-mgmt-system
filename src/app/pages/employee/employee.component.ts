@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 
@@ -7,13 +7,14 @@ import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpListResponse } from '../../models/HttpResponse';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     SidebarComponent,
     LoaderComponent,
     HttpClientModule
@@ -24,12 +25,15 @@ import { HttpListResponse } from '../../models/HttpResponse';
 export class EmployeeComponent {
   isOpen: boolean = false;
   isRoleModalOpen: boolean = false;
+  isConfirmDialogOpen: boolean = false;
   isLoading: boolean = false;
   myForm: FormGroup = new FormGroup({});
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
+  selectedEmployee: any = {};
   filter = { searchText: "" }
-  
+  createForm: boolean = true;
+
   roles: any[] = [];
   employees: any[] = [];
 
@@ -42,6 +46,7 @@ export class EmployeeComponent {
 
 
     this.myForm = this.fb.group({
+      employeeId: [''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -58,44 +63,30 @@ export class EmployeeComponent {
   onFileSelect(event: any) {
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
-      this.myForm.get('file')?.setValue(event.target.files[0]);
     }
   }
 
-  async submitRoleForm(){
+  async submitRoleForm() {
     this.isLoading = true;
-    if(this.myRoleForm.valid){
+    if (this.myRoleForm.valid) {
       this.httpService.httpPost("admin/createEmployeeRole", this.myRoleForm.value)
-      .subscribe(
-        (response) => {
-          console.log(response);
-          this.myRoleForm.reset();
-          this.loadRoles();
-        },
-        (error) => {
-          console.log(error.message);
-          this.isLoading = false;
-        }
-      )
+        .subscribe(
+          (response) => {
+            console.log(response);
+            this.myRoleForm.reset();
+            this.loadRoles();
+          },
+          (error) => {
+            console.log(error.message);
+            this.isLoading = false;
+          }
+        )
     }
-    else{
+    else {
       this.markFormGroupTouched(this.myRoleForm);
     }
   }
 
-  
-  async submitImage(){
-    const formData = new FormData();
-    formData.append('file', 'anything');
-
-    this.httpService.httpPost("upload", formData)
-      .subscribe(response => {
-        console.log('Upload response:', response);
-      },
-      error => {
-        console.error('Upload error:', error);
-      });
-  }
 
   async submitForm() {
     if (this.myForm.valid) {
@@ -103,27 +94,46 @@ export class EmployeeComponent {
       // Perform actions with form data here (e.g., submit to backend)
       console.log(this.myForm.value);
       let formData = new FormData();
-      formData.append('file', this.selectedFile!);
+      if(this.selectedFile){
+        formData.append('file', this.selectedFile!);
+      }
 
       Object.keys(this.myForm.value).forEach(key => {
-        if(key !== "file")
-          formData.append(key, this.myForm.value[key]);
+        formData.append(key, this.myForm.value[key]);
       });
 
-      this.httpService.httpPost("admin/createEmployee",formData)
-      .subscribe(
-        (response)=>{
-          console.log("Response received");
+      if(this.createForm){
+        this.httpService.httpPost("admin/createEmployee", formData)
+          .pipe(finalize(() => {
+            this.isLoading = false;
+            this.loadEmployees();
+          }))
+          .subscribe(
+            (response) => {
+              console.log("Response received");
+              this.closeModal();
+            },
+            (error) => {
+              console.log("Error caught");
+            }
+          );
+      }
+      else{
+        this.httpService.httpPost("admin/updateEmployee", formData)
+        .pipe(finalize(() => {
           this.isLoading = false;
-          this.closeModal();
-        },
-        (error) => {
-          console.log("Error caught");
-          this.isLoading = false;
-        }
-      );
+          this.loadEmployees();
+        }))
+        .subscribe(
+          (response) =>{
+            this.closeModal();
+          },
+          (error) => {
+            console.log("Error caught", error);
+          }
+        )
+      }
 
-      
       //this.isLoading = false;
     } else {
       // Optionally, mark all fields as touched to trigger validation messages
@@ -141,8 +151,12 @@ export class EmployeeComponent {
     });
   }
 
+  openModalForCreatingEmployee(){
+    this.createForm = true;
+    this.myForm.reset();
+    this.openModal();
+  }
   openModal() {
-    console.log("Clicked");
     this.isOpen = true;
     this.loadRoles();
 
@@ -152,16 +166,20 @@ export class EmployeeComponent {
     this.myForm.reset();
   }
 
-  openRoleModal(){
+  openRoleModal() {
     this.isRoleModalOpen = true;
     this.loadRoles();
   }
 
-  closeRoleModal(){
+  closeRoleModal() {
     this.isRoleModalOpen = false;
   }
 
-  loadRoles(){
+  closeConfirmDialog(){
+    this.isConfirmDialogOpen = false;
+  }
+
+  loadRoles() {
     this.isLoading = true;
     this.httpService.httpGet("admin/getRoles").subscribe(
       (response) => {
@@ -169,7 +187,7 @@ export class EmployeeComponent {
         console.log('Fetched data:', roleResponse);
         this.roles = roleResponse.data;
         this.isLoading = false;
-      },  
+      },
       (error) => {
         console.error('Error fetching users:', error);
         this.isLoading = false;
@@ -177,7 +195,7 @@ export class EmployeeComponent {
     )
   }
 
-  loadEmployees(){
+  loadEmployees() {
     this.isLoading = true;
     this.httpService.httpPost("admin/getEmployees", this.filter).subscribe(
       (response) => {
@@ -187,18 +205,56 @@ export class EmployeeComponent {
         this.isLoading = false;
       },
       (error) => {
-          console.error('Error fetching users:', error);
-          this.isLoading = false;
+        console.error('Error fetching users:', error);
+        this.isLoading = false;
       }
     );
   }
 
-  searchInputChanged(event: any){
+  searchInputChanged(event: any) {
     this.filter.searchText = event.target.value;
   }
 
-  searchButtonClicked(){
+  searchButtonClicked() {
     this.loadEmployees();
+  }
+
+  editButtonClicked(employee: any) {
+    this.createForm = false;
+    let initialValues = {
+      employeeId: employee._id,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      email: employee.contactInfo.email,
+      phoneNumber: employee.contactInfo.phone,
+      address: employee.contactInfo.address,
+      role: employee.role._id,
+    }
+
+    this.myForm.setValue(initialValues);
+    this.openModal();
+  }
+
+  deleteButtonClicked(employee: any) {
+    this.isConfirmDialogOpen = true;
+    this.selectedEmployee = employee;
+  }
+
+  confirmButtonClicked(){
+    this.isLoading = true;
+    this.httpService.httpPost('admin/deleteEmployee', this.selectedEmployee)
+    .pipe(finalize(() => {
+      this.isLoading = false;
+      this.loadEmployees();
+    }))
+    .subscribe(
+      (response) => {
+        console.log("Deleted successfully");
+        this.closeConfirmDialog();
+      },
+      (error) => {
+        console.log("Error while deleting", error);
+      });
   }
 
 }

@@ -6,6 +6,7 @@ const conversion = require('../../helper/conversion');
 const { FileUpload } = require('../../helper/file_upload');
 
 const businessLogic = require('../../business-logic');
+const employee = require('../../model/employee');
 
 
 router.post('/createEmployee', FileUpload.single('file'), async (req, res, next) => {
@@ -86,6 +87,100 @@ router.post('/createEmployee', FileUpload.single('file'), async (req, res, next)
     }
 })
 
+router.post('/updateEmployee', FileUpload.single('file'), async (req, res, next) => {
+    let user = req.body;
+
+    var errorMessage = [];
+    if(!user.employeeId){
+        errorMessage.push("Employee id is missing");
+    }
+
+    if (!user.firstName) {
+        errorMessage.push("FirstName is needed")
+    }
+
+    if (!user.lastName) {
+        errorMessage.push("LastName is needed")
+    }
+
+    if (!user.email) {
+        errorMessage.push("Email is needed")
+    }
+
+    if (!user.phoneNumber) {
+        errorMessage.push("Phone Number is needed")
+    }
+
+    if(!user.role){
+        errorMessage.push("Role is needed")
+    }
+
+    if (errorMessage.length > 0) {
+        return res.status(422).json({
+            success: false,
+            msg: 'validation failed',
+            error: errorMessage
+        });
+    }
+
+    try {
+        
+        let existingEmployee = await dbContext.Employee.findOne({_id: user.employeeId}).exec();
+        // Create new user
+
+        existingEmployee.firstName = user.firstName;
+        existingEmployee.lastName = user.lastName;
+        existingEmployee.contactInfo = {
+            phone: user.phoneNumber,
+            address: user.address,
+            email: user.email
+        }
+        existingEmployee.role = conversion.ToObjectId(user.role)
+
+        if(req.file){
+            existingEmployee.documents = [
+                {
+                    documentType: "ProfilePic",
+                    fileObject: req.file.filename
+                }
+            ]
+        }
+
+        await existingEmployee.save();
+        return res.status(200).json({
+            success: true,
+            msg: 'success'
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            msg: "Error encountered:"+err.message
+        });
+    }
+
+})
+
+router.post('/deleteEmployee', async(req, res, next) => {
+    try{
+
+        let employee = await dbContext.Employee.findOne({_id: req.body._id});
+        employee.meta.isDeleted = true;
+        
+        await employee.save();
+        return res.status(200).json({
+            success: true,
+            message: "Delete successfully"
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+})
+
 router.post('/createEmployeeRole', async (req, res, next) => {
     let role = req.body;
 
@@ -125,7 +220,7 @@ router.post('/createEmployeeRole', async (req, res, next) => {
 router.post('/getEmployees', async(req, res, next) => {
     try {
         let params = req.body;
-        let filter = {};
+        let filter = {"meta.isDeleted": false};
 
         if(params.searchText){
             filter.$or = [
@@ -204,7 +299,8 @@ async function checkIfEmployeeExists(email, firstName, lastName) {
     const user = await dbContext.Employee.findOne({ 
         firstName: firstName, 
         lastName: lastName, 
-        'contactInfo.email': email });
+        'contactInfo.email': email,
+        'meta.isDeleted': false });
     return user; // Returns null if user not found, otherwise returns the user object
 }
 
