@@ -123,6 +123,7 @@ export class EmployeeComponent {
             this.isLoading = false;
             this.showNotification = true;
             this.loadEmployees();
+            this.selectedFile = undefined;
           }))
           .subscribe(
             (response) => {
@@ -145,6 +146,7 @@ export class EmployeeComponent {
             this.isLoading = false;
             this.loadEmployees();
             this.showNotification = true;
+            this.selectedFile = undefined;
           }))
           .subscribe(
             (response) => {
