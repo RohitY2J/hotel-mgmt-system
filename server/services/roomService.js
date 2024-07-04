@@ -83,7 +83,7 @@ exports.getRooms = async (req, res, next) => {
     var result = await dbContext.Room.find(req.body)
       .skip((req.query.pageNo - 1) * req.query.pageSize)
       .limit(req.query.pageSize);
-    return res.status(200).send(result.map(mapUiResponse));
+    return res.status(200).send(result.map(this.mapUiResponse));
   } catch (ex) {
     console.error("Error occurred while getting room!", ex);
     return res

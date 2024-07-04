@@ -7,6 +7,7 @@ import { EmployeeAttendanceComponent } from './pages/employee-attendance/employe
 import { RoomComponent } from './pages/room/room.component';
 import { LayoutComponent } from './pages/shared/layout/layout.component';
 import { AnimationFrameScheduler } from 'rxjs/internal/scheduler/AnimationFrameScheduler';
+import { ReservationComponent } from './pages/reservation/reservation.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -20,6 +21,13 @@ export const routes: Routes = [
           {title: 'Employee', path: 'employee', component: EmployeeComponent, outlet:"main" },
           {title: 'Employee Attendance', component: EmployeeAttendanceComponent, path:'employee-attendance', outlet:"main"},
           {title: "Rooms", component: RoomComponent, path:'rooms', outlet:'main'},
+          {
+            title: 'Reservation',
+            component: ReservationComponent,
+            path: 'reservations',
+            canActivate: [authGuard],
+            outlet: "main"
+          },
           { path: '**', redirectTo:"dashboard", outlet:'main', pathMatch:'full'}
         ],
         canActivate: [authGuard]

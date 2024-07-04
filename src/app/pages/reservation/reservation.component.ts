@@ -4,6 +4,8 @@ import { NotificationComponent } from '../shared/notification/notification.compo
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http-service.service';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-reservation',
@@ -13,6 +15,9 @@ import { HttpService } from '../../services/http-service.service';
     NotificationComponent,
     SidebarComponent,
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule,
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
@@ -23,11 +28,49 @@ export class ReservationComponent implements OnInit {
   showNotification: any = false;
   isLoading: any = false;
   reservations: any = [];
+  isReservationFormOpen: any = false;
+  paymentStatus: any = [];
+  initialStatus: any = [];
+
+  selectedItems: any = [];
+  dropdownSettings: IDropdownSettings = {};
+  allRooms: any = [];
   // reservation:any={};
   constructor(private httpService: HttpService) {}
   ngOnInit(): void {
     this.getReservations();
+    this.fetchRooms();
+    this.paymentStatus = [
+      { item_id: 'Paid', item_text: 'Paid' },
+      { item_id: 'Unpaid', item_text: 'Unpaid' },
+      { item_id: 'PartiallyPaid', item_text: 'Partially Paid' },
+    ];
+    this.initialStatus = [
+      { item_id: 'Booked', item_text: 'Booked' },
+      { item_id: 'CheckedIn', item_text: 'Checked In' },
+    ];
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'roomNumber',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true,
+    };
   }
+  createReservationRequest = new FormGroup({
+    customerFullName: new FormControl('', Validators.required),
+    numberOfIndividuals: new FormControl('', Validators.required),
+    checkInDate: new FormControl('', Validators.required),
+    status: new FormControl('', Validators.required),
+    customerContact: new FormGroup({
+      phone: new FormControl('', Validators.required),
+      address: new FormControl(''),
+    }),
+    rooms: new FormControl([], Validators.required),
+    paymentStatus: new FormControl('', Validators.required),
+  });
   deleteButtonClicked(reservation: any) {}
   editButtonClicked(reservation: any) {}
   searchButtonClicked() {}
@@ -47,6 +90,72 @@ export class ReservationComponent implements OnInit {
         next: (res) => (this.reservations = res),
         error: (err) => console.log,
         complete: () => (this.isLoading = false),
+      });
+  }
+  fetchRooms() {
+    this.httpService
+      .httpPost(`room/getRooms?pageSize=100&pageNo=1`, {
+        occupancyStatus: 'Available',
+      })
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.allRooms = res;
+        },
+        error: (err) => console.log,
+      });
+  }
+
+  closeModal() {
+    this.isReservationFormOpen = false;
+  }
+  openCreateReservationForm() {
+    this.isReservationFormOpen = true;
+  }
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+  formSubmitted() {
+    console.log(this.createReservationRequest.value);
+    if (this.createReservationRequest.invalid) {
+      this.showNotification = true;
+      this.notificationParams = { message: 'Invalid form', error: true };
+      return;
+    }
+
+    let rooms: any = this.createReservationRequest.value.rooms?.map(
+      (x: any) => x.id
+    );
+    //cant use map, use for
+    let request = this.createReservationRequest.value;
+    request.rooms = rooms;
+    this.httpService
+      .httpPost(
+        'reservation/createReservation',
+        this.createReservationRequest.value
+      )
+      .subscribe({
+        next: () => {
+          this.showNotification = true;
+          this.notificationParams = {
+            message: 'Reservation created successfully.',
+            error: false,
+            
+          };
+          this.getReservations();
+          this.closeModal();
+        },
+        error: (err) => {
+          this.showNotification = true;
+          this.notificationParams = {
+            message: 'Could not create reservation',
+            error: true,
+          };
+          this.closeModal();
+        },
       });
   }
 }

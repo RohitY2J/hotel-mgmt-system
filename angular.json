@@ -92,7 +92,8 @@
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "ng-multiselet-dropdown/themes/ng-multiselect-dropdown.theme.scss"
             ],
             "scripts": [
             ]
