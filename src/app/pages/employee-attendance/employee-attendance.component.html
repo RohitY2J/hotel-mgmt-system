@@ -28,11 +28,13 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attendance</label>
                         <select formControlName="attendance" id="attendance"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option *ngFor="let attendance of allAttendance" value="{{attendance.key}}">{{attendance.value}}</option>
+                            <option *ngFor="let attendance of allAttendance" value="{{attendance.key}}">
+                                {{attendance.value}}</option>
                         </select>
                         <div
                             *ngIf="myForm.get('attendance')?.invalid && (myForm.get('attendance')?.dirty || myForm.get('attendance')?.touched)">
-                            <div *ngIf="myForm.get('attendance')?.errors?.['required']" class="text-red-500 text-xs italic">
+                            <div *ngIf="myForm.get('attendance')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
                                 Attendance is required.</div>
                         </div>
                     </div>
@@ -54,11 +56,13 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shift Status</label>
                         <select formControlName="shiftStatus" id="shiftStatus"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option *ngFor="let shiftStatus of allShiftStatus" value="{{shiftStatus.key}}">{{shiftStatus.value}}</option>
+                            <option *ngFor="let shiftStatus of allShiftStatus" value="{{shiftStatus.key}}">
+                                {{shiftStatus.value}}</option>
                         </select>
                         <div
                             *ngIf="myForm.get('shiftStatus')?.invalid && (myForm.get('shiftStatus')?.dirty || myForm.get('shiftStatus')?.touched)">
-                            <div *ngIf="myForm.get('shiftStatus')?.errors?.['required']" class="text-red-500 text-xs italic">
+                            <div *ngIf="myForm.get('shiftStatus')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
                                 Shift Status is required.</div>
                         </div>
                     </div>
@@ -75,135 +79,130 @@
     </div>
 </div>
 
-<div class="flex h-screen">
 
-    <app-sidebar></app-sidebar>
+<div class="flex-1 p-4 bg-gray-800 h-full">
+    <!-- <span class="text-xs">Home / Employee-Attendance-And-Shift</span> -->
 
-    <div class="flex-1 p-4 bg-gray-800">
-        <!-- <span class="text-xs">Home / Employee-Attendance-And-Shift</span> -->
+    <div class="flex items-center justify-between mb-2">
+        <div class="text-lg font-semibold text-white">Attendance and Shift</div>
+    </div>
 
-        <div class="flex items-center justify-between mb-2">
-            <div class="text-lg font-semibold text-white">Attendance and Shift</div>
-        </div>
+    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-        <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
+    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="space-y-4 md:space-y-0 py-4">
 
-        <div class="overflow-x-auto shadow-md sm:rounded-lg">
-            <div class="space-y-4 md:space-y-0 py-4">
+            <div class="flex me-4">
+                <select id="role" [(ngModel)]="filter.role"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="" selected>All Role</option>
+                    <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                    </option>
+                </select>
 
-                <div class="flex me-4">
-                    <select id="role" [(ngModel)]="filter.role"
-                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>All Role</option>
-                        <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
-                        </option>
-                    </select>
-
-                    <select id="shifts" [(ngModel)]="filter.shift"
-                        class="mx-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>All Shifts</option>
-                        <option *ngFor="let shift of allShifts" value="{{shift.key}}">{{shift.value}}</option>
-                    </select>
+                <select id="shifts" [(ngModel)]="filter.shift"
+                    class="mx-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="" selected>All Shifts</option>
+                    <option *ngFor="let shift of allShifts" value="{{shift.key}}">{{shift.value}}</option>
+                </select>
 
 
-                    <div class="relative max-w-sm mx-2">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <i class="fas fa-calendar text-gray-200"></i>
-                        </div>
-                        <input [(ngModel)]="filter.date" id="datepicker-custom" datepicker datepicker-buttons
-                            datepicker-autoselect-today type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Select date">
+                <div class="relative max-w-sm mx-2">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-calendar text-gray-200"></i>
                     </div>
-
-                    <div class="relative w-80 mx-2">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <i class="fas fa-user text-white"></i>
-                        </div>
-                        <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Search employee name.." required />
-                    </div>
-                    <button type="button" (click)="searchButtonClicked()"
-                        class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                        <!-- <i class="fas fa-search text-white"></i> -->
-                        <span>Apply</span>
-                    </button>
-                    <button type="button" (click)="clearFilter()"
-                        class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                        <!-- <i class="fas fa-search text-white"></i> -->
-                        <span>Clear</span>
-                    </button>
+                    <input [(ngModel)]="filter.date" id="datepicker-custom" datepicker datepicker-buttons
+                        datepicker-autoselect-today type="text"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Select date">
                 </div>
 
+                <div class="relative w-80 mx-2">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search employee name.." required />
+                </div>
+                <button type="button" (click)="searchButtonClicked()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Apply</span>
+                </button>
+                <button type="button" (click)="clearFilter()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Clear</span>
+                </button>
             </div>
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Employee
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Position
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Employee Status
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Shift
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Shift Status
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let schedule of schedules"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row"
-                            class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                            <ng-container *ngIf="schedule.employee.profilePicUrl">
-                                <img class="w-10 h-10 rounded-full" [src]="schedule.employee.profilePicUrl"
-                                    alt="Profile Picture">
-                            </ng-container>
-                            <ng-container *ngIf="!schedule.employee.profilePicUrl">
-                                <i
-                                    class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
-                                <!-- Assuming you have Font Awesome configured -->
-                            </ng-container>
-                            <div class="ps-3">
-                                <div class="text-base font-semibold">{{ schedule.employee.firstName + " " +
-                                    schedule.employee.lastName }}
-                                </div>
-                                <div class="font-normal text-gray-500">{{ schedule.employee.contactInfo.email }}</div>
-                            </div>
-                        </th>
-                        <td class="px-6 py-4">
-                            {{ schedule.employee.role.roleName }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ constantService.getStatusString('attendanceStatus', schedule.attendanceStatus) }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class=""> {{ constantService.getStatusString('shift', schedule.shift) }} </div>
-                            <div class=""> {{ constantService.getStatusString('shiftTiming', schedule.shift) }} </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ constantService.getStatusString('shiftStatus', schedule.shiftStatus ) }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <!-- Modal toggle -->
-                            <button (click)="updateButtonClicked(schedule)" type="button"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
         </div>
-
-
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Employee
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Position
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Employee Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Shift
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Shift Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let schedule of schedules"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                        <ng-container *ngIf="schedule.employee.profilePicUrl">
+                            <img class="w-10 h-10 rounded-full" [src]="schedule.employee.profilePicUrl"
+                                alt="Profile Picture">
+                        </ng-container>
+                        <ng-container *ngIf="!schedule.employee.profilePicUrl">
+                            <i
+                                class="fas fa-user w-10 h-10 rounded-full fa-xl flex justify-center items-center bg-gray-500"></i>
+                            <!-- Assuming you have Font Awesome configured -->
+                        </ng-container>
+                        <div class="ps-3">
+                            <div class="text-base font-semibold">{{ schedule.employee.firstName + " " +
+                                schedule.employee.lastName }}
+                            </div>
+                            <div class="font-normal text-gray-500">{{ schedule.employee.contactInfo.email }}</div>
+                        </div>
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ schedule.employee.role.roleName }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ constantService.getStatusString('attendanceStatus', schedule.attendanceStatus) }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class=""> {{ constantService.getStatusString('shift', schedule.shift) }} </div>
+                        <div class=""> {{ constantService.getStatusString('shiftTiming', schedule.shift) }} </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ constantService.getStatusString('shiftStatus', schedule.shiftStatus ) }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <!-- Modal toggle -->
+                        <button (click)="updateButtonClicked(schedule)" type="button"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
+
 </div>

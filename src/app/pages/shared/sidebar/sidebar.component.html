@@ -1,95 +1,71 @@
-<nav
-  class="md:left-0 fill-height md:block md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between md:w-64 z-10 py-4 px-6">
-  <div
-    class="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
-    <!-- Toggler -->
-    <button
-      class="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
-      type="button" (click)="toggleCollapseShow('bg-white m-2 py-3 px-6')">
-      <i class="fas fa-bars"></i>
-    </button>
-    <!-- Brand -->
-    <a class="flex items-center mb-5 p-2 pe-6 pb-0">
+<aside id="sidebar-multi-level-sidebar"
+  class="md:left-0 
+    fill-height md:block 
+    md:overflow-y-auto 
+    md:flex-row md:flex-nowrap 
+    md:overflow-hidden 
+    shadow-xl bg-white flex 
+    flex-wrap items-center 
+    justify-between md:w-52 
+    dark:bg-gray-900"
+  aria-label="Sidebar">
+
+  <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+    <a href="#" class="flex items-center ps-2.5 mb-5">
       <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 me-3 sm:h-7" alt="Flowbite Logo" />
       <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
     </a>
-    <!-- User -->
-    <!-- Collapse -->
-    <div
-      class="md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded"
-      [ngClass]="collapseShow">
-      <!-- Collapse header -->
-      <div class="md:min-w-full md:hidden block pb-4 mb-4 border-b border-solid border-blueGray-200">
-        <div class="flex flex-wrap">
-          <div class="w-6/12">
-            <a class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
-              href="javascript:void(0)">
-              Tailwind Starter Kit
-            </a>
-          </div>
-          <div class="w-6/12 flex justify-end">
-            <button type="button"
-              class="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
-              (click)="toggleCollapseShow('hidden')">
-              Hola
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- Form -->
+    <ul class="space-y-2 font-medium">
+      <li>
+        <a [routerLink]="['/admin', { outlets: { main: 'dashboard' } }]" routerLinkActive="router-link-active"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+          <i class="fas fa-chart-pie opacity-75"></i>
+          <span class="ms-3">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <button type="button"
+          class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+          aria-controls="dropdown-example" data-collapse-toggle="employee-dropdown">
+          <i class="fas fa-user opacity-75"></i>
+          <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Employee</span>
+          <i class="fa-solid fa-caret-down ms-2"></i>
+        </button>
+        <ul id="employee-dropdown" class="hidden py-2 space-y-2">
+          <li>
+            <a [routerLink]="['/admin', { outlets: { main: 'employee' } }]" routerLinkActive="router-link-active"
+              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">List</a>
+          </li>
+          <li>
+            <a [routerLink]="['/admin', { outlets: { main: 'employee-attendance' } }]" routerLinkActive="router-link-active"
+              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">Schedule</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+        [routerLink]="['/admin', { outlets: { main: 'reservations' } }]"><i class="fa-solid fa-person-shelter text-sm"></i>
+          <span class="flex-1 ms-3 whitespace-nowrap">Reservation</span>
+        </a>
+      </li>
+      <li>
+        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          [routerLink]="['/admin', { outlets: { main: 'rooms' } }]" routerLinkActive="router-link-active"><i
+            class="fa-solid fa-door-open text-sm me-3"></i>
+          Rooms</a>
+      </li>
 
-      <!-- Navigation -->
-      <ul class="md:flex-col md:min-w-full flex flex-col list-none">
-        <li class="items-center">
-          <a class="hover:text-pink-600 text-xs uppercase py-3 font-bold block" [routerLink]="['/dashboard']"
-            routerLinkActive="router-link-active"><i class="fas fa-chart-pie opacity-75 mr-2 text-sm"></i>
-            Dashboard</a>
-        </li>
-        <li>
-          <button type="button"
-            class="flex items-center w-full p-0 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-            aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
-            <i class="fas fa-user opacity-75 mr-2 text-sm"></i>
-            <span class="hover:text-pink-600 text-xs uppercase py-3 font-bold block">Employee</span>
-            <i class="fa-solid fa-caret-down ms-2 text-sm"></i>
-          </button>
-          <ul id="dropdown-example" class="hidden space-y-2">
-            <li>
-              <a [routerLink]="['/admin/employee']" routerLinkActive="router-link-active"
-                class="flex items-center w-full p-1 text-gray-900 transition duration-75 rounded-lg pl-11 group font-semibold text-xs uppercase hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">List</a>
-            </li>
-            <li>
-              <a [routerLink]="['/admin/employee-attendance']" routerLinkActive="router-link-active"
-                class="flex items-center w-full p-1 text-gray-900 transition duration-75 rounded-lg pl-11 group font-semibold text-xs uppercase hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Schedule</a>
-            </li>
-          </ul>
-        </li>
-        <li class="items-center">
-          <a class="hover:text-pink-600 text-xs uppercase py-3 font-bold block" [routerLink]="['/admin/reservations']"
-            routerLinkActive="router-link-active"><i class="fa-solid fa-person-shelter text-sm"></i>
-            Reservation</a>
-        </li>
-        <li class="items-center">
-          <a class="hover:text-pink-600 text-xs uppercase py-3 font-bold block" [routerLink]="['/admin/rooms']"
-            routerLinkActive="router-link-active"><i class="fa-solid fa-door-open text-sm"></i>
-            Rooms</a>
-        </li>
-      </ul>
-      <!-- Divider -->
       <hr class="my-4 md:min-w-full" />
-      <!-- Heading -->
-      <h6 class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-        Profile
-      </h6>
-      <!-- Navigation -->
-      <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
 
-        <li class="inline-flex">
-          <a class="hover:text-pink-600 text-xs uppercase py-3 font-bold block" [routerLink]="['/dashboard']"
-            routerLinkActive="router-link-active"><i class="fas fa-right-from-bracket opacity-75 mr-2 text-sm"></i>
-            Sign out</a>
-        </li>
-      </ul>
-    </div>
+      <li>
+        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          (click) = "logout()"
+          [routerLink]="['/dashboard']" 
+          routerLinkActive="router-link-active">
+          <i class="fas fa-right-from-bracket opacity-75"></i>
+          <span class="flex-1 ms-3 whitespace-nowrap">Sign out</span>
+        </a>
+      </li>
+    </ul>
   </div>
-</nav>
+</aside>
