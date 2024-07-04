@@ -9,6 +9,7 @@ import { HttpListResponse } from '../../models/HttpResponse';
 import { finalize } from 'rxjs/operators';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { NotificationParameter } from '../../models/Notification';
+import { ModalComponent } from '../shared/modal/modal.component';
 
 @Component({
   selector: 'app-employee',
@@ -18,7 +19,8 @@ import { NotificationParameter } from '../../models/Notification';
     ReactiveFormsModule,
     SidebarComponent,
     LoaderComponent,
-    NotificationComponent
+    NotificationComponent,
+    ModalComponent
   ],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.scss'
