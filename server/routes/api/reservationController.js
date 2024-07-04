@@ -4,8 +4,9 @@ const router = express.Router();
 
 router.post("/createReservation", services.reservationService.createReservation);
 router.put("/updateReservation", services.reservationService.updateReservation);
+router.post("/addCustomerOrders", services.reservationService.addOrdersForCustomer);
 router.get("/getReservationById", services.reservationService.getReservationById);
-router.get(
+router.post(
   "/getReservations",
   services.reservationService.getReservations
 );

@@ -1,5 +1,6 @@
 const { OperationCanceledException } = require("typescript");
 const dbContext = require("../model");
+const roomService = require("./roomService");
 
 exports.createReservation = async (req, res, next) => {
   try {
@@ -26,6 +27,30 @@ exports.createReservation = async (req, res, next) => {
       .send({ success: true, message: "Reservation created successfully" });
   } catch (ex) {
     console.error("Error creating room: ", ex);
+    return res.status(500).send({ error: ex });
+  }
+};
+
+exports.addOrdersForCustomer = async (req, res, nex) => {
+  try {
+    var request = req.body;
+
+    var reservationToUpdate = await dbContext.Reservation.findById(request.id);
+    if (!reservationToUpdate)
+      return res.status(400).send("No reservation found.");
+    
+    reservationToUpdate.billing.orders.push(request.orders);
+
+    console.log(reservationToUpdate.billing.orders);
+
+    let result = await dbContext.Reservation.updateOne(
+      { _id: request.id },
+      reservationToUpdate
+    );
+
+    return res.status(200).send("Orders added successfully");
+  } catch (ex) {
+    console.error("Error updating room: ", ex);
     return res.status(500).send({ error: ex });
   }
 };
@@ -64,11 +89,36 @@ exports.getReservationById = async (req, res, next) => {
 exports.getReservations = async (req, res, next) => {
   try {
     var result = await dbContext.Reservation.find(req.body)
-    .skip((req.query.pageNo - 1) * req.query.pageSize)
+      .populate({
+        path: "rooms",
+        select:
+          "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt",
+      })
+      .skip((req.query.pageNo - 1) * req.query.pageSize)
       .limit(req.query.pageSize);
-    return res.status(200).send(result);
+    return res.status(200).send(result.map(this.mapUiResponse));
   } catch (ex) {
     console.error("Error occurred while getting room!", ex);
     return res.status(500).send({ error: ex });
   }
+};
+
+exports.mapUiResponse = (reservation) => {
+  return {
+    id: reservation._id,
+    customerContact: {
+      phone: reservation.customerContact.phone,
+      email: reservation.customerContact.email,
+      address: reservation.customerContact.address,
+    },
+    customerFullName: reservation.customerFullName,
+    numberOfIndividuals: reservation.numberOfIndividuals,
+    checkInDate: reservation.checkInDate,
+    checkOutDate: reservation.checkInDate,
+    rooms: reservation.rooms.map(roomService.mapUiResponse),
+    status: reservation.status,
+    paymentStatus: reservation.paymentStatus,
+    createdAt: reservation.createdAt,
+    billing: reservation.billing
+  };
 };

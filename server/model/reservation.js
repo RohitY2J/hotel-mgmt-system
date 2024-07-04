@@ -50,12 +50,12 @@ CustomSchema.methods.calculateTotalAmount = ()=> {
     let totalOrderAmt = this.billing.orders.reduce(
         (a,o)=> a + o.amount, 0
     );
-    this.orders.totalAmount = totalOrderAmt;
+    this.billing.totalAmount = totalOrderAmt;
 
     let discount = (totalOrderAmt / 100) * this.billing.discountPercentage;
     let tax = (totalOrderAmt / 100) * this.billing.taxPercentage;
 
-    this.orders.totalPayableAmount = totalOrderAmt - discount + tax;
+    this.billing.totalPayableAmount = totalOrderAmt - discount + tax;
   };
 
 module.exports = mongoose.model('Reservation', CustomSchema);

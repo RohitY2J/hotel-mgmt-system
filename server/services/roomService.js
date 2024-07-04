@@ -3,6 +3,7 @@ const dbContext = require("../model");
 
 const mongoose = require("mongoose");
 
+
 exports.createRoom = async (req, res, next) => {
   try {
     var errorMessage = [];
@@ -82,11 +83,21 @@ exports.getRooms = async (req, res, next) => {
     var result = await dbContext.Room.find(req.body)
       .skip((req.query.pageNo - 1) * req.query.pageSize)
       .limit(req.query.pageSize);
-    return res.status(200).send(result);
+    return res.status(200).send(result.map(mapUiResponse));
   } catch (ex) {
     console.error("Error occurred while getting room!", ex);
     return res
       .status(500)
       .send({ error: ex, message: "Error occurred during process" });
   }
+};
+
+exports.mapUiResponse = (room) => {
+  return {
+    id: room._id,
+    roomNumber: room.roomNumber,
+    occupancyStatus: room.occupancyStatus,
+    maintainanceStatus: room.maintainanceStatus,
+    lastCleanedAt: room.lastCleanedAt,
+  };
 };
