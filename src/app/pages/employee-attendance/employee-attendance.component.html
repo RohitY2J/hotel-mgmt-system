@@ -80,7 +80,7 @@
 </div>
 
 
-<div class="flex-1 p-4 bg-gray-800 h-full">
+<div class="flex-1 p-4 bg-gray-800 h-full overflow-hidden">
     <!-- <span class="text-xs">Home / Employee-Attendance-And-Shift</span> -->
 
     <div class="flex items-center justify-between mb-2">
@@ -138,7 +138,7 @@
             </div>
 
         </div>
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table class="w-full h-10 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
@@ -162,6 +162,11 @@
                 </tr>
             </thead>
             <tbody>
+                <tr *ngIf="schedules.length === 0">
+                    <td colspan="5" class="text-center text-xl py-16">
+                        No records found
+                    </td>
+                </tr>
                 <tr *ngFor="let schedule of schedules"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
@@ -202,6 +207,30 @@
                 </tr>
             </tbody>
         </table>
+        <div
+            class="py-3 px-2 flex justify-between items-center text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <div>
+                Showing <b>{{this.filter.pagination.page}}</b>-<b>{{this.filter.pagination.page + this.filter.pagination.pageSize}}</b>
+            </div>
+            <div aria-label="Page navigation example">
+                <ul class="inline-flex -space-x-px text-sm">
+                    <li>
+                        <button (click)="previousButtonClicked()"
+                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            Previous
+                    </button>
+                    </li>
+                    <input readonly type="text" [(ngModel)]="filter.pagination.page"
+                        class="w-10 rounded-sm text-center focus:ring-0 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"/>
+                    <li>
+                        <button (click)="nextButtonClicked()"
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            Next
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
 

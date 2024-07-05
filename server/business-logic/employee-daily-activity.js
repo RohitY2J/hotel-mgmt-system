@@ -33,6 +33,9 @@ exports.createDailyActivityRecord = async () => {
 };
 
 exports.getEmployeeSchedules = async (filterParams) => {
+
+  page = filterParams.pagination.page ?? 1;
+  pageSize = filterParams.pagination.pageSize ?? 5;
   let beforeLookUpFilter = {};
   let afterLookUpFilter = {'employee.meta.isDeleted': false};
   
@@ -82,7 +85,9 @@ exports.getEmployeeSchedules = async (filterParams) => {
     { $unwind: '$employee.role' }, // Deconstruct the 'role' array
     {
       $match: afterLookUpFilter // Use the afterLookupFilter variable for $match stage
-    }
+    },
+    { $skip: (page - 1) * pageSize }, // Skip documents for pagination
+    { $limit: pageSize }  // Limit the number of documents returned
   ];
 
   const employeeSchedule = await dbContext.ExployeeDailyActivity.aggregate(pipeline).exec();

@@ -36,7 +36,11 @@ export class EmployeeAttendanceComponent {
     searchText: "",
     role: "",
     shift: "",
-    date: ""
+    date: "",
+    pagination:{
+      page: 1,
+      pageSize: 5
+    }
   }
   allShifts: { key: number, value: string }[] = [];
   allAttendance: { key: number, value: string }[] = [];
@@ -161,7 +165,11 @@ export class EmployeeAttendanceComponent {
       searchText: "",
       role: "",
       shift: "",
-      date: this.getTodayDateString()
+      date: this.getTodayDateString(),
+      pagination: {
+        page: 1,
+        pageSize: 5
+      }
     }
     this.loadEmployeeSchedules();
   }
@@ -213,5 +221,17 @@ export class EmployeeAttendanceComponent {
         );
     }
   }
+
+  nextButtonClicked(){
+    this.filter.pagination.page += 1; 
+    this.loadEmployeeSchedules();
+  }
+
+  previousButtonClicked(){
+    if(this.filter.pagination.page > 1){
+      this.filter.pagination.page -= 1;
+      this.loadEmployeeSchedules();
+    }
+  } 
 
 }
