@@ -23,7 +23,7 @@ exports.ValidateStringDate = (dateStr) => {
     }
 
     // Format the date into a specific string format, e.g., YYYY-MM-DD
-    const formattedDate = date.format('YYYY-DD-MM');
+    const formattedDate = date.format('YYYY-MM-DD');
     
     return { isValid: true, formattedDate };
 }

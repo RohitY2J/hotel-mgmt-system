@@ -9,6 +9,12 @@ import { HttpListResponse } from '../../models/HttpResponse';
 import { ConstantsService } from '../../services/constants.service';
 import { finalize } from 'rxjs/operators';
 
+import { Datepicker } from 'flowbite';
+import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
+import type { InstanceOptions } from 'flowbite';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
+
+
 @Component({
   selector: 'app-employee-attendance',
   standalone: true,
@@ -17,7 +23,8 @@ import { finalize } from 'rxjs/operators';
     FormsModule,
     ReactiveFormsModule,
     SidebarComponent,
-    LoaderComponent
+    LoaderComponent,
+    PaginationComponent
   ],
   templateUrl: './employee-attendance.component.html',
   styleUrl: './employee-attendance.component.scss'
@@ -27,14 +34,22 @@ export class EmployeeAttendanceComponent {
   isLoading: boolean = false;
   myForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
-  filter = { 
+  filter = {
     searchText: "",
     role: "",
-    shift: "", 
-    date: "" }
+    shift: "",
+    date: "",
+    pagination:{
+      page: 1,
+      pageSize: 5,
+      dataCount: 5
+    }
+  }
   allShifts: { key: number, value: string }[] = [];
   allAttendance: { key: number, value: string }[] = [];
   allShiftStatus: { key: number, value: string }[] = [];
+
+  datepicker: Datepicker | null = null;
 
   roles: any[] = [];
   employees: any[] = [];
@@ -51,7 +66,7 @@ export class EmployeeAttendanceComponent {
     this.allShifts = this.constantService.getStatusValuesAsDictionary("shift");
     this.allAttendance = this.constantService.getStatusValuesAsDictionary("attendanceStatus");
     this.allShiftStatus = this.constantService.getStatusValuesAsDictionary("shiftStatus");
-    
+
     this.loadRoles();
     this.loadEmployeeSchedules();
 
@@ -61,6 +76,51 @@ export class EmployeeAttendanceComponent {
       attendance: ['', Validators.required],
       shiftStatus: ['', Validators.required],
     });
+
+
+    // set the target element of the input field or div
+    const $datepickerEl: HTMLInputElement = document.getElementById('datepicker-filter') as HTMLInputElement;
+
+    // optional options with default values and callback functions
+    const options: DatepickerOptions = {
+      defaultDatepickerId: null,
+      autohide: true,
+      format: 'mm/dd/yyyy',
+      maxDate: null,
+      minDate: null,
+      orientation: 'bottom',
+      buttons: true,
+      autoSelectToday: 1,
+      title: null,
+      rangePicker: false
+    };
+
+    // instance options object
+    const instanceOptions: InstanceOptions = {
+      id: 'datepicker-filter-custom',
+      override: true
+    };
+
+    /*
+     * $datepickerEl: required
+     * options: optional
+     * instanceOptions: optional
+     */
+    this.datepicker = new Datepicker(
+      $datepickerEl,
+      options,
+      instanceOptions
+    );
+
+
+    this.datepicker?.updateOnHide(() => {
+      debugger;
+      this.filter.date = this.datepicker?.getDate() as string;
+    })
+  }
+
+  inputChange(event: any) {
+    this.filter.date = event.target.value; 
   }
 
   loadRoles() {
@@ -79,7 +139,7 @@ export class EmployeeAttendanceComponent {
     )
   }
 
-  loadEmployeeSchedules(){
+  loadEmployeeSchedules() {
     this.isLoading = true;
     this.httpService.httpPost("admin/getEmployeeSchedule", this.filter).pipe(
       finalize(() => {
@@ -89,25 +149,33 @@ export class EmployeeAttendanceComponent {
       (response) => {
         let scheduleResponse = response as HttpListResponse;
         this.schedules = scheduleResponse.data;
+        this.filter.pagination.dataCount = this.schedules.length;
         console.log("Response received: ", this.schedules);
       },
       (error) => {
-        console.log("Error encounter: ",error);
+        console.log("Error encounter: ", error);
       }
     )
-    
+
   }
 
   searchButtonClicked() {
+    this.filter.date = (this.datepicker?.getDate() as any).toLocaleDateString();
     this.loadEmployeeSchedules();
   }
 
-  clearFilter(){
-    this.filter = { 
+  clearFilter() {
+    this.filter = {
       searchText: "",
       role: "",
-      shift: "", 
-      date: this.getTodayDateString() }
+      shift: "",
+      date: this.getTodayDateString(),
+      pagination: {
+        page: 1,
+        pageSize: 5,
+        dataCount: 5
+      }
+    }
     this.loadEmployeeSchedules();
   }
 
@@ -120,10 +188,10 @@ export class EmployeeAttendanceComponent {
     let year = today.getFullYear();
 
     // Format the date string as "DD/MM/YYYY"
-    return `${day}/${month}/${year}`;
+    return `${month}/${day}/${year}`;
   }
 
-  updateButtonClicked(schedule: any){
+  updateButtonClicked(schedule: any) {
     const initialValues = {
       scheduleId: schedule._id,
       shift: schedule.shift,
@@ -135,28 +203,33 @@ export class EmployeeAttendanceComponent {
     this.isOpen = true;
   }
 
-  closeModal(){
+  closeModal() {
     this.isOpen = false;
   }
 
-  submitForm(){
+  submitForm() {
     if (this.myForm.valid) {
       this.isLoading = true;
-      
-      this.httpService.httpPost("admin/updateEmployeeSchedule",this.myForm.value)
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
-      .subscribe(
-        (response)=>{
-          this.closeModal();
-          this.loadEmployeeSchedules();
-        },
-        (error) => {
-          console.log("Error caught", error);
-        }
-      );
-    } 
+
+      this.httpService.httpPost("admin/updateEmployeeSchedule", this.myForm.value)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
+        .subscribe(
+          (response) => {
+            this.closeModal();
+            this.loadEmployeeSchedules();
+          },
+          (error) => {
+            console.log("Error caught", error);
+          }
+        );
+    }
+  }
+
+  updatePaginationPage(page: number){
+    this.filter.pagination.page = page;
+    this.loadEmployeeSchedules();
   }
 
 }

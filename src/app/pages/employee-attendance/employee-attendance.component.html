@@ -80,7 +80,7 @@
 </div>
 
 
-<div class="flex-1 p-4 bg-gray-800 h-full">
+<div class="flex-1 p-4 bg-gray-800 h-full overflow-hidden">
     <!-- <span class="text-xs">Home / Employee-Attendance-And-Shift</span> -->
 
     <div class="flex items-center justify-between mb-2">
@@ -111,11 +111,11 @@
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="fas fa-calendar text-gray-200"></i>
                     </div>
-                    <input [(ngModel)]="filter.date" id="datepicker-custom" datepicker datepicker-buttons
-                        datepicker-autoselect-today type="text"
+                    <input [(ngModel)]="filter.date" id="datepicker-filter" type="text"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Select date">
                 </div>
+
 
                 <div class="relative w-80 mx-2">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -138,7 +138,7 @@
             </div>
 
         </div>
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table class="w-full h-10 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
@@ -162,6 +162,11 @@
                 </tr>
             </thead>
             <tbody>
+                <tr *ngIf="schedules.length === 0">
+                    <td colspan="5" class="text-center text-xl py-16">
+                        No records found
+                    </td>
+                </tr>
                 <tr *ngFor="let schedule of schedules"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
@@ -202,6 +207,7 @@
                 </tr>
             </tbody>
         </table>
+        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page" [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
     </div>
 
 

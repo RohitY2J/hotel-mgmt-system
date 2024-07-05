@@ -20,7 +20,6 @@ export default class StandardUrlSerializer extends DefaultUrlSerializer {
         // Convert URL: /admin/(main:employee) back to /admin/employee
         const url = super.serialize(tree);
         const editedurl = url.replace(/\/\(main:(.*?)\)/, '/$1');
-        console.log(editedurl);
         return editedurl;
     }
 }
