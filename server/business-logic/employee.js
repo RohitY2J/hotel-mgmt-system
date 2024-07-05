@@ -18,6 +18,12 @@ exports.getEmployee = async (filterParams) => {
             { 'contactInfo.email': { $regex: new RegExp(filterParams.searchText, 'i') }}
         ];
     }
+
+    if (filterParams.role) {
+      afterLookUpFilter.$and = [
+        { 'role._id': conversion.ToObjectId(filterParams.role) }
+      ];
+    }
   
   
     const pipeline = [

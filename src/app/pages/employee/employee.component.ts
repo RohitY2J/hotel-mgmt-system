@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
 import { HttpListResponse } from '../../models/HttpResponse';
@@ -20,6 +20,7 @@ import { firstValueFrom } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     SidebarComponent,
     LoaderComponent,
@@ -42,6 +43,7 @@ export class EmployeeComponent {
   selectedEmployee: any = {};
   filter = { 
     searchText: "",
+    role: "",
     pagination: {
       page: 1,
       pageSize: 5,
@@ -263,6 +265,19 @@ export class EmployeeComponent {
   }
 
   searchButtonClicked() {
+    this.loadEmployees();
+  }
+
+  clearFilter(){
+    this.filter = { 
+      searchText: "",
+      role: "",
+      pagination: {
+        page: 1,
+        pageSize: 5,
+        dataCount: 5
+      } 
+    }
     this.loadEmployees();
   }
 
