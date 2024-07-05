@@ -35,7 +35,8 @@ export class ReservationComponent implements OnInit {
   selectedItems: any = [];
   dropdownSettings: IDropdownSettings = {};
   allRooms: any = [];
-  // reservation:any={};
+  isOrdersFormVisible: any = false;
+
   constructor(private httpService: HttpService) {}
   ngOnInit(): void {
     this.getReservations();
@@ -71,6 +72,10 @@ export class ReservationComponent implements OnInit {
     rooms: new FormControl([], Validators.required),
     paymentStatus: new FormControl('', Validators.required),
   });
+  ordersForm = new FormGroup({
+    orderSummary : new FormControl('', Validators.required),
+    orderPrice: new FormControl('', Validators.required)
+  })
   deleteButtonClicked(reservation: any) {}
   editButtonClicked(reservation: any) {}
   searchButtonClicked() {}
@@ -157,5 +162,15 @@ export class ReservationComponent implements OnInit {
           this.closeModal();
         },
       });
+  }
+  addOrders(reservationItem:any){
+
+  }
+  orderButtonClicked(reservationItem:any){
+      this.isOrdersFormVisible = true;
+      
+  }
+  closeOrdersForm(){
+    this.isOrdersFormVisible = false;
   }
 }
