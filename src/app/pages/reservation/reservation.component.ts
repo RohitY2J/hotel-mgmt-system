@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http-service.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { OrderFormComponent } from '../shared/order-form/order-form.component';
 
 @Component({
   selector: 'app-reservation',
@@ -18,6 +19,7 @@ import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-d
     FormsModule,
     ReactiveFormsModule,
     NgMultiSelectDropDownModule,
+    OrderFormComponent,
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
@@ -35,7 +37,9 @@ export class ReservationComponent implements OnInit {
   selectedItems: any = [];
   dropdownSettings: IDropdownSettings = {};
   allRooms: any = [];
-  isOrdersFormVisible: any = false;
+  isOrdersFormVisible: boolean = false;
+  selectedReservation: any = {};
+  formMode: any = 'create';
 
   constructor(private httpService: HttpService) {}
   ngOnInit(): void {
@@ -73,9 +77,9 @@ export class ReservationComponent implements OnInit {
     paymentStatus: new FormControl('', Validators.required),
   });
   ordersForm = new FormGroup({
-    orderSummary : new FormControl('', Validators.required),
-    orderPrice: new FormControl('', Validators.required)
-  })
+    orderSummary: new FormControl('', Validators.required),
+    orderPrice: new FormControl('', Validators.required),
+  });
   deleteButtonClicked(reservation: any) {}
   editButtonClicked(reservation: any) {}
   searchButtonClicked() {}
@@ -115,6 +119,7 @@ export class ReservationComponent implements OnInit {
     this.isReservationFormOpen = false;
   }
   openCreateReservationForm() {
+    this.formMode = 'create';
     this.isReservationFormOpen = true;
   }
   onItemSelect(item: any) {
@@ -148,7 +153,6 @@ export class ReservationComponent implements OnInit {
           this.notificationParams = {
             message: 'Reservation created successfully.',
             error: false,
-            
           };
           this.getReservations();
           this.closeModal();
@@ -163,14 +167,33 @@ export class ReservationComponent implements OnInit {
         },
       });
   }
-  addOrders(reservationItem:any){
 
+  submitOrder(reservationItem: any) {
+    if (this.ordersForm.invalid) {
+      this.showNotification = true;
+      this.notificationParams = {
+        message: 'Invalid form. Please fill all the required fields.',
+        error: true,
+      };
+      return;
+    }
+    console.log(this.ordersForm.value);
   }
-  orderButtonClicked(reservationItem:any){
-      this.isOrdersFormVisible = true;
-      
+
+  triggerNotification(message: any) {
+    this.showNotification = true;
+    this.notificationParams = message;
   }
-  closeOrdersForm(){
+
+  orderButtonClicked(reservationItem: any) {
+    this.selectedReservation = reservationItem;
+    this.isOrdersFormVisible = true;
+  }
+  closeOrdersForm() {
     this.isOrdersFormVisible = false;
+    this.getReservations();
+  }
+  update(reservationItem: any) {
+    
   }
 }

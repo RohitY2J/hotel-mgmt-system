@@ -167,77 +167,11 @@
     </div>
 </div>
 
-<div *ngIf="isOrdersFormVisible" tabindex="-1" aria-hidden="true"
-    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                   Add Orders
-                </h3>
-                <button (click)="closeOrdersForm()" type="button"
-                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <!-- Modal body -->
-            <form [formGroup]="ordersForm" class="p-4 md:p-5" ngS>
-               <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-1">
-                        <label for="orderSummary"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Order Summary</label>
-                            <input
-                            type="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Order Summary"
-                            style="transition: all 0.15s ease 0s;"
-                           formControlName="orderSummary"
-                          />
-                        <div
-                            *ngIf="ordersForm.get('orderSummary')?.invalid && (ordersForm.get('orderSummary')?.dirty || ordersForm.get('orderSummary')?.touched)">
-                            <div *ngIf="ordersForm.get('orderSummary')?.errors?.['required']"
-                                class="text-red-500 text-xs italic">
-                                Order Summary is required.</div>
-                        </div>
-                    </div>
-                    <div class="col-span-1">
-                        <label for="orderAmount"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Order Amount</label>
-                            <input
-                            type="number"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Price"
-                            style="transition: all 0.15s ease 0s;"
-                           formControlName="orderAmount"
-                          />
-                          <div
-                            *ngIf="ordersForm.get('orderSummary')?.invalid && (ordersForm.get('orderSummary')?.dirty || ordersForm.get('orderSummary')?.touched)">
-                            <div *ngIf="ordersForm.get('orderSummary')?.errors?.['required']"
-                                class="text-red-500 text-xs italic">
-                                Order amount is required.</div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
-                    style="margin: -1.25rem; margin-top: 0.5rem">
-                    <button type="submit"
-                    (click)="formSubmitted()"
-                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
-                    <button (click)="closeModal()" type="button"
-                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<ng-container *ngIf="selectedReservation!=null && selectedReservation!=undefined">
+    <app-order-form [reservation]="selectedReservation" [isVisible]="isOrdersFormVisible"
+        (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()"></app-order-form>
+
+</ng-container>
 
 <div class="flex h-screen">
 
@@ -350,7 +284,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
-                            <button type="button" (click)="editButtonClicked(reservationItem)"
+                            <button type="button" (click)="update(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
                             |
                             <button type="button" (click)="orderButtonClicked(reservationItem)"

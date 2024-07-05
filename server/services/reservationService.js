@@ -16,6 +16,10 @@ exports.createReservation = async (req, res, next) => {
       console.error("validation errors: ", errorMessage);
       return res.status(400).send(`invalidRequest: ${errorMessage}`);
     }
+    let roomIds = [];
+    request.rooms.map(x=>roomIds.push(x));
+    
+    await dbContext.Room.updateMany({ _id: { $in: roomIds } }, {occupancyStatus: "Occupied"});
 
     request.createdAt = Date.now();
     request.updatedAt = Date.now();
