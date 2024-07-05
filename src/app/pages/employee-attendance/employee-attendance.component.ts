@@ -120,7 +120,7 @@ export class EmployeeAttendanceComponent {
     let year = today.getFullYear();
 
     // Format the date string as "DD/MM/YYYY"
-    return `${day}/${month}/${year}`;
+    return `${month}/${day}/${year}`;
   }
 
   updateButtonClicked(schedule: any){
