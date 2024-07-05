@@ -12,6 +12,7 @@ import { finalize } from 'rxjs/operators';
 import { Datepicker } from 'flowbite';
 import type { DatepickerOptions, DatepickerInterface } from 'flowbite';
 import type { InstanceOptions } from 'flowbite';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 
 @Component({
@@ -22,7 +23,8 @@ import type { InstanceOptions } from 'flowbite';
     FormsModule,
     ReactiveFormsModule,
     SidebarComponent,
-    LoaderComponent
+    LoaderComponent,
+    PaginationComponent
   ],
   templateUrl: './employee-attendance.component.html',
   styleUrl: './employee-attendance.component.scss'
@@ -39,7 +41,8 @@ export class EmployeeAttendanceComponent {
     date: "",
     pagination:{
       page: 1,
-      pageSize: 5
+      pageSize: 5,
+      dataCount: 5
     }
   }
   allShifts: { key: number, value: string }[] = [];
@@ -146,6 +149,7 @@ export class EmployeeAttendanceComponent {
       (response) => {
         let scheduleResponse = response as HttpListResponse;
         this.schedules = scheduleResponse.data;
+        this.filter.pagination.dataCount = this.schedules.length;
         console.log("Response received: ", this.schedules);
       },
       (error) => {
@@ -168,7 +172,8 @@ export class EmployeeAttendanceComponent {
       date: this.getTodayDateString(),
       pagination: {
         page: 1,
-        pageSize: 5
+        pageSize: 5,
+        dataCount: 5
       }
     }
     this.loadEmployeeSchedules();
@@ -222,16 +227,9 @@ export class EmployeeAttendanceComponent {
     }
   }
 
-  nextButtonClicked(){
-    this.filter.pagination.page += 1; 
+  updatePaginationPage(page: number){
+    this.filter.pagination.page = page;
     this.loadEmployeeSchedules();
   }
-
-  previousButtonClicked(){
-    if(this.filter.pagination.page > 1){
-      this.filter.pagination.page -= 1;
-      this.loadEmployeeSchedules();
-    }
-  } 
 
 }

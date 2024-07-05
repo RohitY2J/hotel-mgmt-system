@@ -207,30 +207,7 @@
                 </tr>
             </tbody>
         </table>
-        <div
-            class="py-3 px-2 flex justify-between items-center text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <div>
-                Showing <b>{{this.filter.pagination.page}}</b>-<b>{{this.filter.pagination.page + this.filter.pagination.pageSize}}</b>
-            </div>
-            <div aria-label="Page navigation example">
-                <ul class="inline-flex -space-x-px text-sm">
-                    <li>
-                        <button (click)="previousButtonClicked()"
-                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            Previous
-                    </button>
-                    </li>
-                    <input readonly type="text" [(ngModel)]="filter.pagination.page"
-                        class="w-10 rounded-sm text-center focus:ring-0 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"/>
-                    <li>
-                        <button (click)="nextButtonClicked()"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            Next
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page" [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
     </div>
 
 
