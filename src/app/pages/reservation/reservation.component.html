@@ -48,7 +48,7 @@
             <form [formGroup]="createReservationRequest" class="p-4 md:p-5" ngS>
                <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
-                        <label for="attendance"
+                        <label for="fullName"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer Full Name</label>
                             <input
                             type="email"
@@ -61,7 +61,7 @@
                             *ngIf="createReservationRequest.get('customerFullName')?.invalid && (createReservationRequest.get('customerFullName')?.dirty || createReservationRequest.get('customerFullName')?.touched)">
                             <div *ngIf="createReservationRequest.get('customerFullName')?.errors?.['required']"
                                 class="text-red-500 text-xs italic">
-                                Attendance is required.</div>
+                                Customer Full Name is Required.</div>
                         </div>
                     </div>
                     <div class="col-span-1">
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <div class="col-span-1">
-                        <label for="attendance" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Status</label>
+                        <label for="paymentStatus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Status</label>
                         <select id="role" formControlName="paymentStatus"
                             class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="" selected>Payment Status</option>
@@ -144,7 +144,7 @@
                         </select>
                     </div>
                     <div class="col-span-1">
-                        <label for="attendance" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                         <select id="role" formControlName="status"
                             class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="" selected>Status</option>

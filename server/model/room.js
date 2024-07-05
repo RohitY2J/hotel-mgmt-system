@@ -10,8 +10,9 @@ const CustomSchema = new Schema({
     occupancyStatus: String, //Booked, CheckedIn, Available
     maintainanceStatus: String, //Dirty, Clean
     lastCleanedAt: { type: Date, default: null },
+    pricePerDay: Number,
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Room', CustomSchema);
