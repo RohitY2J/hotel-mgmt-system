@@ -86,11 +86,11 @@ export class EmployeeAttendanceComponent {
       defaultDatepickerId: null,
       autohide: true,
       format: 'mm/dd/yyyy',
-      maxDate: null,
+      maxDate: this.filter.date,
       minDate: null,
       orientation: 'bottom',
       buttons: true,
-      autoSelectToday: 1,
+      autoSelectToday: 0,
       title: null,
       rangePicker: false
     };
