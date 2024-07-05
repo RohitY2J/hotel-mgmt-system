@@ -6,7 +6,6 @@ const conversion = require('../../helper/conversion');
 const { FileUpload } = require('../../helper/file_upload');
 
 const businessLogic = require('../../business-logic');
-const employee = require('../../model/employee');
 
 
 router.post('/createEmployee', FileUpload.single('file'), async (req, res, next) => {
@@ -220,31 +219,8 @@ router.post('/createEmployeeRole', async (req, res, next) => {
 router.post('/getEmployees', async(req, res, next) => {
     try {
         let params = req.body;
-        let filter = {"meta.isDeleted": false};
 
-        if(params.searchText){
-            filter.$or = [
-                { firstName: { $regex: new RegExp(params.searchText, 'i') } },
-                { lastName: { $regex: new RegExp(params.searchText, 'i') } },
-                { 'contactInfo.email': { $regex: new RegExp(params.searchText, 'i') }}
-              ];
-        }
-
-        const employees = await dbContext.Employee.find(filter).populate('role');
-
-        employees.forEach(employee => {
-            let profilePics = employee.documents.find(x => x.documentType === "ProfilePic");
-            if(profilePics ){
-                let fileName = profilePics.fileObject;
-                employee._doc.profilePicUrl = "http://localhost:8000/uploads/"+fileName;
-            }
-            else{
-                employee._doc.profilePicUrl = null;
-            }
-
-            // Convert to plain object with virtuals
-            employee = employee.toObject({ virtuals: true });
-        });
+        const employees = await businessLogic.EmployeeLogic.getEmployee(params);
 
         res.status(200).json({
             message: "Successfully retrieved all the employees",

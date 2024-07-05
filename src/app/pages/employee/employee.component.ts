@@ -10,6 +10,10 @@ import { finalize } from 'rxjs/operators';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { NotificationParameter } from '../../models/Notification';
 import { ModalComponent } from '../shared/modal/modal.component';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
+
+import { firstValueFrom } from 'rxjs';
+
 
 @Component({
   selector: 'app-employee',
@@ -20,7 +24,8 @@ import { ModalComponent } from '../shared/modal/modal.component';
     SidebarComponent,
     LoaderComponent,
     NotificationComponent,
-    ModalComponent
+    ModalComponent,
+    PaginationComponent
   ],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.scss'
@@ -35,7 +40,14 @@ export class EmployeeComponent {
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
   selectedEmployee: any = {};
-  filter = { searchText: "" }
+  filter = { 
+    searchText: "",
+    pagination: {
+      page: 1,
+      pageSize: 5,
+      dataCount: 5
+    } 
+  }
   notificationParams: NotificationParameter = {
     message: "",
     error: false
@@ -47,25 +59,27 @@ export class EmployeeComponent {
 
   constructor(private fb: FormBuilder, private httpService: HttpService) { }
 
-  ngOnInit(): void {
-    this.isLoading = true;
-    this.loadRoles();
-    this.loadEmployees();
-
-
+  async ngOnInit(){
     this.myForm = this.fb.group({
-      employeeId: [''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
       address: [''],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      employeeId: [''],
     });
 
     this.myRoleForm = this.fb.group({
       roleName: ['', Validators.required]
     });
+
+    await this.loadRoles();
+    this.loadEmployees();
+
+
+  
+  
   }
 
   onFileSelect(event: any) {
@@ -209,34 +223,37 @@ export class EmployeeComponent {
     this.isConfirmDialogOpen = false;
   }
 
-  loadRoles() {
+  async loadRoles() {
     this.isLoading = true;
-    this.httpService.httpGet("admin/getRoles").subscribe(
-      (response) => {
-        let roleResponse = response as HttpListResponse;
-        console.log('Fetched data:', roleResponse);
-        this.roles = roleResponse.data;
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching users:', error);
-        this.isLoading = false;
-      }
-    )
+
+    try {
+      const response = await firstValueFrom(this.httpService.httpGet("admin/getRoles"));
+      let roleResponse = response as HttpListResponse;
+      console.log('Fetched data:', roleResponse);
+      this.roles = roleResponse.data;
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  
   }
 
   loadEmployees() {
     this.isLoading = true;
-    this.httpService.httpPost("admin/getEmployees", this.filter).subscribe(
+    this.httpService.httpPost("admin/getEmployees", this.filter)
+    .pipe(finalize(() => {
+      this.isLoading = false;
+    }))
+    .subscribe(
       (response) => {
         let employeeResponse = response as HttpListResponse;
         console.log('Fetched data:', response);
         this.employees = employeeResponse.data;
-        this.isLoading = false;
+        this.filter.pagination.dataCount = this.employees.length;
       },
       (error) => {
         console.error('Error fetching users:', error);
-        this.isLoading = false;
       }
     );
   }
@@ -285,6 +302,11 @@ export class EmployeeComponent {
         (error) => {
           console.log("Error while deleting", error);
         });
+  }
+
+  updatePaginationPage(page: number){
+    this.filter.pagination.page = page;
+    this.loadEmployees();
   }
 
 }

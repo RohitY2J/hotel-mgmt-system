@@ -1,7 +1,7 @@
 <div
     class="py-3 px-2 flex justify-between items-center text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
     <div>
-        Showing <b>{{page}}</b>-<b>{{dataCount}}</b>
+        Showing <b>{{((page-1)*pageSize)+1}}</b>-<b>{{((page-1)*pageSize)+dataCount}}</b>
     </div>
     <div aria-label="Page navigation example">
         <ul class="inline-flex -space-x-px text-sm">
