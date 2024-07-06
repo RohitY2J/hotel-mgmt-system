@@ -7,6 +7,8 @@ import { HttpService } from '../../services/http-service.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { OrderFormComponent } from '../shared/order-form/order-form.component';
+import { ConstantsService } from '../../services/constants.service';
+import { InvoiceComponentComponent } from '../shared/invoice-component/invoice-component.component';
 
 @Component({
   selector: 'app-reservation',
@@ -20,6 +22,7 @@ import { OrderFormComponent } from '../shared/order-form/order-form.component';
     ReactiveFormsModule,
     NgMultiSelectDropDownModule,
     OrderFormComponent,
+    InvoiceComponentComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
@@ -38,21 +41,22 @@ export class ReservationComponent implements OnInit {
   dropdownSettings: IDropdownSettings = {};
   allRooms: any = [];
   isOrdersFormVisible: boolean = false;
+  printInvoiceVisible: boolean = false;
   selectedReservation: any = {};
   formMode: any = 'create';
 
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private constService: ConstantsService) {}
   ngOnInit(): void {
     this.getReservations();
     this.fetchRooms();
     this.paymentStatus = [
-      { item_id: 'Paid', item_text: 'Paid' },
-      { item_id: 'Unpaid', item_text: 'Unpaid' },
-      { item_id: 'PartiallyPaid', item_text: 'Partially Paid' },
+      { item_id: 0, item_text: 'Paid' },
+      { item_id: 1, item_text: 'Unpaid' },
+      { item_id: 2, item_text: 'Partially Paid' },
     ];
     this.initialStatus = [
-      { item_id: 'Booked', item_text: 'Booked' },
-      { item_id: 'CheckedIn', item_text: 'Checked In' },
+      { item_id: 0, item_text: 'Booked' },
+      { item_id: 1, item_text: 'Checked In' },
     ];
     this.dropdownSettings = {
       singleSelection: false,
@@ -68,6 +72,7 @@ export class ReservationComponent implements OnInit {
     customerFullName: new FormControl('', Validators.required),
     numberOfIndividuals: new FormControl('', Validators.required),
     checkInDate: new FormControl('', Validators.required),
+    checkOutDate: new FormControl('', Validators.required),
     status: new FormControl('', Validators.required),
     customerContact: new FormGroup({
       phone: new FormControl('', Validators.required),
@@ -104,7 +109,7 @@ export class ReservationComponent implements OnInit {
   fetchRooms() {
     this.httpService
       .httpPost(`room/getRooms?pageSize=100&pageNo=1`, {
-        occupancyStatus: 'Available',
+        occupancyStatus: 0,
       })
       .subscribe({
         next: (res) => {
@@ -120,6 +125,7 @@ export class ReservationComponent implements OnInit {
   }
   openCreateReservationForm() {
     this.formMode = 'create';
+    this.createReservationRequest.reset();
     this.isReservationFormOpen = true;
   }
   onItemSelect(item: any) {
@@ -136,11 +142,24 @@ export class ReservationComponent implements OnInit {
       return;
     }
 
+    let request:any = this.createReservationRequest.value;
+    request.billing = { orders: [] };
     let rooms: any = this.createReservationRequest.value.rooms?.map(
-      (x: any) => x.id
+      (x: any) => {
+        let room = this.allRooms.find((r: any) => r.id == x.id);
+        request.billing.orders.push({
+          summary: `Room: ${room.roomNumber}`,
+          amount:
+            room.pricePerDay *
+            Math.floor(
+              (Date.parse(request.checkOutDate) -
+                Date.parse(request.checkInDate)) /
+                (1000 * 60 * 60 * 24)
+            ),
+        });
+        return room.id;
+      }
     );
-    //cant use map, use for
-    let request = this.createReservationRequest.value;
     request.rooms = rooms;
     this.httpService
       .httpPost(
@@ -193,7 +212,12 @@ export class ReservationComponent implements OnInit {
     this.isOrdersFormVisible = false;
     this.getReservations();
   }
-  update(reservationItem: any) {
-    
+  getOrderAmount(reservationItem:any){
+
+    return reservationItem.billing.orders.reduce(
+      (a:any,o:any)=> a + o.amount, 0
+  );
+
   }
+ 
 }

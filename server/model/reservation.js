@@ -37,8 +37,8 @@ const CustomSchema = new Schema(
       totalPayableAmount: Number, //totalAmount - discount + tax
     },
     rooms: [{ type: ObjectId, ref: "Room" }],
-    status: String, //Booked, CheckedIn (update check in date), CheckedOut(update check out time), Closed, Canceled
-    paymentStatus: String, //Unpaid, PartiallyPaid, Paid
+    status: Number, //Booked, CheckedIn (update check in date), CheckedOut(update check out time), Closed, Canceled
+    paymentStatus: Number, //Unpaid, PartiallyPaid, Paid
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },

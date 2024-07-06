@@ -7,8 +7,8 @@ const CustomSchema = new Schema({
         isDeleted: { type: Boolean, default: false }
     },
     roomNumber: String,
-    occupancyStatus: String, //Booked, CheckedIn, Available
-    maintainanceStatus: String, //Dirty, Clean
+    occupancyStatus: Number, //Booked, CheckedIn, Available
+    maintainanceStatus: Number, //Dirty, Clean
     lastCleanedAt: { type: Date, default: null },
     pricePerDay: Number,
     createdAt: { type: Date, default: Date.now },

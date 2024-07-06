@@ -135,6 +135,19 @@
                         </div>
                     </div>
                     <div class="col-span-1">
+                        <label for="checkOutDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Check Out
+                            Date</label>
+                        <input type="date"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            style="transition: all 0.15s ease 0s;" formControlName="checkOutDate" />
+                        <div
+                            *ngIf="createReservationRequest.get('checkOutDate')?.invalid && (createReservationRequest.get('checkOutDate')?.dirty || createReservationRequest.get('checkOutDate')?.touched)">
+                            <div *ngIf="createReservationRequest.get('checkOutDate')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Check In Date is Required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
                         <label for="paymentStatus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Status</label>
                         <select id="role" formControlName="paymentStatus"
                             class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
@@ -169,8 +182,10 @@
 
 <ng-container *ngIf="selectedReservation!=null && selectedReservation!=undefined">
     <app-order-form [reservation]="selectedReservation" [isVisible]="isOrdersFormVisible"
-        (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()"></app-order-form>
-
+        (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()" (updateReservation)="getReservations()"></app-order-form>
+</ng-container>
+<ng-container *ngIf="printInvoiceVisible">
+    <app-invoice-component [reservation]="selectedReservation"></app-invoice-component>
 </ng-container>
 
 <div class="flex h-screen">
@@ -273,22 +288,22 @@
                         </td>
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
-                            <button type="button" (click)="editButtonClicked(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
-                            |
-                            <button type="button" (click)="deleteButtonClicked(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</button>
+                            {{ reservationItem.checkInDate | date}}
                         </td>
                         <td class="text-center">
-                            100
+                            {{getOrderAmount(reservationItem)}}
                         </td>
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
-                            <button type="button" (click)="update(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
-                            |
+                            <!-- <button type="button" (click)="update(reservationItem)"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Cancel</button>
+                            | -->
                             <button type="button" (click)="orderButtonClicked(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Orders</button>
+                                <!-- |
+                                <button type="button" (click)="printInvoice(reservationItem)"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Print Invoice</button> -->
+                                
                         </td>
                     </tr>
                 </tbody>

@@ -1,6 +1,7 @@
 const { OperationCanceledException } = require("typescript");
 const dbContext = require("../model");
 const roomService = require("./roomService");
+const globalConstants = require("../constants/globalConstants");
 
 exports.createReservation = async (req, res, next) => {
   try {
@@ -19,7 +20,7 @@ exports.createReservation = async (req, res, next) => {
     let roomIds = [];
     request.rooms.map(x=>roomIds.push(x));
     
-    await dbContext.Room.updateMany({ _id: { $in: roomIds } }, {occupancyStatus: "Occupied"});
+    await dbContext.Room.updateMany({ _id: { $in: roomIds } }, {occupancyStatus: globalConstants.RoomStatus.Occupied});
 
     request.createdAt = Date.now();
     request.updatedAt = Date.now();
@@ -63,10 +64,11 @@ exports.updateReservation = async (req, res, next) => {
   try {
     var request = req.body;
     request.updatedAt = Date.now();
-    let result = await dbContext.Reservation.updateOne(
-      { _id: request.id },
-      request
-    );
+    if(request.status == 0)
+    // let result = await dbContext.Reservation.updateOne(
+    //   { _id: request.id },
+    //   request
+    // );
     if (result.modifiedCount === 0)
       return res
         .status(400)

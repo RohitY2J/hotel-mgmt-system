@@ -4,6 +4,7 @@ import { NotificationComponent } from '../shared/notification/notification.compo
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConstantsService } from '../../services/constants.service';
 
 @Component({
   selector: 'app-room',
@@ -13,7 +14,10 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrl: './room.component.scss',
 })
 export class RoomComponent implements OnInit {
-  constructor(private httpService: HttpService) {}
+  _constService:any;
+  constructor(private httpService: HttpService, private constService: ConstantsService) {
+    this._constService = constService;
+  }
   pageNo: Number = 1;
   showNotification: boolean = false;
   notificationParams: any = {};
@@ -26,15 +30,15 @@ export class RoomComponent implements OnInit {
   }
 
   roomOccupancyStatus:any = [
-    {"value": "Booked", "text": "Booked"},
-    {"value": "CheckedIn", "text": "Checked In"},
-    {"value": "Available", "text": "Available"},
+    {"value": 0, "text": "Available"},
+    {"value": 1, "text": "Booked"},
+    {"value": 2, "text": "Occupied"},
 
   ];
 
   roomMaintainanceStatus:any = [
-    {"value": "Clean", "text": "Clean"},
-    {"value": "Dirty", "text": "Dirty"},
+    {"value": 0, "text": "Dirty"},
+    {"value": 1, "text": "Clean"},
   ];
 
   createRoomRequest = new FormGroup({

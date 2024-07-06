@@ -97,6 +97,7 @@ exports.mapUiResponse = (room) => {
     id: room._id,
     roomNumber: room.roomNumber,
     occupancyStatus: room.occupancyStatus,
+    pricePerDay: room.pricePerDay,
     maintainanceStatus: room.maintainanceStatus,
     lastCleanedAt: room.lastCleanedAt,
   };

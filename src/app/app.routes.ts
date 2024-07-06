@@ -8,6 +8,7 @@ import { RoomComponent } from './pages/room/room.component';
 import { LayoutComponent } from './pages/shared/layout/layout.component';
 import { AnimationFrameScheduler } from 'rxjs/internal/scheduler/AnimationFrameScheduler';
 import { ReservationComponent } from './pages/reservation/reservation.component';
+import { PrintLayoutComponent } from './pages/print-layout/print-layout.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -32,5 +33,6 @@ export const routes: Routes = [
         ],
         canActivate: [authGuard]
     },
+    {path: 'print-invoice', component: PrintLayoutComponent},
     {path:'**', component:LoginComponent, canActivate:[authGuard]},
 ];

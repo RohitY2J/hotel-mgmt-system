@@ -2,16 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpService } from '../../../services/http-service.service';
+import { InvoiceComponentComponent } from '../invoice-component/invoice-component.component';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, InvoiceComponentComponent, RouterModule],
   templateUrl: './order-form.component.html',
   styleUrl: './order-form.component.scss'
 })
 export class OrderFormComponent implements OnChanges, OnInit {
-  constructor(private httpService: HttpService){
+  constructor(private httpService: HttpService, private router: Router){
 
   }
   ngOnInit(): void {
@@ -28,6 +30,7 @@ export class OrderFormComponent implements OnChanges, OnInit {
   @Input({required: true}) isVisible!: boolean;
   @Output() showNotification = new EventEmitter<any>();
   @Output() closeForm = new EventEmitter();
+  @Output() updateReservation = new EventEmitter();
 
   orders:any = [];
 
@@ -60,11 +63,24 @@ export class OrderFormComponent implements OnChanges, OnInit {
             message: 'Order placed.',
             error: false,
           });
-          this.orders.push(this.ordersForm.value)
+          this.updateReservation.emit();
+
         },
+       
       });
+      this.updateSelection();
+  }
+  updateSelection(){
+    this.httpService.httpGet(`reservation/getReservationById?id=${this.reservation.id}`).subscribe({
+      next:(res)=>this.reservation = res
+    })
   }
   close(){
     this.closeForm.emit();
   }
+  getOrderAmount(){
+    return this.reservation.billing.orders.reduce(
+      (a:any,o:any)=> a + o.amount, 0
+  );
+}
 }
