@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 interface StatusMaps {
   attendanceStatus: { [key: number]: string };
   shiftStatus: { [key: number]: string };
   shift: { [key: number]: string };
   shiftTiming: { [key: number]: string };
+  roomOccupancyStatus: { [key: number]: string };
+  roomMaintainanceStatus: { [key: number]: string };
 }
 
 @Injectable({
@@ -35,6 +38,14 @@ export class ConstantsService {
       2: '6am - 2pm',
       3: '3pm - 11pm'
       // Add more as needed
+    },
+    roomOccupancyStatus:{
+       0: "Occupied",
+       1: "Available"
+    },
+    roomMaintainanceStatus: {
+      0:"Clean",
+      1:"Dirty"
     }
   };
 
@@ -53,6 +64,15 @@ export class ConstantsService {
       key: Number(key),
       value: map[Number(key)]
     }));
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
 }

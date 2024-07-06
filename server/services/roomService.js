@@ -99,5 +99,6 @@ exports.mapUiResponse = (room) => {
     occupancyStatus: room.occupancyStatus,
     maintainanceStatus: room.maintainanceStatus,
     lastCleanedAt: room.lastCleanedAt,
+    pricePerDay: room.pricePerDay
   };
 };
