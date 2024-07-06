@@ -12,19 +12,19 @@
         </thead>
         <tbody>
             <tr *ngFor="let order of reservation.billing.orders" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" class="px-4 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                     {{order.summary}}
                 </th>
-                <td class="px-6 py-4">
+                <td class="px-4 py-2">
                     {{order.amount}}
                 </td>
             </tr>
 
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-bold">
+                <th scope="row" class="px-4 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white text-bold">
                    Total
                 </th>
-                <td class="px-6 py-4 text-bold">
+                <td class="px-4 py-4 text-bold">
                     {{getOrderAmount()}}
                 </td>
             </tr>
