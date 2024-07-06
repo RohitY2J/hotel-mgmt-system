@@ -9,6 +9,8 @@ import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-d
 import { OrderFormComponent } from '../shared/order-form/order-form.component';
 import { ConstantsService } from '../../services/constants.service';
 import { InvoiceComponentComponent } from '../shared/invoice-component/invoice-component.component';
+import { finalize } from 'rxjs';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-reservation',
@@ -22,7 +24,8 @@ import { InvoiceComponentComponent } from '../shared/invoice-component/invoice-c
     ReactiveFormsModule,
     NgMultiSelectDropDownModule,
     OrderFormComponent,
-    InvoiceComponentComponent
+    InvoiceComponentComponent,
+    PaginationComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
@@ -36,6 +39,20 @@ export class ReservationComponent implements OnInit {
   isReservationFormOpen: any = false;
   paymentStatus: any = [];
   initialStatus: any = [];
+  allStatus: any = [];
+
+  filter:any = { 
+    searchText: "",
+    filterObj: {
+      paymentStatus: 1,
+      status: 0,
+    },
+    pagination: {
+      page: 1,
+      pageSize: 5,
+      dataCount:5
+    } 
+  }
 
   selectedItems: any = [];
   dropdownSettings: IDropdownSettings = {};
@@ -50,14 +67,19 @@ export class ReservationComponent implements OnInit {
     this.getReservations();
     this.fetchRooms();
     this.paymentStatus = [
-      { item_id: 0, item_text: 'Paid' },
-      { item_id: 1, item_text: 'Unpaid' },
+      { item_id: 0, item_text: 'Unpaid' },
+      { item_id: 1, item_text: 'Paid' },
       { item_id: 2, item_text: 'Partially Paid' },
     ];
     this.initialStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
     ];
+    this.allStatus = [
+      { item_id: 0, item_text: 'Booked' },
+      { item_id: 1, item_text: 'Checked In' },
+    ];
+
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -85,23 +107,32 @@ export class ReservationComponent implements OnInit {
     orderSummary: new FormControl('', Validators.required),
     orderPrice: new FormControl('', Validators.required),
   });
+  //TODO
   deleteButtonClicked(reservation: any) {}
   editButtonClicked(reservation: any) {}
-  searchButtonClicked() {}
-
+  search() {
+    this.getReservations();
+  }
   closeConfirmDialog() {}
-
-  openModalForCreatingEmployee() {}
-
   confirmButtonClicked() {}
-  searchInputChanged(e: any) {}
+  searchInputChanged(e: any) {
+
+  }
 
   getReservations() {
     this.isLoading = true;
+    this.filter.filterObj.customerFullName = {$regex: this.filter.searchText, $options: 'i'};
     this.httpService
-      .httpPost('reservation/getReservations?pageNo=1&pageSize=100', {})
+      .httpPost(`reservation/getReservations?pageNo=${this.filter.pagination.page}&pageSize=${this.filter.pagination.pageSize}`, this.filter.filterObj)
+      .pipe(finalize(()=>{
+        this.isLoading = false;
+      }))
       .subscribe({
-        next: (res) => (this.reservations = res),
+        next: (res) => {
+          this.reservations = res;
+          if(this.selectedReservation != null) this.selectedReservation = this.reservations.find((r:any)=>r.id === this.selectedReservation.id);
+          console.log(this.selectedReservation);
+        },
         error: (err) => console.log,
         complete: () => (this.isLoading = false),
       });
@@ -135,6 +166,7 @@ export class ReservationComponent implements OnInit {
     console.log(items);
   }
   formSubmitted() {
+    this.isLoading = true;
     console.log(this.createReservationRequest.value);
     if (this.createReservationRequest.invalid) {
       this.showNotification = true;
@@ -166,7 +198,11 @@ export class ReservationComponent implements OnInit {
         'reservation/createReservation',
         this.createReservationRequest.value
       )
-      .subscribe({
+      .pipe(finalize(() => {
+        this.isLoading = false;
+        this.closeModal();
+      }))
+      .subscribe({  
         next: () => {
           this.showNotification = true;
           this.notificationParams = {
@@ -174,7 +210,7 @@ export class ReservationComponent implements OnInit {
             error: false,
           };
           this.getReservations();
-          this.closeModal();
+         
         },
         error: (err) => {
           this.showNotification = true;
@@ -182,7 +218,6 @@ export class ReservationComponent implements OnInit {
             message: 'Could not create reservation',
             error: true,
           };
-          this.closeModal();
         },
       });
   }
@@ -218,6 +253,26 @@ export class ReservationComponent implements OnInit {
       (a:any,o:any)=> a + o.amount, 0
   );
 
+  }
+
+  clearFilter(){
+    this.filter = { 
+      searchText: "",
+      filterObj: {
+        paymentStatus: 1,
+        status: 0,
+      },
+      pagination: {
+        page: 1,
+        pageSize: 5,
+        dataCount: 5
+      } 
+    }
+    this.getReservations();
+  }
+  updatePaginationPage(page: number){
+    this.filter.pagination.page = page;
+    this.getReservations();
   }
  
 }

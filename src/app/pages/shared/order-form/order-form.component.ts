@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { HttpService } from '../../../services/http-service.service';
 import { InvoiceComponentComponent } from '../invoice-component/invoice-component.component';
 import { Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-order-form',
@@ -57,6 +58,9 @@ export class OrderFormComponent implements OnChanges, OnInit {
         id: this.reservation.id,
         orders: this.ordersForm.value,
       })
+      .pipe(finalize(()=>{
+          this.updateReservation.emit();
+      }))
       .subscribe({
         next: (res) => {
           this.showNotification.emit({
@@ -66,9 +70,7 @@ export class OrderFormComponent implements OnChanges, OnInit {
           this.updateReservation.emit();
 
         },
-       
       });
-      this.updateSelection();
   }
   updateSelection(){
     this.httpService.httpGet(`reservation/getReservationById?id=${this.reservation.id}`).subscribe({

@@ -8,6 +8,8 @@ interface StatusMaps {
   shiftTiming: { [key: number]: string };
   roomOccupancyStatus: { [key: number]: string };
   roomMaintainanceStatus: { [key: number]: string };
+  paymentStatus: { [key: number]: string };
+  reservationStatus: { [key: number]: string };
 }
 
 @Injectable({
@@ -40,13 +42,24 @@ export class ConstantsService {
       // Add more as needed
     },
     roomOccupancyStatus:{
-       0: "Occupied",
-       1: "Available"
+       0: "Available",
+       1: "Occupied",
     },
     roomMaintainanceStatus: {
-      0:"Clean",
-      1:"Dirty"
-    }
+      0:"Dirty",
+      1:"Clean"
+    },
+    paymentStatus:{
+      0: "Paid",
+      1: "Unpaid",
+      2: "PartiallyPaid"
+    },
+    reservationStatus:{
+      0: "Booked",
+      1: "CheckedIn",
+      2: "Closed",
+      3: "Canceled"
+    },
   };
 
 
