@@ -171,6 +171,8 @@ export class ReservationComponent implements OnInit {
     if (this.createReservationRequest.invalid) {
       this.showNotification = true;
       this.notificationParams = { message: 'Invalid form', error: true };
+      this.createReservationRequest.markAllAsTouched();
+      this.isLoading = false;
       return;
     }
 
