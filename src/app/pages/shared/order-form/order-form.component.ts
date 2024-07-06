@@ -107,10 +107,9 @@ export class OrderFormComponent implements OnChanges, OnInit {
     this.isCheckOutModalVisible = false;
   }
   checkOutAndPrintInvoice() {
-    this.reservation.status = 0;
     this.reservation.billing.discountPercentage = this.discount;
     this.reservation.billing.taxPercentage = this.tax;
-    this.reservation.status = this.tax;
+    this.reservation.status = 2;
     this.httpService
       .httpPost(`reservation/updateReservation`, this.reservation)
       .pipe(

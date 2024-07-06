@@ -78,6 +78,8 @@ export class ReservationComponent implements OnInit {
     this.allStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
+      { item_id: 2, item_text: 'Closed' },
+      { item_id: 3, item_text: 'Canceled' },
     ];
 
     this.dropdownSettings = {

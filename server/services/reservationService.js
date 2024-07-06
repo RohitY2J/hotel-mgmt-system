@@ -43,16 +43,14 @@ exports.addOrdersForCustomer = async (req, res, nex) => {
     var reservationToUpdate = await dbContext.Reservation.findById(request.id);
     if (!reservationToUpdate)
       return res.status(400).send("No reservation found.");
-    
+
     reservationToUpdate.billing.orders.push(request.orders);
-
-    console.log(reservationToUpdate.billing.orders);
-
+    
     let result = await dbContext.Reservation.updateOne(
       { _id: request.id },
       reservationToUpdate
-    );
-
+    ); 
+  
     return res.status(200).send("Orders added successfully");
   } catch (ex) {
     console.error("Error updating room: ", ex);
@@ -63,16 +61,46 @@ exports.addOrdersForCustomer = async (req, res, nex) => {
 exports.updateReservation = async (req, res, next) => {
   try {
     var request = req.body;
-    request.updatedAt = Date.now();
-    if(request.status == 0)
-    // let result = await dbContext.Reservation.updateOne(
-    //   { _id: request.id },
-    //   request
-    // );
+    
+
+    let reservationUpdateRequest = {};
+    if(request.status > -1) reservationUpdateRequest.status = request.status;
+    if(request.paymentStatus > -1)reservationUpdateRequest.paymentStatus = request.paymentStatus;
+    if(request.billing)reservationUpdateRequest.billing = request.billing;
+    if(request.checkInDate)reservationUpdateRequest.checkInDate = request.checkInDate;
+    if(request.checkOutDate)reservationUpdateRequest.checkOutDate = request.checkOutDate;
+    if(request.numberOfIndividuals)reservationUpdateRequest.numberOfIndividuals = request.numberOfIndividuals;
+    if(request.customerFullName)reservationUpdateRequest.customerFullName = request.customerFullName;
+    if(request.customerContact)reservationUpdateRequest.customerContact = request.customerContact;
+    reservationUpdateRequest.updatedAt = Date.now();
+
+    let result = await dbContext.Reservation.updateOne(
+      { _id: request.id },
+      reservationUpdateRequest
+    );
+
+   
+    
     if (result.modifiedCount === 0)
       return res
         .status(400)
         .send(`Invalid request. No record found for updated.`);
+
+        
+        let roomIds = [];
+        request.rooms.map(x=>roomIds.push(x.id));
+        
+        let roomsUpdateRequest = {};
+        
+        if(request.status === globalConstants.ReservationStatus.Closed){
+          roomsUpdateRequest.occupancyStatus = globalConstants.RoomStatus.Available;
+          roomsUpdateRequest.maintainnanceStatus = globalConstants.MaintainanceStatus.Dirty;
+        }
+        if(request.status === globalConstants.ReservationStatus.Canceled){
+          roomsUpdateRequest.occupancyStatus = globalConstants.RoomStatus.Available;
+        }
+        
+        await dbContext.Room.updateMany({ _id: { $in: roomIds } }, roomsUpdateRequest);
     return res
       .status(200)
       .send({ success: true, message: "Updated successfully" });

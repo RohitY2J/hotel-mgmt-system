@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './print-layout.component.scss',
 })
 export class PrintLayoutComponent implements OnInit {
-id: string = "";
+  id: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -20,13 +20,16 @@ id: string = "";
   ) {}
   reservationId: any;
   reservation: any;
- async ngOnInit() {
+  discount: Number = 0;
+  tax: Number = 0;
+  totalPayable: Number = 0;
+  async ngOnInit() {
     this.reservationId = this.route.snapshot.queryParamMap.get('id');
     console.log(this.reservationId);
     await this.getReservation();
-    setTimeout(()=>{
+    setTimeout(() => {
       window.print();
-    }, 100);
+    }, 1000);
   }
   async getReservation() {
     this.httpService
@@ -34,9 +37,21 @@ id: string = "";
       .subscribe({
         next: (res) => {
           this.reservation = res;
-          if(this.reservation != null){
-
-            // window.print();
+          if (this.reservation != null) {
+            let total = this.reservation.billing.orders.reduce(
+              (a: any, o: any) => a + o.amount,
+              0
+            );
+            if (this.reservation.billing.discountPercentage > 0)
+              this.discount =
+                (Number(total) / 100) * this.reservation.billing.discountPercentage;
+            if (this.reservation.billing.taxPercentage > 0)
+              this.tax =
+                ((total - Number(this.discount)) / 100) *
+                this.reservation.billing.taxPercentage;
+            this.totalPayable =
+              total - Number(this.discount) + Number(this.tax);
+              console.log(this.discount, this.tax, this.totalPayable);
           }
         },
       });
