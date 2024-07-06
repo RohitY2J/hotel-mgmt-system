@@ -32,6 +32,7 @@ export class RoomComponent implements OnInit {
   isLoading: boolean = false;
   isUpdate: boolean = false;
   createRoomRequest = new FormGroup({
+    roomId: new FormControl(''),
     roomNumber: new FormControl('', Validators.required),
     pricePerDay: new FormControl('', Validators.required),
     occupancyStatus: new FormControl('', Validators.required),
@@ -44,6 +45,7 @@ export class RoomComponent implements OnInit {
   }
 
   openCreateRoomForm() {
+    this.createRoomRequest.get("roomNumber")?.enable();
     this.isRoomFormOpen = true;
     this.isUpdate = false;
   }
@@ -76,10 +78,39 @@ export class RoomComponent implements OnInit {
     this.createRoomRequest.reset();
   }
   formSubmitted(){
+    this.showNotification = false;
     if (this.createRoomRequest.valid) {
-      this.isLoading = true;
-      this.httpService
+      if(this.isUpdate){
+        this.isLoading = true;
+        this.httpService
+        .httpPost(`room/updateRoom`, this.createRoomRequest.value)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
+        .subscribe({
+          next: (res)=>{
+            this.triggerNotification({
+              message: 'Room Updated Successfully',
+              error: false
+            });
+            this.fetchRooms();
+            this.closeModal();
+          },
+          error: (err) => {
+            this.triggerNotification({
+              message: 'Room update failed',
+              error: true              
+            });
+          }
+        })
+      }
+      else{
+        this.isLoading = true;
+        this.httpService
         .httpPost(`room/createRoom`, this.createRoomRequest.value)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
         .subscribe({
           next: (res) => {
             this.triggerNotification({
@@ -96,6 +127,7 @@ export class RoomComponent implements OnInit {
             });
           },
         });
+      }
     }
     else{
       this.constantService.markFormGroupTouched(this.createRoomRequest);
@@ -104,11 +136,13 @@ export class RoomComponent implements OnInit {
 
   openUpdateForm(room: any){
     this.createRoomRequest.setValue({
+      roomId: room.id,
       roomNumber: room.roomNumber,
       pricePerDay: room.pricePerDay,
       occupancyStatus: room.occupancyStatus,
       maintainanceStatus: room.maintainanceStatus
     });
+    this.createRoomRequest.get("roomNumber")?.disable();
     this.isUpdate = true;
     this.isRoomFormOpen = true;
   }
