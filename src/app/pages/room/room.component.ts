@@ -45,9 +45,9 @@ export class RoomComponent implements OnInit {
   }
 
   openCreateRoomForm() {
-    this.createRoomRequest.get("roomNumber")?.enable();
-    this.isRoomFormOpen = true;
     this.isUpdate = false;
+    this.updateRoomRequest();
+    this.isRoomFormOpen = true;
   }
 
   fetchRooms() {
@@ -75,7 +75,13 @@ export class RoomComponent implements OnInit {
   }
   closeModal() {
     this.isRoomFormOpen = false;
-    this.createRoomRequest.reset();
+    this.createRoomRequest.setValue({
+      roomId: '',
+      roomNumber: '',
+      pricePerDay: '',
+      occupancyStatus: '',
+      maintainanceStatus: ''
+    });
   }
   formSubmitted(){
     this.showNotification = false;
@@ -122,7 +128,7 @@ export class RoomComponent implements OnInit {
           },
           error: (err) => {
             this.triggerNotification({
-              message: 'Invalid form submitted',
+              message: err.error,
               error: true,
             });
           },
@@ -142,8 +148,19 @@ export class RoomComponent implements OnInit {
       occupancyStatus: room.occupancyStatus,
       maintainanceStatus: room.maintainanceStatus
     });
-    this.createRoomRequest.get("roomNumber")?.disable();
     this.isUpdate = true;
+    this.updateRoomRequest();
     this.isRoomFormOpen = true;
+  }
+
+  updateRoomRequest(){
+    if(this.isUpdate){
+      this.createRoomRequest.get("roomNumber")?.disable();
+      this.createRoomRequest.get("occupancyStatus")?.disable();
+    }
+    else{
+      this.createRoomRequest.get("roomNumber")?.enable();
+      this.createRoomRequest.get("occupancyStatus")?.enable();
+    }
   }
 }
