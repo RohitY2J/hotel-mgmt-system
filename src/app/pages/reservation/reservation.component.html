@@ -167,6 +167,12 @@
     </div>
 </div>
 
+<ng-container *ngIf="selectedReservation!=null && selectedReservation!=undefined">
+    <app-order-form [reservation]="selectedReservation" [isVisible]="isOrdersFormVisible"
+        (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()"></app-order-form>
+
+</ng-container>
+
 <div class="flex h-screen">
 
     <div class="flex-1 p-4 bg-gray-800">
@@ -184,6 +190,7 @@
                     type="button">
                     Add Reservation
                 </button>
+                
             </div>
 
             <div class="space-y-4 md:space-y-0 py-4">
@@ -277,11 +284,11 @@
                         </td>
                         <td class="px-6 py-4">
                             <!-- Modal toggle -->
-                            <button type="button" (click)="editButtonClicked(reservationItem)"
+                            <button type="button" (click)="update(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
                             |
-                            <button type="button" (click)="deleteButtonClicked(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Print Invoice</button>
+                            <button type="button" (click)="orderButtonClicked(reservationItem)"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Orders</button>
                         </td>
                     </tr>
                 </tbody>
