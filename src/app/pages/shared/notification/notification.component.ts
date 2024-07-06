@@ -54,7 +54,7 @@ export class NotificationComponent {
       // Hide the element after 3 seconds
       setTimeout(() => {
         this.dismiss?.hide();
-      }, 2000);
+      }, 4000);
     }
   }
 

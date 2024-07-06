@@ -2,62 +2,68 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http-service.service';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConstantsService } from '../../services/constants.service';
+import { LoaderComponent } from '../shared/loader/loader.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-room',
   standalone: true,
-  imports: [NotificationComponent, CommonModule, SidebarComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    NotificationComponent, 
+    CommonModule, 
+    FormsModule, 
+    ReactiveFormsModule,
+    LoaderComponent
+  ],
   templateUrl: './room.component.html',
   styleUrl: './room.component.scss',
 })
 export class RoomComponent implements OnInit {
-  _constService:any;
-  constructor(private httpService: HttpService, private constService: ConstantsService) {
-    this._constService = constService;
-  }
   pageNo: Number = 1;
   showNotification: boolean = false;
   notificationParams: any = {};
   pageSize: Number = 10;
   allRooms: any = [];
-  searchRequest: any = {};
   isRoomFormOpen: any = false;
-  ngOnInit(): void {
-    this.fetchRooms();
-  }
-
-  roomOccupancyStatus:any = [
-    {"value": 0, "text": "Available"},
-    {"value": 1, "text": "Booked"},
-    {"value": 2, "text": "Occupied"},
-
-  ];
-
-  roomMaintainanceStatus:any = [
-    {"value": 0, "text": "Dirty"},
-    {"value": 1, "text": "Clean"},
-  ];
-
+  isLoading: boolean = false;
+  isUpdate: boolean = false;
   createRoomRequest = new FormGroup({
+    roomId: new FormControl(''),
     roomNumber: new FormControl('', Validators.required),
     pricePerDay: new FormControl('', Validators.required),
     occupancyStatus: new FormControl('', Validators.required),
     maintainanceStatus: new FormControl('', Validators.required),
   });
+  filter: any = {
+    roomNumber: "",
+    occupancyStatus: "",
+    maintainanceStatus: ""
+  }
+  
+  constructor(private httpService: HttpService, public constantService: ConstantsService) {}
+  
+  ngOnInit(): void {
+    this.fetchRooms();
+  }
 
   openCreateRoomForm() {
+    this.isUpdate = false;
+    this.updateRoomRequest();
     this.isRoomFormOpen = true;
   }
 
   fetchRooms() {
+    this.isLoading = true;
     this.httpService
       .httpPost(
         `room/getRooms?pageSize=${this.pageSize}&pageNo=${this.pageNo}`,
-        this.searchRequest
+        this.filter
       )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -68,20 +74,53 @@ export class RoomComponent implements OnInit {
   }
 
   triggerNotification(notificationContent: any) {
+    this.notificationParams = notificationContent;
     this.showNotification = true;
   }
   closeModal() {
     this.isRoomFormOpen = false;
+    this.createRoomRequest.setValue({
+      roomId: '',
+      roomNumber: '',
+      pricePerDay: '',
+      occupancyStatus: '',
+      maintainanceStatus: ''
+    });
   }
   formSubmitted(){
-    if (this.createRoomRequest.invalid) {
-      this.triggerNotification({
-        message: 'Invalid form submitted',
-        error: true,
-      });
-    } else {
-      this.httpService
+    this.showNotification = false;
+    if (this.createRoomRequest.valid) {
+      if(this.isUpdate){
+        this.isLoading = true;
+        this.httpService
+        .httpPost(`room/updateRoom`, this.createRoomRequest.value)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
+        .subscribe({
+          next: (res)=>{
+            this.triggerNotification({
+              message: 'Room Updated Successfully',
+              error: false
+            });
+            this.fetchRooms();
+            this.closeModal();
+          },
+          error: (err) => {
+            this.triggerNotification({
+              message: 'Room update failed',
+              error: true              
+            });
+          }
+        })
+      }
+      else{
+        this.isLoading = true;
+        this.httpService
         .httpPost(`room/createRoom`, this.createRoomRequest.value)
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
         .subscribe({
           next: (res) => {
             this.triggerNotification({
@@ -93,11 +132,56 @@ export class RoomComponent implements OnInit {
           },
           error: (err) => {
             this.triggerNotification({
-              message: 'Invalid form submitted',
+              message: err.error,
               error: true,
             });
           },
         });
+      }
     }
+    else{
+      this.constantService.markFormGroupTouched(this.createRoomRequest);
+    }
+  }
+
+  openUpdateForm(room: any){
+    this.createRoomRequest.setValue({
+      roomId: room.id,
+      roomNumber: room.roomNumber,
+      pricePerDay: room.pricePerDay,
+      occupancyStatus: room.occupancyStatus,
+      maintainanceStatus: room.maintainanceStatus
+    });
+    this.isUpdate = true;
+    this.updateRoomRequest();
+    this.isRoomFormOpen = true;
+  }
+
+  updateRoomRequest(){
+    if(this.isUpdate){
+      this.createRoomRequest.get("roomNumber")?.disable();
+      this.createRoomRequest.get("occupancyStatus")?.disable();
+    }
+    else{
+      this.createRoomRequest.get("roomNumber")?.enable();
+      this.createRoomRequest.get("occupancyStatus")?.enable();
+    }
+  }
+
+  getRoomNumber(){
+    return this.allRooms.map((room: { roomNumber: any; }) => room.roomNumber);
+  }
+
+  searchButtonClicked(){
+    this.fetchRooms();
+  }
+
+  clearFilter(){
+    this.filter = {
+      roomNumber: "",
+      occupancyStatus: "",
+      maintainanceStatus: ""
+    };
+    this.fetchRooms();
   }
 }
