@@ -21,13 +21,11 @@ import { finalize } from 'rxjs';
   styleUrl: './room.component.scss',
 })
 export class RoomComponent implements OnInit {
-  constructor(private httpService: HttpService, public constantService: ConstantsService) {}
   pageNo: Number = 1;
   showNotification: boolean = false;
   notificationParams: any = {};
   pageSize: Number = 10;
   allRooms: any = [];
-  searchRequest: any = {};
   isRoomFormOpen: any = false;
   isLoading: boolean = false;
   isUpdate: boolean = false;
@@ -38,7 +36,13 @@ export class RoomComponent implements OnInit {
     occupancyStatus: new FormControl('', Validators.required),
     maintainanceStatus: new FormControl('', Validators.required),
   });
+  filter: any = {
+    roomNumber: "",
+    occupancyStatus: "",
+    maintainanceStatus: ""
+  }
   
+  constructor(private httpService: HttpService, public constantService: ConstantsService) {}
   
   ngOnInit(): void {
     this.fetchRooms();
@@ -55,7 +59,7 @@ export class RoomComponent implements OnInit {
     this.httpService
       .httpPost(
         `room/getRooms?pageSize=${this.pageSize}&pageNo=${this.pageNo}`,
-        this.searchRequest
+        this.filter
       )
       .pipe(finalize(() => {
         this.isLoading = false;
@@ -162,5 +166,22 @@ export class RoomComponent implements OnInit {
       this.createRoomRequest.get("roomNumber")?.enable();
       this.createRoomRequest.get("occupancyStatus")?.enable();
     }
+  }
+
+  getRoomNumber(){
+    return this.allRooms.map((room: { roomNumber: any; }) => room.roomNumber);
+  }
+
+  searchButtonClicked(){
+    this.fetchRooms();
+  }
+
+  clearFilter(){
+    this.filter = {
+      roomNumber: "",
+      occupancyStatus: "",
+      maintainanceStatus: ""
+    };
+    this.fetchRooms();
   }
 }

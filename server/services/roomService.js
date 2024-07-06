@@ -82,7 +82,21 @@ exports.getRoomById = async (req, res, next) => {
 
 exports.getRooms = async (req, res, next) => {
   try {
-    var result = await dbContext.Room.find(req.body)
+    let request = {};
+    if(req.body.roomNumber){
+      request.roomNumber = req.body.roomNumber;
+    }
+
+    if(req.body.maintainanceStatus){
+      request.maintainanceStatus = req.body.maintainanceStatus;
+    }
+
+    if(req.body.occupancyStatus){
+      request.occupancyStatus = req.body.occupancyStatus;
+    }
+
+    var result = await dbContext.Room.find(request)
+      .sort({ roomNumber: 1 }) 
       .skip((req.query.pageNo - 1) * req.query.pageSize)
       .limit(req.query.pageSize);
     return res.status(200).send(result.map(this.mapUiResponse));
