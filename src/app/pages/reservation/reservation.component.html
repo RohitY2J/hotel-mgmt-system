@@ -159,7 +159,7 @@
                         <select id="role" formControlName="paymentStatus"
                             class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option class="text-gray-400" value="" selected>Payment Status</option>
-                            <option *ngFor="let status of paymentStatus" [value]="status.item_id">{{ status.item_text }}
+                            <option *ngFor="let status of constService.getStatusValuesAsDictionary('paymentStatus')" [value]="status.key">{{ status.value }}
                             </option>
                         </select>
                     </div>
@@ -217,14 +217,14 @@
                 <div class="flex me-4 ml-2">
                     <select id="role" [(ngModel)]="filter.filterObj.status"
                         class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>Booking Status</option>
-                        <option *ngFor="let status of allStatus" [value]="status.item_id">{{ status.item_text }}
+                        <option class="text-gray-400" value="" selected>All Bookings</option>
+                        <option *ngFor="let status of constService.getStatusValuesAsDictionary('reservationStatus')" [value]="status.key">{{ status.value }}
                         </option>
                     </select>
                     <select id="role" [(ngModel)]="filter.filterObj.paymentStatus"
                         class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>Payment Status</option>
-                        <option *ngFor="let status of paymentStatus" [value]="status.item_id">{{ status.item_text }}
+                        <option class="text-gray-400" value="" selected>All Payments</option>
+                        <option *ngFor="let status of constService.getStatusValuesAsDictionary('paymentStatus')" [value]="status.key">{{ status.value }}
                         </option>
                     </select>
 

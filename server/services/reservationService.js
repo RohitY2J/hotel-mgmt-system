@@ -122,7 +122,22 @@ exports.getReservationById = async (req, res, next) => {
 
 exports.getReservations = async (req, res, next) => {
   try {
-    var result = await dbContext.Reservation.find(req.body)
+
+    filter = {}
+
+    if(req.body.paymentStatus){
+      filter.paymentStatus = req.body.paymentStatus;
+    }
+
+    if(req.body.status){
+      filter.status = req.body.status;
+    }
+
+    if(req.body.customerFullName){
+      filter.customerFullName = req.body.customerFullName;
+    }
+
+    var result = await dbContext.Reservation.find(filter)
       .populate({
         path: "rooms",
         select:

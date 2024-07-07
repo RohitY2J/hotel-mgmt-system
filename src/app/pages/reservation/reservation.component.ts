@@ -44,8 +44,8 @@ export class ReservationComponent implements OnInit {
   filter:any = { 
     searchText: "",
     filterObj: {
-      paymentStatus: 1,
-      status: 0,
+      paymentStatus: "",
+      status: "",
     },
     pagination: {
       page: 1,
@@ -62,24 +62,14 @@ export class ReservationComponent implements OnInit {
   selectedReservation: any = {};
   formMode: any = 'create';
 
-  constructor(private httpService: HttpService, private constService: ConstantsService) {}
+  constructor(private httpService: HttpService, public constService: ConstantsService) {}
   ngOnInit(): void {
     this.getReservations();
     this.fetchRooms();
-    this.paymentStatus = [
-      { item_id: 0, item_text: 'Unpaid' },
-      { item_id: 1, item_text: 'Paid' },
-      { item_id: 2, item_text: 'Partially Paid' },
-    ];
+  
     this.initialStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
-    ];
-    this.allStatus = [
-      { item_id: 0, item_text: 'Booked' },
-      { item_id: 1, item_text: 'Checked In' },
-      { item_id: 2, item_text: 'Closed' },
-      { item_id: 3, item_text: 'Canceled' },
     ];
 
     this.dropdownSettings = {
@@ -154,11 +144,11 @@ export class ReservationComponent implements OnInit {
   }
 
   closeModal() {
+    this.resetForm();
     this.isReservationFormOpen = false;
   }
   openCreateReservationForm() {
     this.formMode = 'create';
-    this.createReservationRequest.reset();
     this.isReservationFormOpen = true;
   }
   onItemSelect(item: any) {
@@ -263,8 +253,8 @@ export class ReservationComponent implements OnInit {
     this.filter = { 
       searchText: "",
       filterObj: {
-        paymentStatus: 1,
-        status: 0,
+        paymentStatus: "",
+        status: "",
       },
       pagination: {
         page: 1,
@@ -277,6 +267,23 @@ export class ReservationComponent implements OnInit {
   updatePaginationPage(page: number){
     this.filter.pagination.page = page;
     this.getReservations();
+  }
+
+  resetForm(){
+    this.createReservationRequest.reset();
+    this.createReservationRequest.setValue({
+      customerFullName: '',
+      numberOfIndividuals: '',
+      checkInDate: '',
+      checkOutDate: '',
+      status: '',
+      customerContact: {
+        phone: '',
+        address: '',
+      },
+      rooms: [],
+      paymentStatus: '',
+    });
   }
  
 }
