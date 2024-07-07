@@ -23,6 +23,7 @@ export class PrintLayoutComponent implements OnInit {
   discount: Number = 0;
   tax: Number = 0;
   totalPayable: Number = 0;
+  invoiceDate: any = Date.now();
   async ngOnInit() {
     this.reservationId = this.route.snapshot.queryParamMap.get('id');
     console.log(this.reservationId);
@@ -31,6 +32,7 @@ export class PrintLayoutComponent implements OnInit {
       window.print();
     }, 1000);
   }
+  
   async getReservation() {
     this.httpService
       .httpGet(`reservation/getReservationById?id=${this.reservationId}`)
@@ -44,16 +46,21 @@ export class PrintLayoutComponent implements OnInit {
             );
             if (this.reservation.billing.discountPercentage > 0)
               this.discount =
-                (Number(total) / 100) * this.reservation.billing.discountPercentage;
+                Math.round((Number(total) / 100) * this.reservation.billing.discountPercentage);
             if (this.reservation.billing.taxPercentage > 0)
               this.tax =
-                ((total - Number(this.discount)) / 100) *
-                this.reservation.billing.taxPercentage;
+                Math.round(((total - Number(this.discount)) / 100) *
+                this.reservation.billing.taxPercentage);
             this.totalPayable =
-              total - Number(this.discount) + Number(this.tax);
+            Math.round(total - Number(this.discount) + Number(this.tax));
               console.log(this.discount, this.tax, this.totalPayable);
           }
         },
       });
   }
+  getOrderAmount(){
+    return this.reservation.billing.orders.reduce(
+      (a:any,o:any)=> a + o.amount, 0
+  );
+}
 }
