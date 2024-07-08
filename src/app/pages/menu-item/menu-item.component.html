@@ -1,0 +1,245 @@
+<app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
+<app-loader *ngIf="isLoading"></app-loader>
+
+<div *ngIf="isMenuFormOpen" tabindex="-1" aria-hidden="true"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <span *ngIf="!isUpdate">Create</span>
+                    <span *ngIf="isUpdate">Update</span>
+                    Menu
+                </h3>
+                <button (click)="closeModal()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form [formGroup]="menuForm" class="p-4 md:p-5">
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-1">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Menu
+                            Name</label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter menu name" style="transition: all 0.15s ease 0s;"
+                            formControlName="name" />
+                        <div *ngIf="menuForm.get('name')?.invalid 
+                                && (menuForm.get('name')?.dirty 
+                                || menuForm.get('name')?.touched)">
+                            <div *ngIf="menuForm.get('name')?.errors?.['required']" class="text-red-500 text-xs italic">
+                                Menu Name is Required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Description
+                        </label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Add description.." style="transition: all 0.15s ease 0s;"
+                            formControlName="description" />
+                        <div *ngIf="menuForm.get('description')?.invalid 
+                                && (menuForm.get('description')?.dirty 
+                                || menuForm.get('description')?.touched)">
+                            <div *ngIf="menuForm.get('description')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Room Number is Required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1">
+                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Price
+                        </label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter menu price.." style="transition: all 0.15s ease 0s;"
+                            formControlName="price" />
+                        <div *ngIf="menuForm.get('price')?.invalid 
+                                && (menuForm.get('price')?.dirty 
+                                || menuForm.get('price')?.touched)">
+                            <div *ngIf="menuForm.get('price')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Price is Required</div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-span-1">
+                        <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Category
+                        </label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter menu category.." style="transition: all 0.15s ease 0s;"
+                            formControlName="category" />
+                        <div *ngIf="menuForm.get('category')?.invalid 
+                                && (menuForm.get('category')?.dirty 
+                                || menuForm.get('category')?.touched)">
+                            <div *ngIf="menuForm.get('category')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Category is Required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="available" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Availability
+                        </label>
+                        <select id="role" formControlName="available"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option class="text-gray-400" value="" selected>Select available status</option>
+                            <option
+                                *ngFor="let roomStatus of constantService.getStatusValuesAsDictionary('menuAvailabilityStatus')"
+                                [value]="roomStatus.key">{{ roomStatus.value }}
+                            </option>
+                        </select>
+                        <div *ngIf="menuForm.get('available')?.invalid 
+                                && (menuForm.get('available')?.dirty 
+                                || menuForm.get('available')?.touched)">
+                            <div *ngIf="menuForm.get('available')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Please select availability status.</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="maintainanceStatus"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Link Inventory
+                        </label>
+                        <select id="role" formControlName="inventoryId"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option class="text-gray-400" value="" selected>
+                                Select Inventory
+                            </option>
+                            <!-- <option
+                                *ngFor="let maintainanceStatus of constantService.getStatusValuesAsDictionary('roomMaintainanceStatus')"
+                                [value]="maintainanceStatus.key">
+                                {{ maintainanceStatus.value}}
+                            </option> -->
+                        </select>
+                        <div *ngIf="menuForm.get('inventoryId')?.invalid 
+                                && (menuForm.get('inventoryId')?.dirty 
+                                || menuForm.get('inventoryId')?.touched)">
+                            <div *ngIf="menuForm.get('inventoryId')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Please select inventory id.</div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            for="file_input">Upload file</label>
+                        <input
+                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            id="file_input" type="file" (change)="onFileSelect($event)">
+                    </div>
+                </div>
+                <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+                    style="margin: -1.25rem; margin-top: 0.5rem">
+                    <button type="submit" (click)="formSubmitted()"
+                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
+                    <button (click)="closeModal()" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="flex-1 p-4 bg-gray-800 h-full">
+    <div class="mx-auto max-w-screen-2xl">
+        <div class="flex items-center justify-between mb-2">
+            <div class="text-lg font-semibold text-white">Menus</div>
+        </div>
+
+        <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
+
+        <div class="flex items-center py-6">
+            
+            <button (click)="openMenuForm()"
+                    class="w-28 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+                    type="button">
+                    Add Menu
+            </button>
+
+
+            <div class="flex items-center ml-72">
+                <!-- <select id="occupancyStatus" ngModel)]="filter.occupancyStatus"
+                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="" selected>All Occupancy</option>
+                        <option
+                            *ngFor="let status of constantService.getStatusValuesAsDictionary('roomOccupancyStatus')"
+                            [value]="status.key">{{status.value}}
+                        </option>
+                    </select> -->
+
+                <select id="availableStatus" [(ngModel)]="filter.availableStatus"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option class="text-gray-600" value="" selected>Available Status</option>
+                    <option value="false">Not Available </option>
+                    <option value="true">Available </option>
+                </select>
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <input type="text" id="simple-search" [(ngModel)]="filter.menuName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search menu item name.." required />
+                </div>
+                <button type="button" (click)="searchButtonClicked()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Apply</span>
+                </button>
+                <button type="button" (click)="clearFilter()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Clear</span>
+                </button>
+            </div>
+
+
+        </div>
+
+
+
+        <div
+            class="grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-4 xs:grid-cols-1 lg:gap-2 justify-center">
+            <!-- logo - start -->
+            <div *ngFor="let menu of allMenus"
+                class="w-48 flexh-16 items-center justify-center rounded-lg bg-gray-100 p-4 text-gray-400 sm:h-40">
+                <div class="card-content">
+                    <div class="flex flex-col items-center justify-center">
+                        <img *ngIf="menu.file" class="w-16 h-16 rounded-lg" [src]="menu.file">
+                        <div *ngIf="!menu.file">
+                            <i class="fas fa-4x fa-bread-slice"></i>
+                        </div>
+                        <dt class="mb-2 text-3xl font-extrabold dark:text-gray-700">{{menu.roomNumber}}</dt>
+                        <dd class="text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            {{menu.name}} (Rs. {{menu.price}})
+                        </dd>
+                        <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            {{getMenuAvailabilityStatus(menu.available)}}
+                        </dd>
+                        <dd class="text-gray-600 text-sm font-semibold dark:text-blue-600 uppercase cursor-pointer">
+                            <span role="button" (click)="openUpdateForm(menu)">Update <i
+                                    class="fa-solid fa-pen text-xs"></i></span>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

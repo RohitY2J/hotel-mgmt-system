@@ -9,10 +9,10 @@ import { LayoutComponent } from './pages/shared/layout/layout.component';
 import { AnimationFrameScheduler } from 'rxjs/internal/scheduler/AnimationFrameScheduler';
 import { ReservationComponent } from './pages/reservation/reservation.component';
 import { PrintLayoutComponent } from './pages/print-layout/print-layout.component';
+import { MenuItemComponent } from './pages/menu-item/menu-item.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
-
     {
         path: 'admin',
         component: LayoutComponent,
@@ -26,6 +26,13 @@ export const routes: Routes = [
             title: 'Reservation',
             component: ReservationComponent,
             path: 'reservations',
+            canActivate: [authGuard],
+            outlet: "main"
+          },
+          {
+            title: 'Menus',
+            component: MenuItemComponent,
+            path: 'menus',
             canActivate: [authGuard],
             outlet: "main"
           },

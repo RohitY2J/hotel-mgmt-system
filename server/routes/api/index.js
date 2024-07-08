@@ -125,6 +125,8 @@ router.use("/reservation", require("./reservationController"));
 
 router.use("/room", require("./roomController"));
 
+router.use("/menu",require("./menuController"));
+
 // Function to check if a user with given email exists
 async function checkIfUserExists(email) {
     const user = await dbContext.User.findOne({ email: email });
