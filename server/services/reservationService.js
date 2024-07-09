@@ -104,7 +104,7 @@ exports.updateReservation = async (req, res, next) => {
       .status(200)
       .send({ success: true, message: "Updated successfully" });
   } catch (ex) {
-    console.error("Error updating room: ", ex);
+    console.error("Error updating item: ", ex);
     return res.status(500).send({ error: ex });
   }
 };
