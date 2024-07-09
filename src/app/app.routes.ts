@@ -6,10 +6,10 @@ import { authGuard } from './services/auth.guard';
 import { EmployeeAttendanceComponent } from './pages/employee-attendance/employee-attendance.component';
 import { RoomComponent } from './pages/room/room.component';
 import { LayoutComponent } from './pages/shared/layout/layout.component';
-import { AnimationFrameScheduler } from 'rxjs/internal/scheduler/AnimationFrameScheduler';
 import { ReservationComponent } from './pages/reservation/reservation.component';
 import { PrintLayoutComponent } from './pages/print-layout/print-layout.component';
 import { MenuItemComponent } from './pages/menu-item/menu-item.component';
+import { WaiterComponent } from './pages/waiter/waiter.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -39,6 +39,10 @@ export const routes: Routes = [
           { path: '**', redirectTo:"dashboard", outlet:'main', pathMatch:'full'}
         ],
         canActivate: [authGuard]
+    },
+    {
+      path: 'waiter',
+      component: WaiterComponent
     },
     {path: 'print-invoice', component: PrintLayoutComponent},
     {path:'**', component:LoginComponent, canActivate:[authGuard]},

@@ -13,7 +13,7 @@ const CustomSchema = new Schema({
   email: String,
   phNum: String,
   profilePic: String,
-  roleID: {type: Number, default: 0},
+  roleID: {type: Number, default: 0}, // 0: Waiter, 1: Admin
   hash: String, // used to store the encrypted passwords
   salt: String // used to store the encrypted passwords
 }, {timestamps: true});

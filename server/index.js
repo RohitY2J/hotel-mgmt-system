@@ -94,6 +94,10 @@ try {
     res.send({ isAuthenticated: req.isAuthenticated() });
   });
 
+  app.get("/api/getUserDetails", (req, res) => {
+    res.send(req.user);
+  })
+
   app.get('/dashboard', isAuthenticated, (req, res) => {
     res.render('dashboard', { user: req.user });
   });

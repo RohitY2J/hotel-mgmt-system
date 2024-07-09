@@ -6,13 +6,25 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService) as AuthService;
   const router = inject(Router) as Router;
 
+  const userDetail: any = await authService.setUserRole();
+
+
+  console.log('User Role:', userDetail.roleID);
   var isAuthenticated = (await authService.isAuthenticated());
   if (state.url === '/login' || state.url === '/') {
-    if (isAuthenticated) {
+    if (isAuthenticated && userDetail.roleID == 1) {
       router.navigate(['/admin', { outlets: { main: ['dashboard'] } }]);
       return false;
     }
+    else if(isAuthenticated && userDetail.roleID == 0){
+        router.navigate(['/waiter'])
+        return false;
+    }
     return true;
+  }
+  if(state.url.includes('/admin') && isAuthenticated && userDetail.roleID == 0){
+    router.navigate(['/waiter'])
+    return false;
   }
   if (!isAuthenticated && !(router.url === '/login')) {
     router.navigate(['/login']);
