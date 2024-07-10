@@ -1,13 +1,13 @@
 <div class="flex w-screen h-screen bg-gray-700">
     <!-- Sidebar start -->
-    <div class="flex flex-col items-center w-12 sm:w-32 h-full overflow-hidden text-gray-400 bg-gray-900 rounded">
+    <div class="flex flex-col items-center w-12 md:w-32 h-full overflow-hidden text-gray-400 bg-gray-900 rounded">
         <a class="flex items-center justify-center w-full px-1 lg:px-3 mt-3" href="#">
             <svg class="w-8 h-8 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                 fill="currentColor">
                 <path
                     d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" />
             </svg>
-            <span class="ml-0 sm:ml-2 text-sm font-bold hidden sm:block">The App</span>
+            <span class="ml-0 md:ml-2 text-sm font-bold hidden md:block">The App</span>
         </a>
         <div class="w-full lg:px-2">
             <div class="flex flex-col items-center w-full mt-3 border-t border-gray-700">
@@ -18,7 +18,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    <span class="ml-0 sm:ml-2 text-sx font-medium hidden sm:block">Home</span>
+                    <span class="ml-0 md:ml-2 text-sx font-medium hidden md:block">Home</span>
                 </a>
                 <a class="flex items-center justify-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
                     href="#">
@@ -27,7 +27,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <span class="ml-0 sm:ml-2  text-sm font-medium hidden sm:block">Search</span>
+                    <span class="ml-0 md:ml-2  text-sm font-medium hidden md:block">Search</span>
                 </a>
             </div>
         </div>
@@ -35,35 +35,143 @@
     <!-- Sidebar end -->
 
     <!-- modal start -->
-    <div class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="fixed inset-0 bg-black opacity-50"></div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden w-11/12 sm:w-3/4 lg:w-1/2">
+    <div *ngIf='isOrderFormOpen' class="fixed inset-0 flex items-center justify-center z-10 bg-gray-900 bg-opacity-50">
+        <div class="bg-gray-800 rounded-lg shadow-lg w-10/12 sm:w-3/4 lg:w-1/2">
             <div class="p-4 border-b">
-                <h2 class="text-lg font-semibold">Update Table Status</h2>
-                <button (click)="closeModal()"
-                    class="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hover:text-gray-700">&times;</button>
+                <h2 class="
+                text-sm 
+                text-white 
+                font-semibold
+                sm:text-lg
+                ">Place Order</h2>
             </div>
-            <div class="p-4">
-                <form (submit)="onSubmit()">
-                    <div class="mb-4">
-                        <label for="tableNumber" class="block text-sm font-medium text-gray-700">Table Number</label>
-                        <input type="number" id="tableNumber" [(ngModel)]="tableNumber" name="tableNumber"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-300 sm:text-sm">
+            <div class="">
+                <form [formGroup]="orderForm" class="p-4 md:p-5">
+                    <div class="grid gap-4 mb-4 grid-cols-2">
+                        <div class="col-span-1">
+                            <label for="tableNumber" class="
+                                block
+                                mb-1 
+                                sm:mb-2
+                                text-sm 
+                                font-medium 
+                                text-gray-900 
+                                dark:text-white">Table
+                                Number</label>
+                            <input type="text"
+                                class="bg-gray-50 
+                                border 
+                                border-gray-300 
+                                text-gray-900 
+                                text-xs
+                                sm:text-sm 
+                                rounded-lg 
+                                focus:ring-primary-600 
+                                focus:border-primary-600 
+                                block 
+                                w-full 
+                                p-2
+                                sm:p-2.5 
+                                dark:bg-gray-600 
+                                dark:border-gray-500 
+                                dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Table Number" style="transition: all 0.15s ease 0s;"
+                                formControlName="tableNumber" />
+                            <div *ngIf="orderForm.get('tableNumber')?.invalid 
+                                    && (orderForm.get('tableNumber')?.dirty 
+                                    || orderForm.get('tableNumber')?.touched)">
+                                <div *ngIf="orderForm.get('tableNumber')?.errors?.['required']"
+                                    class="text-red-500 text-xs italic">
+                                    Table Number is Required</div>
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="items"
+                                class="block mb-1 sm:mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Menu item</label>
+                            <ng-select [items]="dropdownList"
+                                class="bg-gray-50 
+                                border 
+                                border-gray-300 
+                                text-gray-900 
+                                text-xs
+                                sm:text-sm 
+                                rounded-lg 
+                                focus:ring-primary-600 
+                                focus:border-primary-600 
+                                block 
+                                w-full 
+                                p-2
+                                sm:p-2.5 
+                                dark:bg-gray-600 
+                                dark:border-gray-500 
+                                dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                formControlName="items" 
+                                [multiple]="true" 
+                                placeholder="Select options">
+
+                                <ng-template ng-option-tmp let-item="item">
+                                    <div
+                                        class="bg-gray-600 dropdown-list-item flex justify-between items-center p-2 border-b border-gray-200 last:border-none">
+                                        <div>
+                                            <div class="city-name font-bold mb-1">{{ item.city }}</div>
+                                            <div>{{ item.item_text }}</div>
+                                        </div>
+                                        <div class="initials text-sm text-gray-500">{{ item.initials }}</div>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="orderForm.get('items')?.invalid 
+                                    && (orderForm.get('items')?.dirty 
+                                    || orderForm.get('items')?.touched)">
+                                <div *ngIf="orderForm.get('items')?.errors?.['required']"
+                                    class="text-red-500 text-xs italic">
+                                    Please select at least one menu.</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                        <select id="status" [(ngModel)]="status" name="status"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-300 sm:text-sm">
-                            <option value="available">Available</option>
-                            <option value="occupied">Occupied</option>
-                            <option value="reserved">Reserved</option>
-                        </select>
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="submit"
-                            class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Save</button>
-                        <button type="button" (click)="closeModal()"
-                            class="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">Cancel</button>
+                    <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+                        style="margin: -1.25rem; margin-top: 0.5rem">
+                        <button type="submit" (click)="onSubmit()" class="
+                            text-white 
+                            bg-blue-700 
+                            hover:bg-blue-800 
+                            font-medium 
+                            rounded-lg 
+                            text-xs
+                            sm:text-sm 
+                            px-5
+                            sm:px-5 
+                            py-2
+                            sm:py-2.5   
+                            text-center 
+                            dark:bg-blue-600 
+                            dark:hover:bg-blue-700">
+                            Save
+                        </button>
+                        <button (click)="closeModal()" type="button" class="
+                            ms-3 
+                            text-xs
+                            sm:text-sm 
+                            px-5
+                            sm:px-5 
+                            py-1
+                            sm:py-2.5    
+                            font-medium 
+                            text-gray-900 
+                            focus:outline-none 
+                            bg-white 
+                            rounded-lg 
+                            border 
+                            border-gray-200 
+                            hover:bg-gray-100 
+                            hover:text-blue-700 
+                            focus:z-10 
+                            dark:bg-gray-800 
+                            dark:text-gray-400 
+                            dark:border-gray-600 
+                            dark:hover:text-white 
+                            dark:hover:bg-gray-700">Close</button>
                     </div>
                 </form>
             </div>
@@ -71,15 +179,15 @@
     </div>
     <!-- modal end -->
 
-    <div class="flex-1 p-4">
+    <div class="flex-1 p-4 overflow-scroll">
         <div class="flex items-center justify-between mb-2">
-            <div class="text-lg font-semibold dark:text-white">Tables</div>
+            <div class="text-lg font-semibold dark:text-white">Orders</div>
 
         </div>
 
         <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-        <button class="block 
+        <button (click)="addOrder()" class="block 
                 text-white 
                 bg-blue-700 
                 hover:bg-blue-800 
@@ -95,8 +203,40 @@
                 text-center 
                 dark:bg-blue-600 
                 dark:hover:bg-blue-700" type="button">
-            Add Table
+            Add Order
         </button>
+
+
+        <div class="grid 
+            grid-cols-2 
+            gap-4 
+            rounded-lg 
+            sm:grid-cols-3
+            md:grid-cols-4 
+            xl:grid-cols-5 
+            xs:grid-cols-1 
+            lg:gap-2 
+            justify-center">
+            <!-- logo - start -->
+            <div *ngFor="let menu of allMenus"
+                class="w-48 mt-4 flexh-16 items-center justify-center rounded-lg bg-gray-100 p-4 text-gray-400 sm:h-40">
+                <div class="card-content">
+                    <div class="flex flex-col items-center justify-center">
+                        <dt class="mb-2 text-3xl font-extrabold dark:text-gray-700">{{menu.tableNumber}}</dt>
+                        <dd class="text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            {{menu.name}} (Rs. {{menu.price}})
+                        </dd>
+                        <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+
+                        </dd>
+                        <dd class="text-gray-600 text-sm font-semibold dark:text-blue-600 uppercase cursor-pointer">
+                            <span role="button" (click)="openUpdateForm(menu)">Update <i
+                                    class="fa-solid fa-pen text-xs"></i></span>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 

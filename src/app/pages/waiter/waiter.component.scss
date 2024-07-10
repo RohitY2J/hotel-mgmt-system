@@ -1,0 +1,19 @@
+/* app.component.scss */
+
+
+::ng-deep .multiselect-dropdown .dropdown-list {
+    max-height: 200px;
+    /* Set the max height of the dropdown list */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+}
+
+::ng-deep .multiselect-dropdown .dropdown-list-wrapper {
+    transform-origin: top;
+    /* Ensure dropdown opens from the top */
+}
+
+::ng-deep .multiselect-dropdown .dropdown-list-wrapper.open {
+    transform: scaleY(1);
+    /* Ensure dropdown opens downward */
+}

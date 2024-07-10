@@ -42,7 +42,8 @@ export const routes: Routes = [
     },
     {
       path: 'waiter',
-      component: WaiterComponent
+      component: WaiterComponent,
+      canActivate: [authGuard]
     },
     {path: 'print-invoice', component: PrintLayoutComponent},
     {path:'**', component:LoginComponent, canActivate:[authGuard]},
