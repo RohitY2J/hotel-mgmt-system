@@ -10,6 +10,7 @@ import { ReservationComponent } from './pages/reservation/reservation.component'
 import { PrintLayoutComponent } from './pages/print-layout/print-layout.component';
 import { MenuItemComponent } from './pages/menu-item/menu-item.component';
 import { WaiterComponent } from './pages/waiter/waiter.component';
+import { OrderItemComponent } from './pages/order-item/order-item.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -45,6 +46,12 @@ export const routes: Routes = [
       component: WaiterComponent,
       canActivate: [authGuard]
     },
+    {
+      path: 'order',
+      component: OrderItemComponent,
+      canActivate: [authGuard]
+    },
+
     {path: 'print-invoice', component: PrintLayoutComponent},
-    {path:'**', component:LoginComponent, canActivate:[authGuard]},
+    {path:'**', component:LoginComponent},
 ];

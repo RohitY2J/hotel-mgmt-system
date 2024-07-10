@@ -112,7 +112,15 @@ exports.getMenuItems = async (req, res, next) => {
         filter.name = { $regex: new RegExp(req.body.menuName, 'i') };
     }
 
-    menus = await dbContext.MenuItem.find(filter);
+    // Extract pagination parameters
+    const page = parseInt(req.body.pagination?.page) || 1;  // Default to page 1 if not provided
+    const limit = parseInt(req.body.pagination?.count) || 8;  // Default to 10 items per page if not provided
+    const skip = (page - 1) * limit;
+
+    const menus = await dbContext.MenuItem.find(filter)
+        .skip(skip)
+        .limit(limit);
+
 
     menus.forEach(menu => {
         if (menu.file) {
