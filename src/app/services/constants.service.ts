@@ -31,28 +31,33 @@ export class ConstantsService {
       3: '3pm - 11pm'
       // Add more as needed
     },
-    roomOccupancyStatus:{
-       0: "Available",
-       1: "Occupied",
+    roomOccupancyStatus: {
+      0: "Available",
+      1: "Occupied",
     },
     roomMaintainanceStatus: {
-      0:"Dirty",
-      1:"Clean"
+      0: "Dirty",
+      1: "Clean"
     },
-    paymentStatus:{
+    paymentStatus: {
       0: "Unpaid",
       1: "Paid",
       2: "PartiallyPaid"
     },
-    reservationStatus:{
+    reservationStatus: {
       0: "Booked",
       1: "Checked In",
       2: "Closed",
       3: "Canceled"
     },
-    menuAvailabilityStatus:{
+    menuAvailabilityStatus: {
       0: "Not Available",
       1: "Available"
+    },
+    orderStatus: {
+      0: "Pending",
+      1: "Served",
+      2: "Cancelled"
     }
   };
 

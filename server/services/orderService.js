@@ -92,3 +92,51 @@ exports.getSpecificOrder = async (req, res, next) => {
         });
     }
 }
+
+exports.getOrders = async (req, res, next) => {
+    try{
+        data = await dbContext.Order.find();
+        data.forEach(record => {
+            record._doc.total = record.orders.reduce((total, order) => {
+                return total + (order.price * order.qty);
+            }, 0);
+        })
+        return res.status(200).json({
+            success: true,
+            msg: 'success',
+            data: data
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            msg: "Error encountered:" + err.message
+        });
+    }
+}
+
+exports.updateStatus = async (req, res, next) => {
+    if(!req.body.orderId || !req.body.status){
+        return res.status(422).json({
+            success: false,
+            msg: "Order Id and status is required"
+        });
+    }
+
+    try{
+        const order = await dbContext.Order.findOne({_id: conversion.ToObjectId(req.body.orderId)});
+        order.status = req.body.status;
+
+        await order.save();
+        return res.status(200).json({
+            success: true,
+            msg: 'Status updated'
+        });
+    }
+    catch(err){
+        return res.status(500).json({
+            success: false,
+            msg: "Error encountered:" + err.message
+        });
+    }
+}   

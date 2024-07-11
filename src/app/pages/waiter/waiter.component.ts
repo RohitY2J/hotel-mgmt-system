@@ -3,6 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { HttpService } from '../../services/http-service.service';
+import { finalize } from 'rxjs';
+import { HttpListResponse } from '../../models/HttpResponse';
+import { ConstantsService } from '../../services/constants.service';
+import { Router } from '@angular/router';
+import { LoaderComponent } from '../shared/loader/loader.component';
+import { NotificationComponent } from '../shared/notification/notification.component';
 
 @Component({
   selector: 'app-waiter',
@@ -12,7 +19,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormsModule,
     ReactiveFormsModule,
     NgMultiSelectDropDownModule,
-    NgSelectModule
+    NgSelectModule,
+    LoaderComponent,
+    NotificationComponent
   ],
   templateUrl: './waiter.component.html',
   styleUrl: './waiter.component.scss'
@@ -45,87 +54,114 @@ export class WaiterComponent implements OnInit {
   }
   ]
 
-  dropdownList: any[] = []
+  isLoading: boolean = false;
+  showNotification: boolean = false;
+  notificationParams: any = {};
+  orders: any[] = [];
 
-  isOrderFormOpen: boolean = true;
-  orderForm: FormGroup = new FormGroup({})
-  dropdownSettings: IDropdownSettings = {};
+  isOrderFormOpen: boolean = false;
 
   selectedItems: any[] = [];
+  filter = {};
+  orderForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder, 
+    private httpService: HttpService,
+    private constantService: ConstantsService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+
     this.orderForm = this.fb.group({
-      tableNumber: new FormControl('', Validators.required),
-      items: new FormControl([], Validators.required),
-      //status: new FormControl('')
+      orderId: new FormControl(''),
+      status: new FormControl('', Validators.required)
     })
 
+    this.fetchOrder();
+  }
+
+  fetchOrder(){
+    this.isLoading = true;
+    this.httpService
+      .httpPost(
+        'order/getOrders',
+        this.filter
+      )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          let response = res as HttpListResponse;
+          this.orders = response.data;
+        },
+        error: (err) => this.triggerNotification({
+          message: "Failed to retrieve data",
+          error: true
+        }),
+      });
+  }
+
+  triggerNotification(notificationContent: any) {
+    this.notificationParams = notificationContent;
+    this.showNotification = true;
+  }
+
+  getStatusString(status: number){
+    return this.constantService.getStatusString("orderStatus", status);
+  }
+  getOrderStatus(){
+    return this.constantService.getStatusValuesAsDictionary("orderStatus");
+  }
+
+  addOrderButtonClicked(){
+    this.router.navigate(['/order']);
+  }
+
+  closeModal(){
+    this.isOrderFormOpen = false;
+    this.orderForm.reset();
     this.orderForm.setValue({
-      tableNumber: '1',
-      items: [ 'hello',
-        { item_id: 1, item_text: 'Item 1', city: 'New York', initials: 'NY' }
-      ]
+      orderId: "",
+      status: ""
+    });
+  }
+
+  openStatusUpdateForm(order: any){
+    this.orderForm.setValue({
+      orderId: order._id,
+      status: order.status
     })
-
-    this.dropdownList = [
-      { item_id: 1, item_text: 'Item 1', city: 'New York', initials: 'NY' },
-      { item_id: 2, item_text: 'Item 2', city: 'Los Angeles', initials: 'LA' },
-      { item_id: 3, item_text: 'Item 3', city: 'Chicago', initials: 'CHI' },
-      { item_id: 4, item_text: 'Item 4', city: 'Houston', initials: 'HOU' },
-      { item_id: 5, item_text: 'Item 5', city: 'Phoenix', initials: 'PHX' }
-    ];
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: "item_id",
-      textField: "item_text",
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'item_id',
-      textField: 'item_text',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
-  }
-
-  get getItems() {
-    return this.dropdownList.reduce((acc, curr) => {
-      acc[curr.item_id] = curr;
-      return acc;
-    }, {});
-  }
-
-  addOrder() {
     this.isOrderFormOpen = true;
   }
 
-
-  closeModal() {
-    this.isOrderFormOpen = false;
-  }
-
-  onSubmit() {
-    this.closeModal();
-  }
-
-  openUpdateForm(menu: any) {
-
-  }
-
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
+  onSubmit(){
+    this.isLoading = true;
+    this.httpService
+      .httpPost(
+        'order/updateStatus',
+        this.orderForm.value
+      )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.triggerNotification({
+            message: "Order status updated successfully",
+            error: false
+          })
+          this.closeModal();
+          this.fetchOrder();
+        },
+        error: (err) => this.triggerNotification({
+          message: "Failed to retrieve data",
+          error: true
+        }),
+      });
   }
 }

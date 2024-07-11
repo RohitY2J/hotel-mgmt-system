@@ -8,4 +8,5 @@ export interface StatusMaps {
     paymentStatus: { [key: number]: string };
     reservationStatus: { [key: number]: string };
     menuAvailabilityStatus: {[key: number]: string};
+    orderStatus: {[key: number]:  string};
 }
