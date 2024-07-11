@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http-service.service';
 import { finalize } from 'rxjs';
-import { HttpListResponse } from '../../models/HttpResponse';
+import { HttpListResponse, HttpSingleResponse } from '../../models/HttpResponse';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-order-item',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
+    FormsModule,
     NotificationComponent,
     LoaderComponent
   ],
@@ -18,12 +20,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './order-item.component.scss'
 })
 export class OrderItemComponent implements OnInit {
-  
+
   isLoading: boolean = false;
   filter: any = {};
   allMenus: any[] = [];
   showNotification: boolean = false;
   notificationParams: any = {};
+  tableNumber: Number | null = null
+  disableScreen: boolean = false;
 
   products = [
     { name: 'Product Name 1', price: 49.99, image: 'https://via.placeholder.com/300' },
@@ -34,26 +38,25 @@ export class OrderItemComponent implements OnInit {
     // Add more products as needed
   ];
 
-  orders: any[] = [
-    { name: "Chowmein", price: "400"},
-    { name: "Chowmein", price: "400"},
-    { name: "Chowmein", price: "400"},
-    { name: "Chowmeindfgdfgdfg dfdfgdfgdfg", price: "400"},
-  ];
+  orders: any[] = [];
 
 
-  constructor(private httpService: HttpService){}
-  
+  constructor(private httpService: HttpService) { }
+
   ngOnInit(): void {
     this.fetchMenuItems();
   }
-  
-  searchButtonClicked(){
+
+  searchButtonClicked() {
 
   }
 
-  clearFilter(){
+  clearFilter() {
 
+  }
+
+  isSubmitButtonDisabled() {
+    return !(this.orders.length > 0 && this.tableNumber) || this.disableScreen;
   }
 
   fetchMenuItems() {
@@ -69,17 +72,128 @@ export class OrderItemComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
-          let response = res as HttpListResponse; 
+          let response = res as HttpListResponse;
           this.allMenus = response.data;
         },
-        error: (err) => this.triggerNotification({ 
-          message: "Failed to retrieve data", 
-          error: true }),
+        error: (err) => this.triggerNotification({
+          message: "Failed to retrieve data",
+          error: true
+        }),
       });
   }
 
   triggerNotification(notificationContent: any) {
     this.notificationParams = notificationContent;
     this.showNotification = true;
+  }
+
+  menuItemSelected(menu: any) {
+    if (!this.disableScreen) {
+      const existingOrder = this.orders.find(order => order.menuId === menu._id);
+      if (existingOrder) {
+        // If it exists, increment the quantity
+        existingOrder.qty += 1;
+      } else {
+        this.orders.push({
+          menuId: menu._id,
+          name: menu.name,
+          price: menu.price,
+          qty: 1
+        })
+      }
+    }
+  }
+
+  minusMenuQty(selectedOrder: any) {
+    if (!this.disableScreen) {
+      const existingOrder = this.orders.find(order => order.menuId === selectedOrder.menuId);
+      if (existingOrder.qty > 1) {
+        // If it exists, increment the quantity
+        existingOrder.qty -= 1;
+      } else {
+        this.orders = this.orders.filter(order => order.menuId !== selectedOrder.menuId);
+      }
+    }
+  }
+
+  plusMenuQty(selectedOrder: any) {
+    if (!this.disableScreen) {
+      const existingOrder = this.orders.find(order => order.menuId === selectedOrder.menuId);
+      existingOrder.qty += 1;
+    }
+  }
+
+  calculateOrderTotal() {
+    return this.orders.reduce((total, order) => {
+      return total + (order.price * order.qty);
+    }, 0);
+  }
+
+  submitOrder() {
+    this.isLoading = true;
+    this.httpService
+      .httpPost(
+        'order/addOrder',
+        {
+          tableNumber: this.tableNumber,
+          orders: this.orders
+        }
+      )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.clearOrder();
+          this.triggerNotification({
+            message: "Order taken successfully",
+            error: false
+          })
+        },
+        error: (err) => this.triggerNotification({
+          message: "Failed to add order",
+          error: true
+        }),
+      });
+  }
+
+  loadOrder() {
+    if (this.tableNumber) {
+      this.isLoading = true;
+      this.disableScreen = true;
+      this.httpService
+        .httpPost(
+          'order/getSpecificOrder',
+          {
+            tableNumber: this.tableNumber
+          }
+        )
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
+        .subscribe({
+          next: (res) => {
+            console.log(res);
+            let response = res as HttpSingleResponse;
+            if (response.data.orders) {
+              this.orders = response.data.orders;
+            }
+            else {
+              this.orders = [];
+            }
+          },
+          error: (err) => this.triggerNotification({
+            message: "Failed to add order",
+            error: true
+          }),
+        });
+    }
+  }
+
+  clearOrder() {
+    this.disableScreen = false;
+    this.orders = [];
+    this.tableNumber = null;
   }
 }
