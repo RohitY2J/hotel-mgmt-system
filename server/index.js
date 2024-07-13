@@ -8,8 +8,18 @@ const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const businessLogic = require("./business-logic");
 const cron = require("node-cron");
+const http = require('http');
 
 const app = express();
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const io = socketIo(server,{
+  cors: {
+    origin: "http://localhost:4200", // Replace with your client's URL
+    methods: ["GET", "POST"]
+  }
+});
+
 const port = 8000;
 const MONGO_DB = 'mongodb://127.0.0.1/hotel-mgmt-app'
 
@@ -28,9 +38,21 @@ try {
         businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
       });
     })
-    .catch((error) => { 
-      console.log('Could not connect to mongodb'); 
+    .catch((error) => {
+      console.log('Could not connect to mongodb');
     })
+
+
+  // Socket.IO connection
+  io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected');
+    });
+  });
+
+  app.set('socketio', io);
 
   /** ==========serve static page build from the location =======*/
 
@@ -64,7 +86,7 @@ try {
   /**========= body parser middleware */
   app.use(bodyParser.json());
   /**===================== **/
-  
+
   app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
@@ -84,10 +106,10 @@ try {
     failureRedirect: '/login',
     failureFlash: true
   }));
-  
+
   app.get("/api/logout", (req, res) => {
     req.logOut();
-    res.send({message: "Log out success!"});
+    res.send({ message: "Log out success!" });
   });
 
   app.get("/api/isAuthenticated", (req, res) => {
@@ -101,13 +123,13 @@ try {
   app.get('/dashboard', isAuthenticated, (req, res) => {
     res.render('dashboard', { user: req.user });
   });
-  
+
 
   function isAuthenticated(req, res, next) {
     if (req.originalUrl === '/api/login' || req.isAuthenticated()) {
       return next();
     }
-     res.status(401).send('Un-authorized user.');
+    res.status(401).send('Un-authorized user.');
   }
 
   /** ======================================================== */
@@ -139,7 +161,9 @@ try {
     res.sendFile(path.join(__dirname, '../dist/browser/index.html'));
   });
 
-  app.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
+  module.exports = { app, server, io };
+  server.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
+
 }
 catch (error) {
   console.log(error)
