@@ -11,6 +11,7 @@ import { PrintLayoutComponent } from './pages/print-layout/print-layout.componen
 import { MenuItemComponent } from './pages/menu-item/menu-item.component';
 import { WaiterComponent } from './pages/waiter/waiter.component';
 import { OrderItemComponent } from './pages/order-item/order-item.component';
+import { KitchenComponent } from './pages/kitchen/kitchen.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -51,7 +52,11 @@ export const routes: Routes = [
       component: OrderItemComponent,
       canActivate: [authGuard]
     },
+    {
+      path: 'kitchen',
+      component: KitchenComponent
+    },
 
     {path: 'print-invoice', component: PrintLayoutComponent},
-    {path:'**', component:LoginComponent},
+    {path:'**', component:LoginComponent, canActivate: [authGuard]},
 ];

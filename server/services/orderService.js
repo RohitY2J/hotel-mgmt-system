@@ -5,6 +5,8 @@ const conversion = require('../helper/conversion');
 exports.createOrder = async (req, res, next) => {
     let request = req.body;
 
+    const io = req.app.get('socketio');
+
     let errors = [];
     if (!request.tableNumber) {
         errors.push("Table Number is required.");
@@ -43,6 +45,9 @@ exports.createOrder = async (req, res, next) => {
             });
 
             await existingOrder.save();
+            
+            io.emit('orderUpdated', existingOrder);
+
         } else {
             // Create a new order if no pending order exists
             const newOrder = new dbContext.Order({
@@ -60,8 +65,10 @@ exports.createOrder = async (req, res, next) => {
             });
 
             await newOrder.save();
-        }
 
+            io.emit('orderUpdated', newOrder);
+        }
+  
         return res.status(200).json({
             success: true,
             msg: 'Order processed successfully!'
