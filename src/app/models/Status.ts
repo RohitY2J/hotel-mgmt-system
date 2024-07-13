@@ -9,4 +9,6 @@ export interface StatusMaps {
     reservationStatus: { [key: number]: string };
     menuAvailabilityStatus: {[key: number]: string};
     orderStatus: {[key: number]:  string};
+    inventoryItemType: {[key: number]: string};
+    quantityUnitType: {[key: number]: string};
 }
