@@ -6,6 +6,7 @@ import { NotificationComponent } from '../shared/notification/notification.compo
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-order-item',
@@ -14,7 +15,8 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     NotificationComponent,
-    LoaderComponent
+    LoaderComponent,
+    PaginationComponent
   ],
   templateUrl: './order-item.component.html',
   styleUrl: './order-item.component.scss'
@@ -22,7 +24,14 @@ import { FormsModule } from '@angular/forms';
 export class OrderItemComponent implements OnInit {
 
   isLoading: boolean = false;
-  filter: any = {};
+  filter: any = {
+    menuName: "",
+    pagination: {
+      page: 1,
+      pageSize: 8,
+      dataCount: 8
+    } 
+  };
   allMenus: any[] = [];
   showNotification: boolean = false;
   notificationParams: any = {};
@@ -48,11 +57,19 @@ export class OrderItemComponent implements OnInit {
   }
 
   searchButtonClicked() {
-
+    this.fetchMenuItems();
   }
 
   clearFilter() {
-
+    this.filter = {
+      menuName: "",
+      pagination: {
+        page: 1,
+        pageSize: 8,
+        dataCount: 8
+      } 
+    };
+    this.fetchMenuItems();
   }
 
   isSubmitButtonDisabled() {
@@ -74,6 +91,7 @@ export class OrderItemComponent implements OnInit {
           console.log(res);
           let response = res as HttpListResponse;
           this.allMenus = response.data;
+          this.filter.pagination.dataCount = response.data.length;
         },
         error: (err) => this.triggerNotification({
           message: "Failed to retrieve data",
@@ -161,7 +179,6 @@ export class OrderItemComponent implements OnInit {
   loadOrder() {
     if (this.tableNumber) {
       this.isLoading = true;
-      this.disableScreen = true;
       this.httpService
         .httpPost(
           'order/getSpecificOrder',
@@ -178,9 +195,11 @@ export class OrderItemComponent implements OnInit {
             let response = res as HttpSingleResponse;
             if (response.data.orders) {
               this.orders = response.data.orders;
+              this.disableScreen = true;
             }
             else {
               this.orders = [];
+              this.disableScreen = true;
             }
           },
           error: (err) => this.triggerNotification({
@@ -195,5 +214,10 @@ export class OrderItemComponent implements OnInit {
     this.disableScreen = false;
     this.orders = [];
     this.tableNumber = null;
+  }
+  
+  updatePaginationPage(page: number){
+    this.filter.pagination.page = page;
+    this.fetchMenuItems();
   }
 }

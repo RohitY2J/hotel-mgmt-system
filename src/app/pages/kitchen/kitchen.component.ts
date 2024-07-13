@@ -29,6 +29,9 @@ export class KitchenComponent implements OnInit {
   showNotification: boolean = false;
   notificationParams: any = {};
   orders: any[] = []; 
+  filter: any = {
+    status: 0
+  };
   
   ngOnInit(): void {
     this.fetchOrderItems();
@@ -43,7 +46,7 @@ export class KitchenComponent implements OnInit {
   fetchOrderItems(){
     this.isLoading = true;
     this.showNotification = false;
-    this.httpService.httpPost("order/getOrders", {})
+    this.httpService.httpPost("order/getOrders", this.filter)
       .pipe(finalize(() => {
         this.isLoading = false;
       }))

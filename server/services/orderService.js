@@ -102,7 +102,7 @@ exports.getSpecificOrder = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
     try{
-        data = await dbContext.Order.find();
+        data = await dbContext.Order.find(req.body);
         data.forEach(record => {
             record._doc.total = record.orders.reduce((total, order) => {
                 return total + (order.price * order.qty);
