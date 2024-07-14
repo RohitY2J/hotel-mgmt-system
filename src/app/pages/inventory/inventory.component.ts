@@ -47,7 +47,7 @@ export class InventoryComponent implements OnInit {
       page: 1,
       pageSize: 5,
       dataCount: 5,
-    }
+    },
   };
 
   quantityUnitType = [
@@ -94,9 +94,7 @@ export class InventoryComponent implements OnInit {
   selectedInventoryItem: any = {};
 
   addDispatchForm = new FormGroup({
-    numberOfItems: new FormControl(1, [
-      Validators.min(1)
-    ]),
+    numberOfItems: new FormControl(1, [Validators.min(1)]),
     description: new FormControl(''),
   });
 
@@ -154,10 +152,12 @@ export class InventoryComponent implements OnInit {
         next: (res) => {
           this.triggerNotification({
             message: 'Inventory added successfully.',
-            error: true,
+            error: false,
           });
+          this.showInventoryForm = false;
         },
         error: (err) => {
+          console.log(err);
           this.triggerNotification({
             message: 'Error creating inventory item.',
             error: true,
@@ -187,9 +187,11 @@ export class InventoryComponent implements OnInit {
   search() {}
   updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
-    // this.getReservations();
+    this.fetchInventoryItems();
   }
   triggerNotification(message: any) {
+    this.showNotification = false;
+    this.notificationParams = null;
     this.showNotification = true;
     this.notificationParams = message;
   }
@@ -215,7 +217,19 @@ export class InventoryComponent implements OnInit {
       this.addDispatchForm.markAllAsTouched();
       return;
     }
-    let request:any = this.addDispatchForm.value;
+    let request: any = this.addDispatchForm.value;
+    if (
+      !this.showAddDispatchForminAddMode &&
+      this.selectedInventoryItem.availableUnit < request.numberOfItems
+    ) {
+      console.log(request);
+      this.isLoading = false;
+      this.triggerNotification({
+        message: 'Not enough items in the store.',
+        error: true,
+      });
+      return;
+    }
     request.id = this.selectedInventoryItem._id;
     request.itemName = this.selectedInventoryItem.name;
     this.httpService
@@ -230,18 +244,26 @@ export class InventoryComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (res) =>
-          this.triggerNotification({ message: 'Success.', error: false }),
-        error: (err) =>
-          this.triggerNotification({ message: err, error: false }),
+        next: (res) => {
+          this.triggerNotification({
+            message: `Items ${
+              this.showAddDispatchForminAddMode ? 'added' : 'dispatched'
+            } succesfully`,
+            error: false,
+          });
+          this.showAddDispatchForm = false;
+          this.addDispatchForm.reset();
+        },
+
+        error: (err) => this.triggerNotification({ message: err, error: true }),
       });
   }
 
-  showItemHistory(selected:any){
+  showItemHistory(selected: any) {
     if (selected != null) this.selectedInventoryItem = selected;
     this.isLoading = true;
-    
-    let request:any = {inventoryItemId: selected._id};
+
+    let request: any = { inventoryItemId: selected._id };
     this.httpService
       .httpPost(
         `inventory/history?pageNo=${this.historyFilter.pagination.page}&pageSize=${this.historyFilter.pagination.pageSize}`,
@@ -253,16 +275,15 @@ export class InventoryComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (res) =>
-          {
-            this.itemHistory = res;
-            this.showHistory = true;
-          },
+        next: (res) => {
+          this.itemHistory = res;
+          this.showHistory = true;
+        },
         error: (err) =>
           this.triggerNotification({ message: err, error: false }),
       });
   }
-  closeItemHistory(){
+  closeItemHistory() {
     this.showHistory = false;
   }
 }

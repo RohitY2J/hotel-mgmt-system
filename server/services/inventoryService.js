@@ -8,9 +8,7 @@ exports.createInventoryItem = async (req, res, next) => {
     item.createdDate = Date.now();
     await item.save();
     let successRes = 'Item saved successfully.';
-    console.info(successRes);
-    return res.status(200).send(successRes);
-    re
+    return res.status(200).send({message: successRes});
   } catch (err) {
     if (err.name === "ValidationError") {
       let errResponse = { message: "Invalid input.", error: err };
@@ -80,7 +78,6 @@ exports.dispatchItem = async (req, res, next) => {
       $inc: { availableUnit: (0 - req.body.numberOfItems) }, //decrement item
       lastAddedOn: Date.now(),
       lastAddedUnit: req.body.numberOfItems,
-      description: req.body.description
     };
 
     let result = await dbContext.Inventory.updateOne(
