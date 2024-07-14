@@ -28,7 +28,7 @@ exports.createOrder = async (req, res, next) => {
             // Update the existing pending order
             request.orders.forEach(order => {
                 const existingOrderItem = existingOrder.orders.find(item => item.menuId.toString() === order.menuId);
-                
+
                 if (existingOrderItem) {
                     // Update the quantity and price if the item already exists in the order
                     existingOrderItem.qty += order.qty;
@@ -45,7 +45,7 @@ exports.createOrder = async (req, res, next) => {
             });
 
             await existingOrder.save();
-            
+
             io.emit('orderUpdated', existingOrder);
 
         } else {
@@ -68,7 +68,7 @@ exports.createOrder = async (req, res, next) => {
 
             io.emit('orderUpdated', newOrder);
         }
-  
+
         return res.status(200).json({
             success: true,
             msg: 'Order processed successfully!'
@@ -84,8 +84,8 @@ exports.createOrder = async (req, res, next) => {
 
 exports.getSpecificOrder = async (req, res, next) => {
     tableNumber = req.body.tableNumber;
-    try{
-        data = await dbContext.Order.findOne({tableNumber: tableNumber, status: 0});
+    try {
+        data = await dbContext.Order.findOne({ tableNumber: tableNumber, status: 0 });
         return res.status(200).json({
             success: true,
             msg: 'success',
@@ -101,25 +101,29 @@ exports.getSpecificOrder = async (req, res, next) => {
 }
 
 exports.getOrders = async (req, res, next) => {
-    try{
+    try {
         filter = {};
 
-        if(req.body.hasOwnProperty('status')){
+        if (req.body.hasOwnProperty('status') && req.body.status != '') {
             filter.status = req.body.status;
         }
-    
-        if(req.body.hasOwnProperty('tableNumber')){
+
+        if (req.body.hasOwnProperty('tableNumber') && req.body.tableNumber != '') {
             filter.tableNumber = req.body.tableNumber;
         }
-    
+
+        if (req.body.hasOwnProperty('id')) {
+            filter._id = conversion.ToObjectId(req.body.id);
+        }
+
         // Extract pagination parameters
         const page = parseInt(req.body.pagination?.page) || 1;  // Default to page 1 if not provided
         const limit = parseInt(req.body.pagination?.count) || 8;  // Default to 10 items per page if not provided
         const skip = (page - 1) * limit;
-    
+
         data = await dbContext.Order.find(filter)
-                    .skip(skip)
-                    .limit(limit);
+            .skip(skip)
+            .limit(limit);
 
         data.forEach(record => {
             record._doc.total = record.orders.reduce((total, order) => {
@@ -140,16 +144,47 @@ exports.getOrders = async (req, res, next) => {
     }
 }
 
+exports.updateOrder = async (req, res, next) => {
+    if (!req.body._id) {
+        return res.status(422).json({
+            success: false,
+            msg: "Order Id is required"
+        });
+    }
+
+    order = req.body;
+    try {
+        existingOrder = await dbContext.Order.findOne({_id: conversion.ToObjectId(order._id)})
+        
+        existingOrder.customerName = order.customerName;
+        existingOrder.discount = order.discount;
+        existingOrder.tax = order.tax; 
+        
+        await existingOrder.save();
+        return res.status(200).json({
+            success: true,
+            msg: 'Status updated'
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            msg: "Error encountered:" + err.message
+        });
+    }
+
+}
+
 exports.updateStatus = async (req, res, next) => {
-    if(!req.body.orderId || !req.body.status){
+    if (!req.body.orderId || !req.body.status) {
         return res.status(422).json({
             success: false,
             msg: "Order Id and status is required"
         });
     }
 
-    try{
-        const order = await dbContext.Order.findOne({_id: conversion.ToObjectId(req.body.orderId)});
+    try {
+        const order = await dbContext.Order.findOne({ _id: conversion.ToObjectId(req.body.orderId) });
         order.status = req.body.status;
 
         await order.save();
@@ -158,7 +193,7 @@ exports.updateStatus = async (req, res, next) => {
             msg: 'Status updated'
         });
     }
-    catch(err){
+    catch (err) {
         return res.status(500).json({
             success: false,
             msg: "Error encountered:" + err.message

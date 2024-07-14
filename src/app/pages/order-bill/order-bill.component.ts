@@ -8,6 +8,8 @@ import { HttpListResponse } from '../../models/HttpResponse';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ConstantsService } from '../../services/constants.service';
+import { Router } from '@angular/router';
+import { Datepicker, DatepickerOptions, InstanceOptions } from 'flowbite';
 
 @Component({
   selector: 'app-order-bill',
@@ -25,6 +27,10 @@ import { ConstantsService } from '../../services/constants.service';
 export class OrderBillComponent implements OnInit {
 
   filter: any = {
+    date: "",
+    status: "",
+    tableNumber: "",
+    customerName: "",
     pagination: {
       page: 1,
       pageSize: 5,
@@ -38,22 +44,123 @@ export class OrderBillComponent implements OnInit {
   notificationParams: any = {};
   orders: any[] = []; 
 
+  isCheckOutModalVisible: boolean = false;
+  discount: Number = 0;
+  tax: Number = 0;
+  tableNumbers: any[]= [];
+
+  selectedOrder: any = {};
+
+  datepicker: Datepicker | null = null;
+
 
   ngOnInit(): void {
     this.fetchOrders();
+    this.filter.date = this.constantService.getDateTodayString();
+
+    // set the target element of the input field or div
+    const $datepickerEl: HTMLInputElement = document.getElementById('datepicker-filter') as HTMLInputElement;
+
+    // optional options with default values and callback functions
+    const options: DatepickerOptions = {
+      defaultDatepickerId: null,
+      autohide: true,
+      format: 'mm/dd/yyyy',
+      maxDate: this.filter.date,
+      minDate: null,
+      orientation: 'bottom',
+      buttons: true,
+      autoSelectToday: 0,
+      title: null,
+      rangePicker: false
+    };
+
+    // instance options object
+    const instanceOptions: InstanceOptions = {
+      id: 'datepicker-filter-custom',
+      override: true
+    };
+
+    /*
+     * $datepickerEl: required
+     * options: optional
+     * instanceOptions: optional
+     */
+    this.datepicker = new Datepicker(
+      $datepickerEl,
+      options,
+      instanceOptions
+    );
+
+
+    this.datepicker?.updateOnHide(() => {
+      debugger;
+      this.filter.date = this.datepicker?.getDate() as string;
+    })
   }
 
   constructor(private httpService: HttpService,
-    private constantService: ConstantsService
+    private constantService: ConstantsService,
+    private router: Router
   ) { }
 
-  clearFilter() { }
-  searchButtonClicked() { }
+  clearFilter() { 
+    this.filter = {
+      date: this.constantService.getDateTodayString(),
+      status: "",
+      tableNumber: "",
+      customerName: "",
+      pagination: {
+        page: 1,
+        pageSize: 5,
+        dataCount: 5
+      }
+    };
+    this.fetchOrders();
+  }
+  searchButtonClicked() { 
+    this.fetchOrders();
+  }
   searchInputChanged(event: Event) { }
+
+  openCheckOutModal() {
+    this.isCheckOutModalVisible = true;
+  }
+  closeCheckOutModal() {
+    this.isCheckOutModalVisible = false;
+  }
 
   updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
     this.fetchOrders();
+  }
+
+  checkOutAndPrintInvoice() {
+    this.isLoading = true;
+    this.selectedOrder.discount = this.discount;
+    this.selectedOrder.tax = this.tax;
+    this.selectedOrder.status = 3; //billed
+    this.httpService
+      .httpPost(`order/updateOrder`, this.selectedOrder)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (res) =>{
+          this.router.navigate(['/print-food-invoice'], {
+            queryParams: { id: this.selectedOrder._id },
+          });
+        },
+        error: (err) => {
+          console.log;
+          this.triggerNotification({
+            message: "Failed to print food invoice",
+            error: true
+          })
+        },
+      });
   }
 
   fetchOrders() {
@@ -76,6 +183,21 @@ export class OrderBillComponent implements OnInit {
       )
   }
 
+  fetchAllTableNumber(){
+    this.httpService.httpGet('order/getTableNumbers')
+    .subscribe(
+      (res) => {
+        this.tableNumbers = (res as HttpListResponse).data;
+      },  
+      (err) => {
+        this.triggerNotification({
+          message: "Failed to get table numbers",
+          error: true
+        })
+      }
+    )
+  }
+
   triggerNotification(notificationContent: any) {
     this.notificationParams = notificationContent;
     this.showNotification = true;
@@ -83,6 +205,15 @@ export class OrderBillComponent implements OnInit {
 
   getOrderStatus(status: number){
     return this.constantService.getStatusString("orderStatus", status);
+  }
+
+  getOrderStatusList(){
+    return this.constantService.getStatusValuesAsDictionary("orderStatus");
+  }
+
+  generateInvoiceClicked(order: any){
+    this.selectedOrder = order;
+    this.isCheckOutModalVisible = true;
   }
 
 }
