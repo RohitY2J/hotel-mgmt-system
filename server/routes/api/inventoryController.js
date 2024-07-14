@@ -4,7 +4,11 @@ const router = express.Router();
 
 router.post("/createInventory", services.inventoryService.createInventoryItem);
 
-router.post("/addInventory", services.inventoryService.addItem);
+router.post("/add", services.inventoryService.addItem);
+
+router.post("/dispatch", services.inventoryService.dispatchItem);
+
+router.post("/history", services.inventoryService.getAddDispatchHistory);
 
 router.post("/updateInventory", services.inventoryService.updateItems);
 
