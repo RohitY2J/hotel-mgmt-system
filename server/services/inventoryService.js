@@ -45,8 +45,11 @@ exports.getItemById = async (req, res, next) => {
 
 exports.getItems = async (req, res, next) => {
   try{
-    let results = await dbContext.Inventory.find(req.body);
-    return res.status(200).send(result);
+    let results = await dbContext.Inventory.find(req.body)
+    .select('_id name description itemType quantityUnitType pricePerUnit availableUnit minUnitToShowAlert')
+    .skip((req.query.pageNo - 1) * req.query.pageSize)
+    .limit(req.query.pageSize);
+    return res.status(200).send(results);
   }catch(err){
     let errorRes = {
       message: "Error occurred while getting item.",
@@ -96,3 +99,4 @@ exports.deleteItems = async (req, res, next) => {
     return res.status(500).send(errRes);
   }
 };
+

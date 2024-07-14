@@ -16,6 +16,7 @@ export class PaginationComponent {
   @Input() page:number = 1;
   @Input() pageSize:number = 5;
   @Input() dataCount: number = 5;
+  @Input() hasNoItems: boolean = false;
 
   @Output() callback = new EventEmitter<number>();
 

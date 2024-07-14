@@ -13,3 +13,5 @@ router.post("/getItems", services.inventoryService.getItems);
 router.get("/getItemById", services.inventoryService.getItemById);
 
 router.delete("/deleteItem", services.inventoryService.deleteItems);
+
+module.exports = router;

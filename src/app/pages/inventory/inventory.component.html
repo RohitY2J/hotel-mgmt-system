@@ -1,0 +1,232 @@
+<app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
+<app-loader *ngIf="isLoading"></app-loader>
+
+<div *ngIf="showInventoryForm" tabindex="-1" aria-hidden="true"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <span *ngIf="!showFormInUpdateMode">Create</span>
+                    <span *ngIf="showFormInUpdateMode">Update</span>
+                    Inventory
+                </h3>
+                <button (click)="closeInventoryForm()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form [formGroup]="inventoryRequest" class="p-4 md:p-5">
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-1">
+                        <label for="inventoryName"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Item Name" style="transition: all 0.15s ease 0s;"
+                            formControlName="name" />
+                        <div *ngIf="inventoryRequest.get('name')?.invalid 
+                                && (inventoryRequest.get('name')?.dirty 
+                                || inventoryRequest.get('name')?.touched)">
+                            <div *ngIf="inventoryRequest.get('name')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Item name is required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="itemType"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Type</label>
+                        <select id="role" formControlName="itemType"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option *ngFor="let status of constService.getStatusValuesAsDictionary('inventoryItemType')" [value]="status.key">{{ status.value }}
+                            </option>
+                        </select>
+                        
+                    </div>
+                    <div class="col-span-1">
+                        <label for="itemType"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity Unit Type</label>
+                        <select id="role" formControlName="quantityUnitType"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option *ngFor="let status of constService.getStatusValuesAsDictionary('quantityUnitType')" [value]="status.key">{{ status.value }}
+                            </option>
+                        </select>
+                        
+                    </div>
+                    <div class="col-span-1">
+                        <label for="pricePerUnit"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price Per Unit</label>
+                        <input type="number"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Price per unit" style="transition: all 0.15s ease 0s;"
+                            formControlName="pricePerUnit" />
+                        <div *ngIf="inventoryRequest.get('pricePerUnit')?.invalid 
+                                && (inventoryRequest.get('pricePerUnit')?.dirty 
+                                || inventoryRequest.get('pricePerUnit')?.touched)">
+                            <div *ngIf="inventoryRequest.get('pricePerUnit')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                               Price is required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="description"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description <i>(Optional)</i></label>
+                            <textarea  name="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" id="description" formControlName="description"></textarea>
+                       
+                    </div>
+                    <!-- <div class="col-span-1">
+                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price
+                            Per Day</label>
+                        <input type="number"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Pricer Per Day" style="transition: all 0.15s ease 0s;"
+                            formControlName="pricePerDay" />
+                        <div
+                            *ngIf="createRoomRequest.get('pricePerDay')?.invalid && (createRoomRequest.get('pricePerDay')?.dirty || createRoomRequest.get('pricePerDay')?.touched)">
+                            <div *ngIf="createRoomRequest.get('pricePerDay')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Room Number is Required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="occupancyStatus"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Occupancy Status</label>
+                        <select id="role" formControlName="occupancyStatus"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option class="text-gray-400" value="" selected>Select occupany Status</option>
+                            <option
+                                *ngFor="let roomStatus of constantService.getStatusValuesAsDictionary('roomOccupancyStatus')"
+                                [value]="roomStatus.key">{{ roomStatus.value }}
+                            </option>
+                        </select>
+                        <div *ngIf="createRoomRequest.get('occupancyStatus')?.invalid 
+                                && (createRoomRequest.get('occupancyStatus')?.dirty 
+                                || createRoomRequest.get('occupancyStatus')?.touched)">
+                            <div *ngIf="createRoomRequest.get('occupancyStatus')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Please select occupance status.</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="maintainanceStatus"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Maintainance
+                            Status</label>
+                        <select id="role" formControlName="maintainanceStatus"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option class="text-gray-400" value="" selected>Select maintainance Status</option>
+                            <option
+                                *ngFor="let maintainanceStatus of constantService.getStatusValuesAsDictionary('roomMaintainanceStatus')"
+                                [value]="maintainanceStatus.key">
+                                {{ maintainanceStatus.value}}
+                            </option>
+                        </select>
+                        <div *ngIf="createRoomRequest.get('maintainanceStatus')?.invalid 
+                                && (createRoomRequest.get('maintainanceStatus')?.dirty 
+                                || createRoomRequest.get('maintainanceStatus')?.touched)">
+                            <div *ngIf="createRoomRequest.get('maintainanceStatus')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Please select Maintainance status.</div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+                    style="margin: -1.25rem; margin-top: 0.5rem">
+                    <button type="submit" (click)="submit()"
+                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
+                    <button (click)="closeInventoryForm()" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                </div>
+            </form>
+            <!-- Modal body -->
+            
+        </div>
+    </div>
+</div>
+
+<div class="flex-1 p-4 bg-gray-800 h-full">
+    <div class="flex items-center justify-between mb-2">
+        <div class="text-lg font-semibold dark:text-white">Inventory</div>
+
+    </div>
+
+    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
+
+    <div class="flex items-center justify-between">
+        <div class="flex">
+            <button (click)="openInventoryForm()"
+                class="block mr-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+                type="button">
+                Add Inventory
+            </button>
+
+            <div class="flex me-4 ml-2">
+                <select id="role" [(ngModel)]="filter.filterObj.itemType"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option class="text-gray-400" value="" selected>All Item Types</option>
+                    <option *ngFor="let status of constService.getStatusValuesAsDictionary('inventoryItemType')" [value]="status.key">{{ status.value }}
+                    </option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="space-y-4 md:space-y-0 py-4">
+
+            <div class="flex items-center max-w-md ml-auto me-4">
+                <label for="simple-search" class="sr-only">Search</label>
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fa-solid fa-box text-white"></i>
+                    </div>
+                    <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search by name" required />
+                </div>
+                <button type="button" (click)="fetchInventoryItems()" (change)="fetchInventoryItems()"
+                    class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <i class="fas fa-search text-white"></i>
+                    <span class="sr-only">Search</span>
+                </button>
+                <button type="button" (click)="clearFilter()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Clear</span>
+                </button>
+            </div>
+
+          
+        </div>
+
+    </div>
+
+    <ng-container *ngFor="let item of inventoryItems">
+        <div class="max-w-sm rounded overflow-hidden my-2 shadow-lg dark:bg-gray-400">
+            <div class="px-6 py-4">
+              <div class="font-bold text-xl mb-2">{{item.name}}</div>
+              <p class="text-gray-700 text-base">
+                Description: {{item.description}} <br/>
+                Available: {{item.availableUnit}} <br/>
+              </p>
+            </div>
+            <div class="px-6 pt-4 pb-2 justify-center">
+              <button class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Update</button>
+              <button class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Add</button>
+              <button class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Dispatch</button>
+            </div>
+          </div>
+    </ng-container>
+    <app-pagination 
+    [dataCount]="filter.pagination.dataCount" 
+    [page]="filter.pagination.page"
+    [pageSize]="filter.pagination.pageSize"
+    [hasNoItems] = "inventoryItems.length == 0"
+    (callback)="updatePaginationPage($event)"></app-pagination>
+</div>

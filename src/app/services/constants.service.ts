@@ -59,6 +59,14 @@ export class ConstantsService {
       1: "Served",
       2: "Cancelled",
       3: "Billed"
+    },
+    inventoryItemType: {
+      0: "Menu",
+      1: "Others",
+    },
+    quantityUnitType: {
+      0: "Unit",
+      1: "ML",
     }
   };
 

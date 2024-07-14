@@ -7,4 +7,4 @@ exports.ExployeeDailyActivity = require("./employee-daily-activity");
 exports.MenuItem = require("./menu-item");
 exports.Inventory = require("./inventory");
 exports.Order = require("./order.model");
-
+exports.InventoryReceiveAndDispatch = require("./inventory-receive-and-dispatch");
