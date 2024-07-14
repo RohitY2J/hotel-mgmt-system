@@ -12,6 +12,7 @@ import { MenuItemComponent } from './pages/menu-item/menu-item.component';
 import { WaiterComponent } from './pages/waiter/waiter.component';
 import { OrderItemComponent } from './pages/order-item/order-item.component';
 import { KitchenComponent } from './pages/kitchen/kitchen.component';
+import { OrderBillComponent } from './pages/order-bill/order-bill.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -24,6 +25,7 @@ export const routes: Routes = [
           {title: 'Employee', path: 'employee', component: EmployeeComponent, outlet:"main" },
           {title: 'Employee Attendance', component: EmployeeAttendanceComponent, path:'employee-attendance', outlet:"main"},
           {title: "Rooms", component: RoomComponent, path:'rooms', outlet:'main'},
+          {title: "OrderBill", component: OrderBillComponent, path:'order-bill', outlet:'main'},
           {
             title: 'Reservation',
             component: ReservationComponent,

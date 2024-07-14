@@ -57,7 +57,8 @@ export class ConstantsService {
     orderStatus: {
       0: "Pending",
       1: "Served",
-      2: "Cancelled"
+      2: "Cancelled",
+      3: "Billed"
     }
   };
 

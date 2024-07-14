@@ -102,7 +102,25 @@ exports.getSpecificOrder = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
     try{
-        data = await dbContext.Order.find(req.body);
+        filter = {};
+
+        if(req.body.hasOwnProperty('status')){
+            filter.status = req.body.status;
+        }
+    
+        if(req.body.hasOwnProperty('tableNumber')){
+            filter.tableNumber = req.body.tableNumber;
+        }
+    
+        // Extract pagination parameters
+        const page = parseInt(req.body.pagination?.page) || 1;  // Default to page 1 if not provided
+        const limit = parseInt(req.body.pagination?.count) || 8;  // Default to 10 items per page if not provided
+        const skip = (page - 1) * limit;
+    
+        data = await dbContext.Order.find(filter)
+                    .skip(skip)
+                    .limit(limit);
+
         data.forEach(record => {
             record._doc.total = record.orders.reduce((total, order) => {
                 return total + (order.price * order.qty);

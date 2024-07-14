@@ -1,0 +1,122 @@
+<app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
+<app-loader *ngIf="isLoading"></app-loader>
+
+<div class="flex-1 p-4 bg-gray-800 h-full">
+    <div class="flex items-center justify-between mb-2">
+        <div class="text-lg font-semibold dark:text-white">Bill</div>
+
+    </div>
+
+    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
+
+    <div class="flex items-center flex-row-reverse">
+        <div class="space-y-4 md:space-y-0 py-4">
+
+            <div class="flex items-center">
+                <select id="role" [(ngModel)]="filter.role"
+                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="" selected>All Role</option>
+                        <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                        </option>
+                    </select>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <input type="text" id="simple-search" (change)="searchInputChanged($event)"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search employee name.." required />
+                </div>
+                <button type="button" (click)="searchButtonClicked()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Apply</span>
+                </button>
+                <button type="button" (click)="clearFilter()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Clear</span>
+                </button>
+            </div>
+    
+        </div>
+
+    </div>
+
+
+    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 h-96">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
+                <tr>
+                    <th scope="col" class="p-4">
+                        <div class="flex items-center">
+                            <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Table Number
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Customer Name
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Total
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="orders.length === 0">
+                    <td colspan="5" class="text-center text-xl py-16">
+                        No records found
+                    </td>
+                </tr>
+                <tr *ngFor="let order of orders"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="checkbox-table-search-{{ order.id }}" type="checkbox"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="checkbox-table-search-{{ order.id }}" class="sr-only">checkbox</label>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ order.tableNumber }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ order.customerName ?? "N/A" }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            {{ getOrderStatus(order.status)}}
+                        </div>
+                    </td>
+
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            {{ order.total}}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <!-- Modal toggle -->
+                        <button type="button"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Generate Invoice</button>
+                        <!-- <button type="button" (click)="deleteButtonClicked(employee)"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</button> -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <app-pagination 
+                [dataCount]="filter.pagination.dataCount" 
+                [page]="filter.pagination.page"
+                [pageSize]="filter.pagination.pageSize"
+                (callback)="updatePaginationPage($event)"></app-pagination>
+    </div>
+
+</div>
