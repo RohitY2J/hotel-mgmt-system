@@ -14,6 +14,7 @@ import { OrderItemComponent } from './pages/order-item/order-item.component';
 import { KitchenComponent } from './pages/kitchen/kitchen.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { OrderBillComponent } from './pages/order-bill/order-bill.component';
+import { FoodInvoiceLayoutComponent } from './pages/food-invoice-layout/food-invoice-layout.component';
 
 export const routes: Routes = [
     {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
@@ -68,5 +69,6 @@ export const routes: Routes = [
     },
 
     {path: 'print-invoice', component: PrintLayoutComponent},
+    {path: 'print-food-invoice', component: FoodInvoiceLayoutComponent},
     {path:'**', component:LoginComponent, canActivate: [authGuard]},
 ];

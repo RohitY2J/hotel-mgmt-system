@@ -1,10 +1,73 @@
 <app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
 <app-loader *ngIf="isLoading"></app-loader>
 
+
+<div *ngIf="isCheckOutModalVisible" tabindex="-1" aria-hidden="true"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px;">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Bill Info
+                </h3>
+                <button (click)="closeCheckOutModal()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+
+            <div class="grid gap-4 mb-4 grid-cols-2">
+
+                <div class="col-span-2 px-5 py-5">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer
+                        Name</label>
+                    <input type="text"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="customerName" style="transition: all 0.15s ease 0s;"
+                        [(ngModel)]="this.selectedOrder.customerName" />
+
+                </div>
+
+                <div class="col-span-1 px-5 py-5">
+                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount
+                        %</label>
+                    <input type="number"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="discount" style="transition: all 0.15s ease 0s;" [(ngModel)]="this.selectedOrder.discount" />
+
+                </div>
+                <div class="col-span-1 px-5 py-5">
+                    <label for="tax" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tax %</label>
+                    <input type="number"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="tax" style="transition: all 0.15s ease 0s;" [(ngModel)]="this.selectedOrder.tax" />
+
+                </div>
+
+            </div>
+            <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 px-5"
+                style="margin: -1.25rem; margin-top: 0.5rem">
+                <button type="submit" (click)="checkOutAndPrintInvoice()"
+                    class="ml-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Continue</button>
+                <button (click)="closeCheckOutModal()" type="button"
+                    class="ml-5 py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="flex-1 p-4 bg-gray-800 h-full">
     <div class="flex items-center justify-between mb-2">
         <div class="text-lg font-semibold dark:text-white">Bill</div>
-
     </div>
 
     <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
@@ -13,17 +76,31 @@
         <div class="space-y-4 md:space-y-0 py-4">
 
             <div class="flex items-center">
-                <select id="role" [(ngModel)]="filter.role"
-                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>All Role</option>
-                        <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
-                        </option>
-                    </select>
+                <div class="relative max-w-sm mx-2">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-calendar text-gray-200"></i>
+                    </div>
+                    <input [(ngModel)]="filter.date" id="datepicker-filter" type="text"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Select date">
+                </div>
+                <select id="role" [(ngModel)]="filter.status"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="" class="bg-gray-700" selected>All Status</option>
+                    <option *ngFor="let status of getOrderStatusList()" [value]="status.key">{{ status.value }}
+                    </option>
+                </select>
+                <select id="role" [(ngModel)]="filter.tableNumber"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="" class="bg-gray-700" selected>All Table</option>
+                    <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                    </option>
+                </select>
                 <div class="relative">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="fas fa-user text-white"></i>
                     </div>
-                    <input type="text" id="simple-search" (change)="searchInputChanged($event)"
+                    <input type="text" id="simple-search" [(ngModel)]="filter.customerName" (change)="searchInputChanged($event)"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search employee name.." required />
                 </div>
@@ -38,14 +115,14 @@
                     <span>Clear</span>
                 </button>
             </div>
-    
+
         </div>
 
     </div>
 
 
-    <div class="overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 h-96">
+    <div class="overflow-x-auto shadow-md sm:rounded-lg h-80">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
                 <tr>
                     <th scope="col" class="p-4">
@@ -104,19 +181,17 @@
                     </td>
                     <td class="px-6 py-4">
                         <!-- Modal toggle -->
-                        <button type="button"
-                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Generate Invoice</button>
+                        <button type="button" (click)="generateInvoiceClicked(order)"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Generate
+                            Invoice</button>
                         <!-- <button type="button" (click)="deleteButtonClicked(employee)"
                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</button> -->
                     </td>
                 </tr>
             </tbody>
         </table>
-        <app-pagination 
-                [dataCount]="filter.pagination.dataCount" 
-                [page]="filter.pagination.page"
-                [pageSize]="filter.pagination.pageSize"
-                (callback)="updatePaginationPage($event)"></app-pagination>
     </div>
+    <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
+        [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
 
 </div>

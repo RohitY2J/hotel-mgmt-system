@@ -96,4 +96,16 @@ export class ConstantsService {
     });
   }
 
+  getDateTodayString(){
+    let today = new Date();
+
+    // Get day, month, and year from the date object
+    let day = today.getDate().toString().padStart(2, '0'); // Ensure two digits with leading zero if necessary
+    let month = (today.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed, so add 1
+    let year = today.getFullYear();
+
+    // Format the date string as "DD/MM/YYYY"
+    return `${month}/${day}/${year}`;
+  }
+
 }

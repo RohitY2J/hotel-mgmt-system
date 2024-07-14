@@ -8,6 +8,17 @@ const OrderSchema = new Schema({
     required: true,
     trim: true
   },
+  customerName: {
+    type: String
+  },
+  discount: {
+    type: Number,
+    default: 0
+  },
+  tax: {
+    type: Number,
+    default: 0
+  },
   status: {type: Number, required: true}, // 0-pending, 1-served, 2-cancelled
   orders: [
     {
