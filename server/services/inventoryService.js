@@ -23,8 +23,83 @@ exports.createInventoryItem = async (req, res, next) => {
     }
   }
 };
-exports.addItem = (req, res, next) => {
-//TODO
+exports.addItem = async (req, res, next) => {
+  try {
+    if (req.body.numberOfItems <= 0)
+      return res.status(400).send("Number of items should be greater than 0");
+
+    let inventoryAddRequest = {
+      inventoryItemId: req.body.id,
+      itemName: req.body.itemName,
+      actionType: globalConstants.InventoryActionType.Receive,
+      count: req.body.numberOfItems,
+    };
+
+    await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
+
+    let inventoryUpdateRequest = {
+      $inc: { availableUnit: req.body.numberOfItems },
+      lastAddedOn: Date.now(),
+      lastAddedUnit: req.body.numberOfItems,
+    };
+
+    let result = await dbContext.Inventory.updateOne(
+      { _id: req.body.id },
+      inventoryUpdateRequest
+    );
+
+    if (result.modifiedCount === 0) {
+      let errRes = { message: "Unable to add items.", error: null };
+      return res.status(400).send(errRes);
+    }
+    return res
+      .status(200)
+      .send({ success: true, message: "Items added successfully" });
+  } catch (err) {
+    let errRes = { message: "Error adding item.", error: err };
+    console.error(errRes);
+    return res.status(500).send(errRes);
+  }
+  
+};
+exports.dispatchItem = async (req, res, next) => {
+  try {
+    if (req.body.numberOfItems <= 0)
+      return res.status(400).send("Number of items should be greater than 0");
+
+    let inventoryAddRequest = {
+      inventoryItemId: req.body.id,
+      itemName: req.body.itemName,
+      actionType: globalConstants.InventoryActionType.Dispatch,
+      count: req.body.numberOfItems,
+    };
+
+    await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
+
+    let inventoryUpdateRequest = {
+      $inc: { availableUnit: (0 - req.body.numberOfItems) }, //decrement item
+      lastAddedOn: Date.now(),
+      lastAddedUnit: req.body.numberOfItems,
+      description: req.body.description
+    };
+
+    let result = await dbContext.Inventory.updateOne(
+      { _id: req.body.id },
+      inventoryUpdateRequest
+    );
+
+    if (result.modifiedCount === 0) {
+      let errRes = { message: "Unable to dispatch items.", error: null };
+      return res.status(400).send(errRes);
+    }
+    return res
+      .status(200)
+      .send({ success: true, message: "Items dispatched successfully" });
+  } catch (err) {
+    let errRes = { message: "Error dispatching item.", error: err };
+    console.error(errRes);
+    return res.status(500).send(errRes);
+  }
 };
 
 exports.getItemById = async (req, res, next) => {
@@ -97,6 +172,25 @@ exports.deleteItems = async (req, res, next) => {
     let errRes = { message: "Error deleting item.", error: err };
     console.error(errRes);
     return res.status(500).send(errRes);
+  }
+
+ 
+};
+
+exports.getAddDispatchHistory = async (req, res, next) =>{
+  try{
+    let results = await dbContext.InventoryReceiveAndDispatch.find(req.body)
+    .select('_id inventoryItemId itemName actionType count createdAt')
+    .skip((req.query.pageNo - 1) * req.query.pageSize)
+    .limit(req.query.pageSize);
+    return res.status(200).send(results);
+  }catch(err){
+    let errorRes = {
+      message: "Error occurred while getting item.",
+      error: err,
+    };
+    console.error(errorRes);
+    return res.status(500).send(errorRes);
   }
 };
 

@@ -7,12 +7,13 @@ const InventoryReceiveAndDispatchSchema = new Schema({
     itemName: {type: String, required: true},
     actionType: {type: Number, required: true}, //0 - Receive, 1 - Dispatch
     count: {type: Number, required: true},
+    description: {type: String, required: false},
     //meta
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date },
+    updatedAt: { type: Date},
     isDeleted: { type: Boolean },
-    createdBy: { type: String, required: true },
-    lastUpdatedBy: { type: String, required: true },
+    createdBy: { type: String},
+    lastUpdatedBy: { type: String},
 });
 
 // Middleware to update the `updatedAt` field on update

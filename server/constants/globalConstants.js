@@ -21,3 +21,8 @@ exports.PaymentStatus = Object.freeze({
   Unpaid: 1,
   PartiallyPaid: 2,
 });
+
+exports.InventoryActionType = Object.freeze({
+Receive: 0,
+Dispatch: 1
+});
