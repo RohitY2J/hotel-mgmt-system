@@ -7,6 +7,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { finalize } from 'rxjs';
 import { HttpListResponse } from '../../models/HttpResponse';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-menu-item',
@@ -16,7 +17,8 @@ import { HttpListResponse } from '../../models/HttpResponse';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    LoaderComponent
+    LoaderComponent,
+    PaginationComponent
   ],
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss'
@@ -36,7 +38,12 @@ export class MenuItemComponent implements OnInit {
 
   filter: any = {
     menuName: "",
-    availableStatus: ""
+    availableStatus: "",
+    pagination: {
+      page: 1,
+      pageSize: 8,
+      dataCount: 8
+    }
   }
 
   constructor(private fb: FormBuilder, private httpService: HttpService, public constantService: ConstantsService) { }
@@ -77,6 +84,7 @@ export class MenuItemComponent implements OnInit {
           console.log(res);
           let response = res as HttpListResponse; 
           this.allMenus = response.data;
+          this.filter.pagination.dataCount = response.data.length;
         },
         error: (err) => this.triggerNotification({ 
           message: "Failed to retrieve data", 
@@ -174,7 +182,7 @@ export class MenuItemComponent implements OnInit {
       description: menu.description,
       price: menu.price,
       category: menu.category,
-      available: menu.available ? 0 : 1,
+      available: menu.available ? 1 : 0,
       inventoryId: menu.inventoryId ?? ""
     });
     this.isUpdate = true;
@@ -198,7 +206,12 @@ export class MenuItemComponent implements OnInit {
   clearFilter() {
     this.filter = {
       menuName: "",
-      availableStatus: ""
+      availableStatus: "",
+      pagination: {
+        page: 1,
+        pageSize: 8,
+        dataCount: 8
+      }
     };
     this.fetchMenuItems();
   }
@@ -210,12 +223,12 @@ export class MenuItemComponent implements OnInit {
   }
 
   getMenuAvailabilityStatus(menuStatus: boolean){
-    if(menuStatus){
-      return "Available";
-    }
-    else{
-      return "Not Available";
-    }
+    return this.constantService.getStatusString("menuAvailabilityStatus", menuStatus ? 1 : 0);
+  }
+
+  updatePaginationPage(page: number){
+    this.filter.pagination.page = page;
+    this.fetchMenuItems();
   }
 }
 
