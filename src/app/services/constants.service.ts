@@ -67,6 +67,10 @@ export class ConstantsService {
     quantityUnitType: {
       0: "Unit",
       1: "ML",
+    },
+    tableAvailableStatus:{
+      0: "Not Available",
+      1: "Available"
     }
   };
 

@@ -118,7 +118,7 @@ exports.getOrders = async (req, res, next) => {
 
         // Extract pagination parameters
         const page = parseInt(req.body.pagination?.page) || 1;  // Default to page 1 if not provided
-        const limit = parseInt(req.body.pagination?.count) || 8;  // Default to 10 items per page if not provided
+        const limit = parseInt(req.body.pagination?.pageSize) || 8;  // Default to 10 items per page if not provided
         const skip = (page - 1) * limit;
 
         data = await dbContext.Order.find(filter)
@@ -159,6 +159,7 @@ exports.updateOrder = async (req, res, next) => {
         existingOrder.customerName = order.customerName;
         existingOrder.discount = order.discount;
         existingOrder.tax = order.tax; 
+        existingOrder.status = order.status;
         
         await existingOrder.save();
         return res.status(200).json({

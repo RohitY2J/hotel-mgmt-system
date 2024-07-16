@@ -27,33 +27,6 @@ import { NotificationComponent } from '../shared/notification/notification.compo
   styleUrl: './waiter.component.scss'
 })
 export class WaiterComponent implements OnInit {
-  allMenus: any[] = [{
-    tableNumber: 5,
-    name: "Test",
-    price: 500,
-  }, {
-    tableNumber: 5,
-    name: "Test",
-    price: 500,
-  }, {
-    tableNumber: 5,
-    name: "Test",
-    price: 500,
-  }, {
-    tableNumber: 5,
-    name: "Test",
-    price: 500,
-  }, {
-    tableNumber: 5,
-    name: "Test",
-    price: 500,
-  }, {
-    tableNumber: 5,
-    name: "Test",
-    price: 500,
-  }
-  ]
-
   isLoading: boolean = false;
   showNotification: boolean = false;
   notificationParams: any = {};
@@ -68,7 +41,7 @@ export class WaiterComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private httpService: HttpService,
-    private constantService: ConstantsService,
+    public constantService: ConstantsService,
     private router: Router
   ) { }
 
@@ -86,7 +59,7 @@ export class WaiterComponent implements OnInit {
     this.isLoading = true;
     this.httpService
       .httpPost(
-        'order/getOrders',
+        'table/getTables',
         this.filter
       )
       .pipe(finalize(() => {

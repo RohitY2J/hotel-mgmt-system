@@ -137,8 +137,6 @@ export class OrderBillComponent implements OnInit {
 
   checkOutAndPrintInvoice() {
     this.isLoading = true;
-    this.selectedOrder.discount = this.discount;
-    this.selectedOrder.tax = this.tax;
     this.selectedOrder.status = 3; //billed
     this.httpService
       .httpPost(`order/updateOrder`, this.selectedOrder)
@@ -173,6 +171,7 @@ export class OrderBillComponent implements OnInit {
       .subscribe( 
         (response) => {
           this.orders = (response as HttpListResponse).data;
+          this.filter.pagination.dataCount = this.orders.length;
         },
         (err) => {
           this.triggerNotification({

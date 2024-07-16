@@ -1,0 +1,186 @@
+<app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
+<app-loader *ngIf="isLoading"></app-loader>
+
+<div *ngIf="istableFormOpen" tabindex="-1" aria-hidden="true"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <span *ngIf="!isUpdate">Create</span>
+                    <span *ngIf="isUpdate">Update</span>
+                    Table
+                </h3>
+                <button (click)="closeModal()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form [formGroup]="tableForm" class="p-4 md:p-5">
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-1">
+                        <label for="tableNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Table Number</label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter table Number" style="transition: all 0.15s ease 0s;"
+                            formControlName="tableNumber" />
+                        <div *ngIf="tableForm.get('tableNumber')?.invalid 
+                                && (tableForm.get('tableNumber')?.dirty 
+                                || tableForm.get('tableNumber')?.touched)">
+                            <div *ngIf="tableForm.get('tableNumber')?.errors?.['required']" class="text-red-500 text-xs italic">
+                                Table Number is Required</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Location
+                        </label>
+                        <input type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Add location.." style="transition: all 0.15s ease 0s;"
+                            formControlName="location" />
+                        <div *ngIf="tableForm.get('location')?.invalid 
+                                && (tableForm.get('location')?.dirty 
+                                || tableForm.get('location')?.touched)">
+                            <div *ngIf="tableForm.get('location')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Location is Required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1">
+                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Availability
+                        </label>
+                        <select id="role" formControlName="status"
+                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option class="text-gray-400" value="" selected>Select available status</option>
+                            <option
+                                *ngFor="let status of constantService.getStatusValuesAsDictionary('tableAvailableStatus')"
+                                [value]="status.key">{{ status.value }}
+                            </option>
+                        </select>
+                        <div *ngIf="tableForm.get('available')?.invalid 
+                                && (tableForm.get('available')?.dirty 
+                                || tableForm.get('available')?.touched)">
+                            <div *ngIf="tableForm.get('available')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Please select availability status.</div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <label for="maintainanceStatus"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Capacity
+                        </label>
+                        <input type="number"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Add capacity.." style="transition: all 0.15s ease 0s;"
+                            formControlName="capacity" />
+                        <div *ngIf="tableForm.get('capacity')?.invalid 
+                                && (tableForm.get('capacity')?.dirty 
+                                || tableForm.get('capacity')?.touched)">
+                            <div *ngIf="tableForm.get('capacity')?.errors?.['required']"
+                                class="text-red-500 text-xs italic">
+                                Capacity is Required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+                    style="margin: -1.25rem; margin-top: 0.5rem">
+                    <button type="submit" (click)="formSubmitted()"
+                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
+                    <button (click)="closeModal()" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="flex-1 p-4 bg-gray-800 h-full">
+    <div class="mx-auto max-w-screen-2xl">
+        <div class="flex items-center justify-between mb-2">
+            <div class="text-lg font-semibold text-white">Tables</div>
+        </div>
+
+        <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
+
+        <div class="flex items-center py-6">
+            
+            <button (click)="openTableForm()"
+                    class="w-28 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+                    type="button">
+                    Add Table
+            </button>
+
+
+            <div class="flex items-center ml-72">
+                <select id="availableStatus" [(ngModel)]="filter.status"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option class="text-gray-600" value="" selected>Available Status</option>
+                    <option value="0">Not Available </option>
+                    <option value="1">Available </option>
+                </select>
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <input type="text" id="simple-search" [(ngModel)]="filter.tableNumber"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search menu item name.." required />
+                </div>
+                <button type="button" (click)="searchButtonClicked()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Apply</span>
+                </button>
+                <button type="button" (click)="clearFilter()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Clear</span>
+                </button>
+            </div>
+
+
+        </div>
+
+
+
+        <div
+            class="grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-5 xs:grid-cols-1 lg:gap-2 justify-center h-96">
+            <!-- logo - start -->
+            <div *ngFor="let menu of allTables"
+                class="w-40 flex h-16 items-center justify-center rounded-lg bg-gray-100 p-4 text-gray-400 sm:h-40">
+                <div class="card-content">
+                    <div class="flex flex-col items-center justify-center">
+                        <dt class="mb-4 text-4xl font-extrabold dark:text-gray-700">{{menu.tableNumber}}</dt>
+                        <dd class="text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            Capacity: {{menu.capacity}}
+                        </dd>
+                        <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            {{constantService.getStatusString('tableAvailableStatus', menu.status)}}
+                        </dd>
+                        <dd class="text-gray-600 text-sm font-semibold dark:text-blue-600 uppercase cursor-pointer">
+                            <span role="button" (click)="openUpdateForm(menu)">Update <i
+                                    class="fa-solid fa-pen text-xs"></i></span>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <app-pagination [dataCount]="filter.pagination.dataCount" 
+        [page]="filter.pagination.page"
+        [pageSize]="filter.pagination.pageSize"
+        (callback)="updatePaginationPage($event)"></app-pagination>
+    </div>
+</div>

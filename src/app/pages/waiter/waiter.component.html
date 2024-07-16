@@ -145,7 +145,7 @@
 
     <div class="flex-1 p-4 overflow-scroll lg:overflow-hidden">
         <div class="flex items-center justify-between mb-2">
-            <div class="text-lg font-semibold dark:text-white">Orders</div>
+            <div class="text-lg font-semibold dark:text-white">Tables</div>
 
         </div>
 
@@ -185,9 +185,8 @@
             <div 
                 *ngFor="let order of orders" 
                 [ngClass]="{
-                    'bg-yellow-100': order.status === 0,
-                    'bg-green-100': order.status === 1,
-                    'bg-red-100': order.status === 2}" 
+                    'bg-red-100': order.status === 0,
+                    'bg-green-100': order.status === 1}" 
                 class="w-40 mt-4 flex h-28 items-center justify-center rounded-lg p-2 text-gray-400 sm:h-28"
                 role="button"
                 (click)="openStatusUpdateForm(order)">
@@ -195,10 +194,10 @@
                     <div class="flex flex-col items-center justify-center">
                         <dt class="mb-2 text-3xl font-extrabold dark:text-gray-700">{{order.tableNumber}}</dt>
                         <dd class="text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            Total Price: (Rs. {{order.total}})
+                            Capacity: {{order.capacity}}
                         </dd>
                         <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            Status: {{getStatusString(order.status)}}
+                            {{constantService.getStatusString('tableAvailableStatus', order.status)}}
                         </dd>
                     </div>
                 </div>

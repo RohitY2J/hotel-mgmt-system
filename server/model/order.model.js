@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 // Define the schema for an order
 const OrderSchema = new Schema({
   tableNumber: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "Table",
     required: true,
-    trim: true
   },
   customerName: {
     type: String
