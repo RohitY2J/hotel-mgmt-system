@@ -5,7 +5,7 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
     <div *ngFor="let order of orders" class="h-fit bg-gray-200 p-4 rounded">
-      <h3 class="font-bold">Table no. {{order.tableNumber}}</h3>
+      <h3 class="font-bold">Table no. {{order.table.tableNumber}}</h3>
       <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-500">
       <div *ngFor="let menu of order.orders" class="flex justify-between">
         <span>{{menu.name}}</span>

@@ -37,23 +37,16 @@ export class OrderItemComponent implements OnInit {
   notificationParams: any = {};
   tableNumber: Number | null = null
   disableScreen: boolean = false;
-
-  products = [
-    { name: 'Product Name 1', price: 49.99, image: 'https://via.placeholder.com/300' },
-    { name: 'Product Name 2', price: 59.99, image: 'https://via.placeholder.com/300' },
-    { name: 'Product Name 3', price: 69.99, image: 'https://via.placeholder.com/300' },
-    { name: 'Product Name 3', price: 69.99, image: 'https://via.placeholder.com/300' },
-    { name: 'Product Name 3', price: 69.99, image: 'https://via.placeholder.com/300' }
-    // Add more products as needed
-  ];
+  allTables: any[] = [];
 
   orders: any[] = [];
 
 
   constructor(private httpService: HttpService) { }
 
-  ngOnInit(): void {
-    this.fetchMenuItems();
+  async ngOnInit(){
+    await this.fetchMenuItems();
+    this.fetchTables();
   }
 
   searchButtonClicked() {
@@ -76,7 +69,31 @@ export class OrderItemComponent implements OnInit {
     return !(this.orders.length > 0 && this.tableNumber) || this.disableScreen;
   }
 
-  fetchMenuItems() {
+  async fetchTables(){
+    this.isLoading = true;
+    this.httpService
+      .httpPost(
+        'table/getTables',
+        {status: 1}
+      )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          let response = res as HttpListResponse;
+          this.allTables = response.data;
+          //this.filter.pagination.dataCount = response.data.length;
+        },
+        error: (err) => this.triggerNotification({
+          message: "Failed to table data",
+          error: true
+        }),
+      });
+  }
+
+  async fetchMenuItems() {
     this.isLoading = true;
     this.httpService
       .httpPost(

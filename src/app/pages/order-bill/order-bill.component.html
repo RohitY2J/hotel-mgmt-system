@@ -26,7 +26,7 @@
 
             <div class="grid gap-4 mb-4 grid-cols-2">
 
-                <div class="col-span-2 px-5 py-5">
+                <div class="col-span-2 px-5">
                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer
                         Name</label>
                     <input type="text"
@@ -36,21 +36,56 @@
 
                 </div>
 
-                <div class="col-span-1 px-5 py-5">
-                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount
-                        %</label>
+                <div class="col-span-2 px-5">
+                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Type
+                    </label>
+                    <select id="role" [(ngModel)]="this.selectedOrder.discountType"
+                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="0" selected>Percent</option>
+                        <option value="1">Flat</option>
+                    </select>
+                </div>
+
+                <div *ngIf="this.selectedOrder.discountType == 0" class="col-span-1 px-5">
+                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Discount %
+                    </label>
                     <input type="number"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="discount" style="transition: all 0.15s ease 0s;" [(ngModel)]="this.selectedOrder.discount" />
+                        placeholder="discount" style="transition: all 0.15s ease 0s;"
+                        [(ngModel)]="this.selectedOrder.discountPercent" />
 
                 </div>
-                <div class="col-span-1 px-5 py-5">
+                <div *ngIf="this.selectedOrder.discountType == 0" class="col-span-1 px-5">
                     <label for="tax" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tax %</label>
                     <input type="number"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="tax" style="transition: all 0.15s ease 0s;" [(ngModel)]="this.selectedOrder.tax" />
+                        placeholder="tax" style="transition: all 0.15s ease 0s;"
+                        [(ngModel)]="this.selectedOrder.taxPercent" />
 
                 </div>
+                <div *ngIf="this.selectedOrder.discountType == 1" class="col-span-1 px-5">
+                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Discount Amount
+                    </label>
+                    <input type="number"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="discount" style="transition: all 0.15s ease 0s;"
+                        [(ngModel)]="this.selectedOrder.discountAmt" />
+
+                </div>
+                <div *ngIf="this.selectedOrder.discountType == 1" class="col-span-1 px-5">
+                    <label for="tax" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Tax Amount
+                    </label>
+                    <input type="number"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="tax" style="transition: all 0.15s ease 0s;"
+                        [(ngModel)]="this.selectedOrder.taxAmt" />
+
+                </div>
+
 
             </div>
             <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 px-5"
@@ -100,7 +135,8 @@
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="fas fa-user text-white"></i>
                     </div>
-                    <input type="text" id="simple-search" [(ngModel)]="filter.customerName" (change)="searchInputChanged($event)"
+                    <input type="text" id="simple-search" [(ngModel)]="filter.customerName"
+                        (change)="searchInputChanged($event)"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search employee name.." required />
                 </div>
@@ -163,7 +199,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-4">
-                        {{ order.tableNumber }}
+                        {{ order.table.tableNumber }}
                     </td>
                     <td class="px-6 py-4">
                         {{ order.customerName ?? "N/A" }}

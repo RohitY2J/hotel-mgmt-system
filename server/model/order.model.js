@@ -11,11 +11,27 @@ const OrderSchema = new Schema({
   customerName: {
     type: String
   },
-  discount: {
+  discountType:{
     type: Number,
     default: 0
   },
-  tax: {
+  taxType: {
+    type: Number,
+    default: 0
+  },
+  discountAmt: {
+    type: Number,
+    default: 0
+  },
+  taxAmt: {
+    type: Number,
+    default: 0
+  },
+  discountPercent:{
+    type: Number,
+    default: 0
+  },
+  taxPercent: {
     type: Number,
     default: 0
   },

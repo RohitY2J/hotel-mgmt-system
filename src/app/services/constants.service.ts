@@ -69,7 +69,7 @@ export class ConstantsService {
       1: "ML",
     },
     tableAvailableStatus:{
-      0: "Not Available",
+      0: "Occupied",
       1: "Available"
     }
   };

@@ -51,12 +51,18 @@ export class FoodInvoiceLayoutComponent implements OnInit {
         next: (res) => {
           this.table = (res as HttpListResponse).data[0];
           this.amount.subTotal = this.table.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
-          if(this.table.discount > 0 && this.amount.subTotal){
-            this.amount.discountAmt = this.table.discount *  this.amount.subTotal/ 100;
+          if(this.table.discountType == 0 ){
+            this.amount.discountAmt = this.table.discountPercent *  this.amount.subTotal/ 100;
           }
-          if(this.table.tax > 0 && this.amount.subTotal){
+          else{
+            this.amount.discountAmt = this.table.discountAmt;
+          }
+          if(this.table.discountType == 0){
             let amtAfterDiscount = this.amount.subTotal - this.amount.discountAmt;
             this.amount.taxAmt = this.table.tax *  amtAfterDiscount/ 100 
+          }
+          else{
+            this.amount.taxAmt = this.table.taxAmt;
           }
           this.amount.totalPayable = this.amount.subTotal - this.amount.discountAmt + this.amount.taxAmt;
         },

@@ -66,6 +66,11 @@ exports.createOrder = async (req, res, next) => {
 
             await newOrder.save();
 
+            const existingTable = await dbContext.Table.findOne({_id: conversion.ToObjectId(request.tableNumber)});
+            existingTable.status = 0;
+
+            await existingTable.save();
+
             io.emit('orderUpdated', newOrder);
         }
 
@@ -83,7 +88,7 @@ exports.createOrder = async (req, res, next) => {
 };
 
 exports.getSpecificOrder = async (req, res, next) => {
-    tableNumber = req.body.tableNumber;
+    tableNumber = conversion.ToObjectId(req.body.tableNumber);
     try {
         data = await dbContext.Order.findOne({ tableNumber: tableNumber, status: 0 });
         return res.status(200).json({
@@ -121,12 +126,29 @@ exports.getOrders = async (req, res, next) => {
         const limit = parseInt(req.body.pagination?.pageSize) || 8;  // Default to 10 items per page if not provided
         const skip = (page - 1) * limit;
 
-        data = await dbContext.Order.find(filter)
-            .skip(skip)
-            .limit(limit);
+        const pipeline = [
+            { $match: filter }, // Match initial filter conditions
+            {
+                $lookup: {
+                    from: 'tables', // Name of the collection to join
+                    localField: 'tableNumber', // Field from the Order collection
+                    foreignField: '_id', // Field from the Database collection
+                    as: 'table' // Output array field
+                }
+            },
+            { $unwind: '$table' }, // Unwind the joined array
+            { $skip: skip }, // Pagination: Skip the first 'skip' documents
+            { $limit: limit } // Pagination: Limit to 'limit' documents
+        ];
+        
+        const data = await dbContext.Order.aggregate(pipeline).exec();
+
+        // data = await dbContext.Order.find(filter)
+        //     .skip(skip)
+        //     .limit(limit);
 
         data.forEach(record => {
-            record._doc.total = record.orders.reduce((total, order) => {
+            record.total = record.orders.reduce((total, order) => {
                 return total + (order.price * order.qty);
             }, 0);
         })
@@ -157,11 +179,19 @@ exports.updateOrder = async (req, res, next) => {
         existingOrder = await dbContext.Order.findOne({_id: conversion.ToObjectId(order._id)})
         
         existingOrder.customerName = order.customerName;
-        existingOrder.discount = order.discount;
-        existingOrder.tax = order.tax; 
+        existingOrder.discountType = order.discountType;
+        existingOrder.discountAmt = order.discountAmt;
+        existingOrder.discountPercent = order.discountPercent;
+        existingOrder.taxType = order.taxType;
+        existingOrder.taxAmt = order.taxAmt;
+        existingOrder.taxPercent = order.taxPercent;
         existingOrder.status = order.status;
         
         await existingOrder.save();
+
+        existingTable = await dbContext.Table.findOne({_id: conversion.ToObjectId(order.tableNumber)})
+        existingTable.status = 1;
+        await existingTable.save();
         return res.status(200).json({
             success: true,
             msg: 'Status updated'
