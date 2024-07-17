@@ -74,7 +74,7 @@ export class OrderItemComponent implements OnInit {
     this.httpService
       .httpPost(
         'table/getTables',
-        {status: 1}
+        {}
       )
       .pipe(finalize(() => {
         this.isLoading = false;

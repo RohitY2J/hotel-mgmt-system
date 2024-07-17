@@ -15,7 +15,7 @@ const socketIo = require('socket.io');
 const server = http.createServer(app);
 const io = socketIo(server,{
   cors: {
-    origin: "http://localhost:4200", // Replace with your client's URL
+    origin: "http://localhost:4200",
     methods: ["GET", "POST"]
   }
 });
@@ -30,13 +30,13 @@ try {
     .then(async () => {
       console.log('Mongoose connected successfully');
       // Run the attendance creation function immediately
-      await businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+      // await businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
 
-      // runs every 6 hour
-      cron.schedule('0 */6 * * *', () => {
-        console.log('Running daily attendance creation script at 12 AM');
-        businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
-      });
+      // // runs every 6 hour
+      // cron.schedule('0 */6 * * *', () => {
+      //   console.log('Running daily attendance creation script at 12 AM');
+      //   businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+      // });
     })
     .catch((error) => {
       console.log('Could not connect to mongodb');
