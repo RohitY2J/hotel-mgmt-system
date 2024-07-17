@@ -11,6 +11,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { Router } from '@angular/router';
 import { Datepicker, DatepickerOptions, InstanceOptions } from 'flowbite';
 
+
 @Component({
   selector: 'app-order-bill',
   standalone: true,
@@ -44,7 +45,7 @@ export class OrderBillComponent implements OnInit {
   notificationParams: any = {};
   orders: any[] = []; 
 
-  isCheckOutModalVisible: boolean = false;
+  isCheckOutModalVisible: boolean = true;
   discount: Number = 0;
   tax: Number = 0;
   tableNumbers: any[]= [];
@@ -52,6 +53,21 @@ export class OrderBillComponent implements OnInit {
   selectedOrder: any = {};
 
   datepicker: Datepicker | null = null;
+
+  steps = ['Step 1', 'Step 2'];
+  currentStep = 0;
+
+  nextStep() {
+    if (this.currentStep < this.steps.length - 1) {
+      this.currentStep++;
+    }
+  }
+
+  previousStep() {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+    }
+  }
 
 
   ngOnInit(): void {
@@ -135,30 +151,31 @@ export class OrderBillComponent implements OnInit {
     this.fetchOrders();
   }
 
-  checkOutAndPrintInvoice() {
-    this.isLoading = true;
-    this.selectedOrder.status = 3; //billed
-    this.httpService
-      .httpPost(`order/updateOrder`, this.selectedOrder)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (res) =>{
-          this.router.navigate(['/print-food-invoice'], {
-            queryParams: { id: this.selectedOrder._id },
-          });
-        },
-        error: (err) => {
-          console.log;
-          this.triggerNotification({
-            message: "Failed to print food invoice",
-            error: true
-          })
-        },
-      });
+  checkOutAndPrintInvoice(order: any) {
+    this.router.navigate(['/print-food-invoice'], {
+      queryParams: { id: order._id },
+    });
+    // this.isLoading = true;
+    // this.selectedOrder.status = 3; //billed
+    // this.httpService
+    //   .httpPost(`order/updateOrder`, this.selectedOrder)
+    //   .pipe(
+    //     finalize(() => {
+    //       this.isLoading = false;
+    //     })
+    //   )
+    //   .subscribe({
+    //     next: (res) =>{
+          
+    //     },
+    //     error: (err) => {
+    //       console.log;
+    //       this.triggerNotification({
+    //         message: "Failed to print food invoice",
+    //         error: true
+    //       })
+    //     },
+    //   });
   }
 
   fetchOrders() {
@@ -212,7 +229,15 @@ export class OrderBillComponent implements OnInit {
 
   generateInvoiceClicked(order: any){
     this.selectedOrder = order;
+  }
+
+  payNow(order: any){
+    this.selectedOrder = order;
     this.isCheckOutModalVisible = true;
+  }
+
+  checkOut(){
+
   }
 
 }
