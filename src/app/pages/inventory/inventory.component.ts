@@ -38,7 +38,7 @@ export class InventoryComponent implements OnInit {
   showAddDispatchForminAddMode: boolean = true;
   inventoryItems: any = [];
   notificationParams: any = {};
-
+  selectedFile: File | undefined;
   itemHistory: any = [];
   showHistory: boolean = false;
 
@@ -89,6 +89,7 @@ export class InventoryComponent implements OnInit {
     pricePerUnit: new FormControl('', Validators.required),
     availableUnit: new FormControl(0),
     minUnitToShowAlert: new FormControl(0),
+    file: new FormControl('')
   });
 
   selectedInventoryItem: any = {};
@@ -139,9 +140,19 @@ export class InventoryComponent implements OnInit {
       this.inventoryRequest.markAllAsTouched();
       return;
     }
+    
+    let request:any = this.inventoryRequest.value;
+    let formData = new FormData();
+    if (this.selectedFile != null) formData.append('file', this.selectedFile!);
+
+    for (const key in request) {
+      formData.append(key, request);
+    }
+   
+    request.file = this.selectedFile?.name;
     this.isLoading = true;
     this.httpService
-      .httpPost('inventory/createInventory', this.inventoryRequest.value)
+      .httpPost('inventory/createInventory', request)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -166,6 +177,7 @@ export class InventoryComponent implements OnInit {
       });
   }
   closeInventoryForm() {
+    this.inventoryRequest.reset();
     this.showInventoryForm = false;
   }
   openInventoryForm() {
@@ -285,5 +297,10 @@ export class InventoryComponent implements OnInit {
   }
   closeItemHistory() {
     this.showHistory = false;
+  }
+  onFileSelect(event: any) {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
   }
 }

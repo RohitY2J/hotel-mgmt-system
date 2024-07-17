@@ -1,8 +1,9 @@
 const express = require("express");
 const services = require("../../services");
 const router = express.Router();
+const { FileUpload } = require('../../helper/file_upload');
 
-router.post("/createInventory", services.inventoryService.createInventoryItem);
+router.post("/createInventory", FileUpload.single('file'), services.inventoryService.createInventoryItem);
 
 router.post("/add", services.inventoryService.addItem);
 

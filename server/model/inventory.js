@@ -5,9 +5,10 @@ const InventorySchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: false },
   itemType: { type: Number, required: true }, // Kitchen, Maintainance, Customer
+  category: {type: String, required: false},
   quantityUnitType: { type: Number, required: true }, // Example: Unit, Dozen, ML
   pricePerUnit: { type: Number, required: false },
-  availableUnit: { type: Number, required: true },
+  availableUnit: { type: Number, required: false },
   isVisibleInMenu: { type: Boolean }, //Show and link in menu if true
   lastAddedOn: { type: Date },
   lastAddedUnit: { type: Number },
