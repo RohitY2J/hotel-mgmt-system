@@ -5,7 +5,7 @@ const InventorySchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: false },
   itemType: { type: Number, required: true }, // Kitchen, Maintainance, Customer
-  category: {type: String, required: false},
+  category: { type: String, required: false },
   quantityUnitType: { type: Number, required: true }, // Example: Unit, Dozen, ML
   pricePerUnit: { type: Number, required: false },
   availableUnit: { type: Number, required: false },
@@ -21,10 +21,10 @@ const InventorySchema = new Schema({
   createdBy: { type: String },
   lastUpdatedBy: { type: String },
   clientId: {
-    type: mongoose.Schema.Types.ObjectId, 
-    ref:"Client",
-    required: true
-  }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Client",
+    required: true,
+  },
 });
 
 // Middleware to update the `updatedAt` field on update
