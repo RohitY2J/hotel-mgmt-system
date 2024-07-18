@@ -7,15 +7,17 @@ import { HttpService } from '../../services/http-service.service';
 import { finalize } from 'rxjs';
 import { HttpListResponse } from '../../models/HttpResponse';
 import { ConstantsService } from '../../services/constants.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { NotificationComponent } from '../shared/notification/notification.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-waiter',
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     NgMultiSelectDropDownModule,
@@ -42,7 +44,8 @@ export class WaiterComponent implements OnInit {
     private fb: FormBuilder, 
     private httpService: HttpService,
     public constantService: ConstantsService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -136,5 +139,9 @@ export class WaiterComponent implements OnInit {
           error: true
         }),
       });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

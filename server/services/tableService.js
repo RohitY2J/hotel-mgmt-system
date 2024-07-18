@@ -2,6 +2,13 @@ const dbContext = require('../model');
 const conversion = require('../helper/conversion');
 
 exports.createTable = async (req, res, next) => {
+    if (!req.clientId) {
+        return res.status(422).json({
+            success: false,
+            msg: 'Client Id is required'
+        });
+    }
+
     table = req.body;
 
     errors = [];
@@ -9,7 +16,7 @@ exports.createTable = async (req, res, next) => {
         errors.push("Table Number is required.");
     }
 
-    const existingTable = await CheckIfTableExist(table.tableNumber);
+    const existingTable = await CheckIfTableExist(table.tableNumber, req.clientId);
     if (existingTable.length > 0) {
         errors.push("Table Number already exisits");
     }
@@ -27,7 +34,8 @@ exports.createTable = async (req, res, next) => {
             tableNumber: table.tableNumber,
             location: table.location,
             status: table.status,
-            capacity: table.capacity
+            capacity: table.capacity,
+            clientId: req.clientId
         });
 
         await newTable.save();
@@ -49,7 +57,7 @@ exports.updateTable = async (req, res, next) => {
 
     errors = [];
 
-    let existingTable = await dbContext.Table.findOne({_id: table.id});
+    let existingTable = await dbContext.Table.findOne({ _id: table.id });
     if (!existingTable) {
         errors.push("Table with given table number does not exist");
     }
@@ -65,7 +73,7 @@ exports.updateTable = async (req, res, next) => {
     try {
         existingTable.status = table.status;
         existingTable.location = table.location;
-        existingTable.capacity =  table.capacity;
+        existingTable.capacity = table.capacity;
 
         await existingTable.save();
         return res.status(200).json({
@@ -84,15 +92,19 @@ exports.updateTable = async (req, res, next) => {
 }
 
 exports.getTabels = async (req, res, next) => {
-    filter = {};
 
-    if(req.body.hasOwnProperty('status') && req.body.status != '') {
+    if (!req.clientId) {
+        return res.status(422).json({
+          success: false,
+          msg: 'Client Id is required'
+        });
+      }
+
+    filter = {clientId: conversion.ToObjectId(req.clientId)};
+
+    if (req.body.hasOwnProperty('status') && req.body.status != '') {
         filter.status = req.body.status;
     }
-
-    // if(req.body.menuName){
-    //     filter.name = { $regex: new RegExp(req.body.menuName, 'i') };
-    // }
 
     // Extract pagination parameters
     const page = parseInt(req.body.pagination?.page) || 1;  // Default to page 1 if not provided
@@ -103,12 +115,6 @@ exports.getTabels = async (req, res, next) => {
         .skip(skip)
         .limit(limit);
 
-
-    // menus.forEach(menu => {
-    //     if (menu.file) {
-    //         menu.file = "http://localhost:8000/uploads/" + menu.file;
-    //     }
-    // });
     return res.status(200).json({
         success: true,
         msg: 'tables successfully retrieved',
@@ -117,7 +123,7 @@ exports.getTabels = async (req, res, next) => {
 }
 
 
-async function CheckIfTableExist(tableNo) {
-    return await dbContext.Table.find({ tableNumber: { $regex: new RegExp(tableNo, 'i') } });
+async function CheckIfTableExist(tableNo, clientId) {
+    return await dbContext.Table.find({ tableNumber: { $regex: new RegExp(tableNo, 'i') }, clientId: conversion.ToObjectId(clientId) });
 
 }

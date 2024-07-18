@@ -2,6 +2,13 @@ const dbContext = require('../model');
 const conversion = require('../helper/conversion');
 
 exports.createMenuItem = async (req, res, next) => {
+    if (!req.clientId) {
+        return res.status(422).json({
+            success: false,
+            msg: 'Client Id is required'
+        });
+    }
+
     menu = req.body;
 
     errors = [];
@@ -9,7 +16,7 @@ exports.createMenuItem = async (req, res, next) => {
         errors.push("Menu name is required.");
     }
 
-    const existingMenu = await CheckIfMenuExist(menu.name);
+    const existingMenu = await CheckIfMenuExist(menu.name, req.clientId);
     if (existingMenu.length > 0) {
         errors.push("Menu name already exisits");
     }
@@ -28,7 +35,8 @@ exports.createMenuItem = async (req, res, next) => {
             description: menu.description,
             price: menu.price,
             category: menu.category,
-            available: menu.available
+            available: menu.available,
+            clientId: conversion.ToObjectId(req.clientId)
         });
 
         if (menu.inventoryId) {
@@ -58,7 +66,7 @@ exports.updateMenuItem = async (req, res, next) => {
 
     errors = [];
 
-    let existingMenu = await dbContext.MenuItem.findOne({_id: menu.id});
+    let existingMenu = await dbContext.MenuItem.findOne({ _id: menu.id });
     if (!existingMenu) {
         errors.push("Menu Item doesnot exist");
     }
@@ -74,7 +82,7 @@ exports.updateMenuItem = async (req, res, next) => {
     try {
         existingMenu.description = menu.description;
         existingMenu.price = menu.price;
-        existingMenu.category =  menu.category;
+        existingMenu.category = menu.category;
         existingMenu.available = menu.available;
 
         if (menu.inventoryId) {
@@ -102,13 +110,20 @@ exports.updateMenuItem = async (req, res, next) => {
 }
 
 exports.getMenuItems = async (req, res, next) => {
-    filter = {};
+    if (!req.clientId) {
+        return res.status(422).json({
+            success: false,
+            msg: 'Client Id is required'
+        });
+    }
+    
+    filter = {clientId: conversion.ToObjectId(req.clientId)};
 
-    if(req.body.availableStatus){
+    if (req.body.availableStatus) {
         filter.available = req.body.availableStatus;
     }
 
-    if(req.body.menuName){
+    if (req.body.menuName) {
         filter.name = { $regex: new RegExp(req.body.menuName, 'i') };
     }
 
@@ -135,7 +150,7 @@ exports.getMenuItems = async (req, res, next) => {
 }
 
 
-async function CheckIfMenuExist(menuName) {
-    return await dbContext.MenuItem.find({ name: { $regex: new RegExp(menuName, 'i') } });
+async function CheckIfMenuExist(menuName, clientId) {
+    return await dbContext.MenuItem.find({ name: { $regex: new RegExp(menuName, 'i') }, clientId: conversion.ToObjectId(clientId) });
 
 }

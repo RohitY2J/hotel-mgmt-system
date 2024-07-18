@@ -4,6 +4,14 @@ const globalConstants = require('../constants/globalConstants');
 
 
 exports.createOrder = async (req, res, next) => {
+
+    if (!req.clientId) {
+        return res.status(422).json({
+            success: false,
+            msg: 'Client Id is required'
+        });
+    }
+
     let request = req.body;
 
     const io = req.app.get('socketio');
@@ -23,7 +31,7 @@ exports.createOrder = async (req, res, next) => {
 
     try {
         // Check if there is an existing pending order for the table number
-        let existingOrder = await dbContext.Order.findOne({ tableNumber: request.tableNumber, status: 0 });
+        let existingOrder = await dbContext.Order.findOne({ tableNumber: request.tableNumber, status: 0, clientId: conversion.ToObjectId(req.clientId) });
 
         if (existingOrder) {
             // Update the existing pending order
@@ -54,6 +62,7 @@ exports.createOrder = async (req, res, next) => {
             const newOrder = new dbContext.Order({
                 tableNumber: request.tableNumber,
                 status: 0, // pending
+                clientId: conversion.ToObjectId(req.clientId)
             });
 
             request.orders.forEach(order => {
@@ -67,7 +76,7 @@ exports.createOrder = async (req, res, next) => {
 
             await newOrder.save();
 
-            const existingTable = await dbContext.Table.findOne({_id: conversion.ToObjectId(request.tableNumber)});
+            const existingTable = await dbContext.Table.findOne({ _id: conversion.ToObjectId(request.tableNumber) });
             existingTable.status = 0;
 
             await existingTable.save();
@@ -75,38 +84,39 @@ exports.createOrder = async (req, res, next) => {
             io.emit('orderUpdated', newOrder);
         }
 
-        if(request.orders.forEach(async (order) =>{
+        if (request.orders.forEach(async (order) => {
             console.log(order);
-            if(order.inventoryId){
+            if (order.inventoryId) {
                 console.log(order.inventoryId);
                 let inventoryAddRequest = {
                     inventoryItemId: order.inventoryId,
-                    itemName:order.name,
+                    itemName: order.name,
                     actionType: globalConstants.InventoryActionType.Dispatch,
                     count: order.qty,
-                  };
-              
-                  await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
-              
-                  let inventoryUpdateRequest = {
+                    clientId: req.clientId
+                };
+
+                await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
+
+                let inventoryUpdateRequest = {
                     $inc: { availableUnit: (0 - req.body.qty) }, //decrement item
                     lastAddedOn: Date.now(),
-                  };
+                };
 
-                  console.log(inventoryUpdateRequest);
+                console.log(inventoryUpdateRequest);
 
-                  await dbContext.Inventory.updateOne(
-                    {_id: order.inventoryId},
+                await dbContext.Inventory.updateOne(
+                    { _id: order.inventoryId },
                     inventoryUpdateRequest
-                  );
+                );
             }
 
         }))
 
-        return res.status(200).json({
-            success: true,
-            msg: 'Order processed successfully!'
-        });
+            return res.status(200).json({
+                success: true,
+                msg: 'Order processed successfully!'
+            });
     }
     catch (err) {
         return res.status(500).json({
@@ -136,7 +146,14 @@ exports.getSpecificOrder = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
     try {
-        filter = {};
+        if (!req.clientId) {
+            return res.status(422).json({
+                success: false,
+                msg: 'Client Id is required'
+            });
+        }
+
+        filter = {clientId: conversion.ToObjectId(req.clientId)};
 
         if (req.body.hasOwnProperty('status') && req.body.status != '') {
             filter.status = req.body.status;
@@ -169,7 +186,7 @@ exports.getOrders = async (req, res, next) => {
             { $skip: skip }, // Pagination: Skip the first 'skip' documents
             { $limit: limit } // Pagination: Limit to 'limit' documents
         ];
-        
+
         const data = await dbContext.Order.aggregate(pipeline).exec();
 
         // data = await dbContext.Order.find(filter)
@@ -205,8 +222,8 @@ exports.billOrder = async (req, res, next) => {
 
     order = req.body;
     try {
-        existingOrder = await dbContext.Order.findOne({_id: conversion.ToObjectId(order._id)})
-        
+        existingOrder = await dbContext.Order.findOne({ _id: conversion.ToObjectId(order._id) })
+
         existingOrder.customerName = order.customerName;
         existingOrder.discountType = order.discountType;
         existingOrder.discountAmt = order.discountAmt;
@@ -216,10 +233,10 @@ exports.billOrder = async (req, res, next) => {
         existingOrder.taxPercent = order.taxPercent;
         existingOrder.status = order.status;
         existingOrder.paymentType = order.paymentType;
-        
+
         await existingOrder.save();
 
-        existingTable = await dbContext.Table.findOne({_id: conversion.ToObjectId(order.tableNumber)})
+        existingTable = await dbContext.Table.findOne({ _id: conversion.ToObjectId(order.tableNumber), clientId: conversion.ToObjectId(req.clientId) })
         existingTable.status = 1;
         await existingTable.save();
         return res.status(200).json({
