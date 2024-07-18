@@ -19,6 +19,12 @@ const TableSchema = new Schema({
     type: Date,
     default: Date.now
   }
+  , // used to store the encrypted passwords
+  clientId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref:"Client",
+    required: true
+  }
 });
 
 // Export the model

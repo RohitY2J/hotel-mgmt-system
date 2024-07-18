@@ -14,6 +14,11 @@ const InventoryReceiveAndDispatchSchema = new Schema({
     isDeleted: { type: Boolean },
     createdBy: { type: String},
     lastUpdatedBy: { type: String},
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref:"Client",
+      required: true
+    }
 });
 
 // Middleware to update the `updatedAt` field on update

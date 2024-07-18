@@ -29,7 +29,12 @@ const CustomSchema = new Schema({
     ],
     role: {type: ObjectId, ref: 'Role'}, // multiple roles
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref:"Client",
+      required: true
+    }
 
 }, { timestamps: true });
 

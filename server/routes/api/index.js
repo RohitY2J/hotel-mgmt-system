@@ -3,6 +3,15 @@ const passport = require('passport');
 const router = express.Router()
 const dbContext = require('../../model');
 
+function middleware(req, res, next){
+    const clientId = req.user.clientId; // Assuming client ID is sent in the header
+    if (clientId) {
+        req.clientId = clientId;
+        next();
+    } else {
+        res.status(400).send('Client ID is required');
+    }
+}
 
 router.post('/login', function (req, res, next) {
     const user = req.body;
@@ -82,6 +91,13 @@ router.post('/login/create', async function (req, res) {
         });
     }
 
+    if(!user.clientId){
+        return res.status(422).json({
+            success: false,
+            msg: "clientId is required"
+        })
+    }
+
 
     try {
         // Check if user with email already exists
@@ -98,7 +114,8 @@ router.post('/login/create', async function (req, res) {
             userName: user.userName,
             email: user.email,
             fullName: user.fullName,
-            phNum: user.phNum
+            phNum: user.phNum,
+            clientId: user.clientId,
         });
 
         newUser.setPassword(user.password);
@@ -118,18 +135,18 @@ router.post('/login/create', async function (req, res) {
     }
 })
 
-router.use('/admin',require('./admin'));
+router.use('/admin', middleware, require("./admin"));
 
 //reservation api
-router.use("/reservation", require("./reservationController"));
+router.use("/reservation", middleware, require("./reservationController"));
 
-router.use("/room", require("./roomController"));
+router.use("/room", middleware ,require("./roomController"));
 
-router.use("/menu",require("./menuController"));
+router.use("/menu", middleware, require("./menuController"));
 
-router.use("/order", require("./orderController"));
+router.use("/order", middleware, require("./orderController"));
 
-router.use("/inventory", require("./inventoryController"));
+router.use("/inventory", middleware, require("./inventoryController"));
 
 router.use("/table", require("./tableController"));
 // Function to check if a user with given email exists
@@ -137,6 +154,8 @@ async function checkIfUserExists(email) {
     const user = await dbContext.User.findOne({ email: email });
     return user; // Returns null if user not found, otherwise returns the user object
 }
+
+
 
 module.exports = router;
 

@@ -15,7 +15,12 @@ const CustomSchema = new Schema({
   profilePic: String,
   roleID: {type: Number, default: 0}, // 0: Waiter, 1: Admin
   hash: String, // used to store the encrypted passwords
-  salt: String // used to store the encrypted passwords
+  salt: String, // used to store the encrypted passwords
+  clientId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref:"Client",
+    required: true
+  }
 }, {timestamps: true});
 
 /**
@@ -54,7 +59,8 @@ CustomSchema.methods.userSimplified = function(){
     userName: this.userName,
     fullName: this.fullName,
     roleID: this.roleID,
-    profilePic: this.profilePic || '/static/img/profile.png'
+    profilePic: this.profilePic || '/static/img/profile.png',
+    clientId: this.clientId
   };
 };
 

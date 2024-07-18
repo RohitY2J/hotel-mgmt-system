@@ -13,7 +13,12 @@ const MenuItemSchema = new Schema({
     inventoryId: { type: ObjectId, ref: 'Stocks' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date },
-    file: {type: String}
+    file: {type: String},
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref:"Client",
+      required: true
+    }
 });
 
 // Middleware to update the `updatedAt` field on update

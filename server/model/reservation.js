@@ -41,6 +41,11 @@ const CustomSchema = new Schema(
     paymentStatus: Number, //Unpaid, PartiallyPaid, Paid
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref:"Client",
+      required: true
+    }
   },
   { timestamps: true }
 );

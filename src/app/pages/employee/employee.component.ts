@@ -152,7 +152,7 @@ export class EmployeeComponent {
             },
             (error) => {
               console.log("Error caught");
-              this.notificationParams.message = error.message;
+              this.notificationParams.message = error.error.msg;
               this.notificationParams.error = true;
             }
           );
@@ -173,7 +173,7 @@ export class EmployeeComponent {
               this.closeModal();
             },
             (error) => {
-              this.notificationParams.message = error.message;
+              this.notificationParams.message = error.error.msg;
               this.notificationParams.error = true;
               console.log("Error caught", error);
             }

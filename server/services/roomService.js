@@ -1,9 +1,11 @@
 const dbContext = require("../model");
-
+const conversion = require("../helper/conversion");
 
 
 exports.createRoom = async (req, res, next) => {
   try {
+
+
     var errorMessage = [];
     let request = req.body;
     if (!request.roomNumber) errorMessage.push("Room number is required");
@@ -11,14 +13,15 @@ exports.createRoom = async (req, res, next) => {
       errorMessage.push("Occupancy status is requried");
     if (!request.maintainanceStatus)
       errorMessage.push("Maintainance status is requried");
+    if (!req.clientId) errorMessage.push("Client Id is required");
 
     if (errorMessage.length > 0) {
       console.error("validation errors: ", errorMessage);
       return res.status(400).send(`invalidRequest: ${errorMessage}`);
     }
 
-    let room = await dbContext.Room.findOne({ roomNumber: request.roomNumber });
-    if (room) {
+    let existingRoom = await dbContext.Room.findOne({ roomNumber: request.roomNumber, clientId: conversion.ToObjectId(req.clientId) });
+    if (existingRoom) {
       return res
         .status(400)
         .send(`invalidRequest: Room ${request.roomNumber} already exists`);
@@ -27,8 +30,9 @@ exports.createRoom = async (req, res, next) => {
     request.createdAt = Date.now();
     request.updatedAt = Date.now();
 
-    var reservation = new dbContext.Room(request);
-    reservation.save();
+    var room = new dbContext.Room(request);
+    room.clientId = conversion.ToObjectId(req.clientId);
+    room.save();
     return res
       .status(200)
       .send({ success: true, message: "Room created successfully" });
@@ -80,7 +84,15 @@ exports.getRoomById = async (req, res, next) => {
 
 exports.getRooms = async (req, res, next) => {
   try {
-    let request = {};
+
+    if (!req.clientId) {
+      return res.status(422).json({
+        success: false,
+        msg: 'Client Id is required'
+      });
+    }
+
+    let request = {clientId: conversion.ToObjectId(req.clientId)};
     if(req.body.roomNumber){
       request.roomNumber = req.body.roomNumber;
     }

@@ -10,7 +10,13 @@ const CustomSchema = new Schema({
     roleName: String,
     permissions: [String], // Array of permissions
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref:"Client",
+      required: true
+    }
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model('Role', CustomSchema);

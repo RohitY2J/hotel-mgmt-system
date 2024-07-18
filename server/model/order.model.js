@@ -65,6 +65,11 @@ const OrderSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  clientId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref:"Client",
+    required: true
   }
 });
 

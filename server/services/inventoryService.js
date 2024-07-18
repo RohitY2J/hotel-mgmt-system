@@ -1,15 +1,24 @@
 const dbContext = require("../model");
 const globalConstants = require("../constants/globalConstants");
-const mongoose = require('mongoose');;
+const mongoose = require('mongoose');
+const conversion = require("../helper/conversion");
 
 
 exports.createInventoryItem = async (req, res, next) => {
   var user = req.user;
+
+  if (!req.clientId) {
+    return res.status(422).json({
+      success: false,
+      msg: 'Client Id is required'
+    });
+  }
   try {
     let inventoryItemId = new mongoose.Types.ObjectId();
     const item = dbContext.Inventory(req.body);
     item._id = inventoryItemId;
     item.createdDate = Date.now();
+    item.clientId = conversion.ToObjectId(req.clientId);
     await item.save();
 
     if (item.itemType == 0) {
@@ -21,6 +30,7 @@ exports.createInventoryItem = async (req, res, next) => {
         availableQuantity: item.availableUnit,
         inventoryId: inventoryItemId,
         file: item.file,
+        clientId: req.clientId
       });
       menuItem.save();
       console.info("Menu item added from inventory item");
@@ -51,6 +61,7 @@ exports.addItem = async (req, res, next) => {
       itemName: req.body.itemName,
       actionType: globalConstants.InventoryActionType.Receive,
       count: req.body.numberOfItems,
+      clientId: req.clientId
     };
 
     await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
@@ -100,6 +111,7 @@ exports.dispatchItem = async (req, res, next) => {
       itemName: req.body.itemName,
       actionType: globalConstants.InventoryActionType.Dispatch,
       count: req.body.numberOfItems,
+      clientId: req.clientId
     };
 
     await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
@@ -156,6 +168,13 @@ exports.getItemById = async (req, res, next) => {
 
 exports.getItems = async (req, res, next) => {
   try{
+    if (!req.clientId) {
+      return res.status(422).json({
+        success: false,
+        msg: 'Client Id is required'
+      });
+    }
+    req.body.clientId = conversion.ToObjectId(req.clientId);
     let results = await dbContext.Inventory.find(req.body)
     .select('_id name description itemType quantityUnitType pricePerUnit availableUnit minUnitToShowAlert')
     .skip((req.query.pageNo - 1) * req.query.pageSize)
@@ -215,6 +234,13 @@ exports.deleteItems = async (req, res, next) => {
 
 exports.getAddDispatchHistory = async (req, res, next) =>{
   try{
+    if (!req.clientId) {
+      return res.status(422).json({
+        success: false,
+        msg: 'Client Id is required'
+      });
+    }
+    req.body.clientId = conversion.ToObjectId(req.clientId);
     let results = await dbContext.InventoryReceiveAndDispatch.find(req.body)
     .select('_id inventoryItemId itemName actionType count createdAt')
     .skip((req.query.pageNo - 1) * req.query.pageSize)

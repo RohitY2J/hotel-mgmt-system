@@ -95,7 +95,7 @@ export class RoomComponent implements OnInit {
         this.httpService
         .httpPost(`room/updateRoom`, this.createRoomRequest.value)
         .pipe(finalize(() => {
-          this.isLoading = false;
+          //this.isLoading = false;
         }))
         .subscribe({
           next: (res)=>{
@@ -119,7 +119,7 @@ export class RoomComponent implements OnInit {
         this.httpService
         .httpPost(`room/createRoom`, this.createRoomRequest.value)
         .pipe(finalize(() => {
-          this.isLoading = false;
+          //this.isLoading = false;
         }))
         .subscribe({
           next: (res) => {

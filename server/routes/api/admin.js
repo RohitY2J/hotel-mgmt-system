@@ -32,6 +32,10 @@ router.post('/createEmployee', FileUpload.single('file'), async (req, res, next)
         errorMessage.push("Role is needed")
     }
 
+    if(!req.clientId){
+        errorMessage.push("Client id is needed")
+    }
+
     if (errorMessage.length > 0) {
         return res.status(422).json({
             success: false,
@@ -42,7 +46,7 @@ router.post('/createEmployee', FileUpload.single('file'), async (req, res, next)
 
     try {
         // Check if user with email already exists
-        const existingUser = await checkIfEmployeeExists(user.email, user.firstName, user.lastName);
+        const existingUser = await checkIfEmployeeExists(user.email, user.firstName, user.lastName, req.clientId);
         if (existingUser) {
            return res.status(422).json({
                 success: false,
@@ -59,7 +63,8 @@ router.post('/createEmployee', FileUpload.single('file'), async (req, res, next)
                 address: user.address,
                 email: user.email
             },
-            role: conversion.ToObjectId(user.role)
+            role: conversion.ToObjectId(user.role),
+            clientId: conversion.ToObjectId(req.clientId)
         });
 
         if(req.file){
@@ -113,6 +118,11 @@ router.post('/updateEmployee', FileUpload.single('file'), async (req, res, next)
     if(!user.role){
         errorMessage.push("Role is needed")
     }
+
+    if(!req.clientId){
+        errorMessage.push("Client id is needed")
+    }
+
 
     if (errorMessage.length > 0) {
         return res.status(422).json({
@@ -183,12 +193,29 @@ router.post('/deleteEmployee', async(req, res, next) => {
 router.post('/createEmployeeRole', async (req, res, next) => {
     let role = req.body;
 
+    var errorMessage = [];
     if (!role.roleName) {
         errorMessage.push("RoleName is needed")
     }
 
+    if(!req.clientId){
+        errorMessage.push("Client id is needed")
+    }
+
+    if (errorMessage.length > 0) {
+        return res.status(422).json({
+            success: false,
+            msg: 'validation failed',
+            error: errorMessage
+        });
+    }
+
+    
     try {
-        const existingRole = await dbContext.Role.find({roleName: role.roleName});
+        const existingRole = await dbContext.Role.find({
+            roleName: role.roleName, 
+            clientId: conversion.ToObjectId(req.clientId)
+        });
         if (existingRole.length > 0) {
            return res.status(422).json({
                 success: false,
@@ -197,7 +224,8 @@ router.post('/createEmployeeRole', async (req, res, next) => {
         }
 
         const newRole = new dbContext.Role({
-            roleName: role.roleName
+            roleName: role.roleName,
+            clientId: req.clientId
         });
 
         await newRole.save();
@@ -219,6 +247,7 @@ router.post('/createEmployeeRole', async (req, res, next) => {
 router.post('/getEmployees', async(req, res, next) => {
     try {
         let params = req.body;
+        params.clientId = req.clientId;
 
         const employees = await businessLogic.EmployeeLogic.getEmployee(params);
 
@@ -232,10 +261,18 @@ router.post('/getEmployees', async(req, res, next) => {
 })
 
 router.get('/getRoles', async(req, res, next) => {
+
+    if(!req.clientId){
+        return res.status(422).json({
+            success: false,
+            msg: 'Client id is required',
+        });
+    }
+    
     try {
-        const roles = await dbContext.Role.find();
+        const roles = await dbContext.Role.find({clientId: conversion.ToObjectId(req.clientId)});
         res.status(200).json({
-            message: "Successfully retrieved all the employees",
+            message: "Successfully retrieved all the roles",
             data: roles
         });
     } catch (err) {
@@ -271,12 +308,13 @@ router.post('/updateEmployeeSchedule', async(req, res, next) => {
     }
 })
 
-async function checkIfEmployeeExists(email, firstName, lastName) {
+async function checkIfEmployeeExists(email, firstName, lastName, clientId) {
     const user = await dbContext.Employee.findOne({ 
         firstName: firstName, 
         lastName: lastName, 
         'contactInfo.email': email,
-        'meta.isDeleted': false });
+        'meta.isDeleted': false,
+        clientId: conversion.ToObjectId(clientId) });
     return user; // Returns null if user not found, otherwise returns the user object
 }
 

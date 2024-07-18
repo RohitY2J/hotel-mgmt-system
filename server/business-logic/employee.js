@@ -7,7 +7,7 @@ exports.getEmployee = async (filterParams) => {
     page = filterParams.pagination.page ?? 1;
     pageSize = filterParams.pagination.pageSize ?? 5;
     
-    let beforeLookUpFilter = {'meta.isDeleted': false};
+    let beforeLookUpFilter = {'meta.isDeleted': false, "clientId": conversion.ToObjectId(filterParams.clientId)};
 
     let afterLookUpFilter = {};
 

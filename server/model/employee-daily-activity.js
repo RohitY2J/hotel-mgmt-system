@@ -10,7 +10,12 @@ const EmployeeDailyActivitySchema = new mongoose.Schema({
     shiftStatus: Number,   // 0:"Scheduled", 1:"Cancelled", 2:"Completed"
     tasks: String,
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref:"Client",
+      required: true
+    }
 });
 
 const EmployeeDailyActivity = mongoose.model('EmployeeDailyActivity', EmployeeDailyActivitySchema);
