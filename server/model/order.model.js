@@ -35,7 +35,11 @@ const OrderSchema = new Schema({
     type: Number,
     default: 0
   },
-  status: {type: Number, required: true}, // 0-pending, 1-served, 2-cancelled
+  paymentType: {
+    type: Number, // 0-cash, 1-online
+    default: 0
+  },
+  status: {type: Number, required: true}, // 0-pending, 1-served, 2-cancelled, 3-bulled
   orders: [
     {
       menuId: {

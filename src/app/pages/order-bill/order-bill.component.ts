@@ -43,12 +43,12 @@ export class OrderBillComponent implements OnInit {
   isLoading: boolean = false;
   showNotification: boolean = false;
   notificationParams: any = {};
-  orders: any[] = []; 
+  orders: any[] = [];
 
-  isCheckOutModalVisible: boolean = true;
+  isCheckOutModalVisible: boolean = false;
   discount: Number = 0;
   tax: Number = 0;
-  tableNumbers: any[]= [];
+  tableNumbers: any[] = [];
 
   selectedOrder: any = {};
 
@@ -57,7 +57,30 @@ export class OrderBillComponent implements OnInit {
   steps = ['Step 1', 'Step 2'];
   currentStep = 0;
 
+  amount: any = {
+    subTotal: 0,
+    discountAmt: 0,
+    taxAmt: 0,
+    totalPayable: 0
+  };
+
   nextStep() {
+    this.amount.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
+    if (this.selectedOrder.discountType == 0) {
+      this.amount.discountAmt = this.selectedOrder.discountPercent * this.amount.subTotal / 100;
+    }
+    else {
+      this.amount.discountAmt = this.selectedOrder.discountAmt;
+    }
+    if (this.selectedOrder.discountType == 0) {
+      let amtAfterDiscount = this.amount.subTotal - this.amount.discountAmt;
+      this.amount.taxAmt = this.selectedOrder.taxPercent * amtAfterDiscount / 100
+    }
+    else {
+      this.amount.taxAmt = this.selectedOrder.taxAmt;
+    }
+    this.amount.totalPayable = this.amount.subTotal - this.amount.discountAmt + this.amount.taxAmt;
+
     if (this.currentStep < this.steps.length - 1) {
       this.currentStep++;
     }
@@ -120,7 +143,7 @@ export class OrderBillComponent implements OnInit {
     private router: Router
   ) { }
 
-  clearFilter() { 
+  clearFilter() {
     this.filter = {
       date: this.constantService.getDateTodayString(),
       status: "",
@@ -134,7 +157,7 @@ export class OrderBillComponent implements OnInit {
     };
     this.fetchOrders();
   }
-  searchButtonClicked() { 
+  searchButtonClicked() {
     this.fetchOrders();
   }
   searchInputChanged(event: Event) { }
@@ -155,27 +178,6 @@ export class OrderBillComponent implements OnInit {
     this.router.navigate(['/print-food-invoice'], {
       queryParams: { id: order._id },
     });
-    // this.isLoading = true;
-    // this.selectedOrder.status = 3; //billed
-    // this.httpService
-    //   .httpPost(`order/updateOrder`, this.selectedOrder)
-    //   .pipe(
-    //     finalize(() => {
-    //       this.isLoading = false;
-    //     })
-    //   )
-    //   .subscribe({
-    //     next: (res) =>{
-          
-    //     },
-    //     error: (err) => {
-    //       console.log;
-    //       this.triggerNotification({
-    //         message: "Failed to print food invoice",
-    //         error: true
-    //       })
-    //     },
-    //   });
   }
 
   fetchOrders() {
@@ -185,7 +187,7 @@ export class OrderBillComponent implements OnInit {
       .pipe(finalize(() => {
         this.isLoading = false;
       }))
-      .subscribe( 
+      .subscribe(
         (response) => {
           this.orders = (response as HttpListResponse).data;
           this.filter.pagination.dataCount = this.orders.length;
@@ -199,19 +201,19 @@ export class OrderBillComponent implements OnInit {
       )
   }
 
-  fetchAllTableNumber(){
+  fetchAllTableNumber() {
     this.httpService.httpGet('order/getTableNumbers')
-    .subscribe(
-      (res) => {
-        this.tableNumbers = (res as HttpListResponse).data;
-      },  
-      (err) => {
-        this.triggerNotification({
-          message: "Failed to get table numbers",
-          error: true
-        })
-      }
-    )
+      .subscribe(
+        (res) => {
+          this.tableNumbers = (res as HttpListResponse).data;
+        },
+        (err) => {
+          this.triggerNotification({
+            message: "Failed to get table numbers",
+            error: true
+          })
+        }
+      )
   }
 
   triggerNotification(notificationContent: any) {
@@ -219,25 +221,47 @@ export class OrderBillComponent implements OnInit {
     this.showNotification = true;
   }
 
-  getOrderStatus(status: number){
+  getOrderStatus(status: number) {
     return this.constantService.getStatusString("orderStatus", status);
   }
 
-  getOrderStatusList(){
+  getOrderStatusList() {
     return this.constantService.getStatusValuesAsDictionary("orderStatus");
   }
 
-  generateInvoiceClicked(order: any){
+  generateInvoiceClicked(order: any) {
     this.selectedOrder = order;
   }
 
-  payNow(order: any){
+  payNow(order: any) {
     this.selectedOrder = order;
+    this.selectedOrder.paymentType = "0";
     this.isCheckOutModalVisible = true;
   }
 
-  checkOut(){
-
+  checkOut() {
+    this.isLoading = true;
+    this.selectedOrder.status = 3; //billed
+    this.httpService
+      .httpPost(`order/billOrder`, this.selectedOrder)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.isCheckOutModalVisible =  false;
+        })
+      )
+      .subscribe({
+        next: (res) =>{
+          
+        },
+        error: (err) => {
+          console.log;
+          this.triggerNotification({
+            message: "Failed to print food invoice",
+            error: true
+          })
+        },
+      });
   }
 
 }

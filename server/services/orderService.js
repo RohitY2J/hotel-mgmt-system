@@ -166,7 +166,7 @@ exports.getOrders = async (req, res, next) => {
     }
 }
 
-exports.updateOrder = async (req, res, next) => {
+exports.billOrder = async (req, res, next) => {
     if (!req.body._id) {
         return res.status(422).json({
             success: false,
@@ -186,6 +186,7 @@ exports.updateOrder = async (req, res, next) => {
         existingOrder.taxAmt = order.taxAmt;
         existingOrder.taxPercent = order.taxPercent;
         existingOrder.status = order.status;
+        existingOrder.paymentType = order.paymentType;
         
         await existingOrder.save();
 

@@ -59,7 +59,7 @@ export class FoodInvoiceLayoutComponent implements OnInit {
           }
           if(this.table.discountType == 0){
             let amtAfterDiscount = this.amount.subTotal - this.amount.discountAmt;
-            this.amount.taxAmt = this.table.tax *  amtAfterDiscount/ 100 
+            this.amount.taxAmt = this.table.taxPercent *  amtAfterDiscount/ 100 
           }
           else{
             this.amount.taxAmt = this.table.taxAmt;
