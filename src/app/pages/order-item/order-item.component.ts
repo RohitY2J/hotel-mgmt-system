@@ -133,6 +133,7 @@ export class OrderItemComponent implements OnInit {
           menuId: menu._id,
           name: menu.name,
           price: menu.price,
+          inventoryId: menu.inventoryId,
           qty: 1
         })
       }

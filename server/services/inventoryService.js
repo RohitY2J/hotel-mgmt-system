@@ -1,14 +1,34 @@
 const dbContext = require("../model");
 const globalConstants = require("../constants/globalConstants");
+const mongoose = require('mongoose');;
+
 
 exports.createInventoryItem = async (req, res, next) => {
   var user = req.user;
   try {
+    let inventoryItemId = new mongoose.Types.ObjectId();
     const item = dbContext.Inventory(req.body);
+    item._id = inventoryItemId;
     item.createdDate = Date.now();
     await item.save();
-    let successRes = 'Item saved successfully.';
-    return res.status(200).send({message: successRes});
+
+    if (item.itemType == 0) {
+      let menuItem = dbContext.MenuItem({
+        name: item.name,
+        description: item.description,
+        price: item.pricePerUnit,
+        category: item.category,
+        availableQuantity: item.availableUnit,
+        inventoryId: inventoryItemId,
+        file: item.file,
+      });
+      menuItem.save();
+      console.info("Menu item added from inventory item");
+    }
+
+    let successRes = "Item saved successfully.";
+    return res.status(200).send({ message: successRes });
+
   } catch (err) {
     if (err.name === "ValidationError") {
       let errResponse = { message: "Invalid input.", error: err };
@@ -41,10 +61,21 @@ exports.addItem = async (req, res, next) => {
       lastAddedUnit: req.body.numberOfItems,
     };
 
+   
+
     let result = await dbContext.Inventory.updateOne(
       { _id: req.body.id },
       inventoryUpdateRequest
     );
+
+    let menuItemUpdateRequest = {
+      $inc: {available: req.body.numberOfItems}
+    };
+    
+    await dbContext.MenuItem.updateOne(
+      {inventoryId: req.body.id},
+      menuItemUpdateRequest
+    )
 
     if (result.modifiedCount === 0) {
       let errRes = { message: "Unable to add items.", error: null };
@@ -58,7 +89,6 @@ exports.addItem = async (req, res, next) => {
     console.error(errRes);
     return res.status(500).send(errRes);
   }
-  
 };
 exports.dispatchItem = async (req, res, next) => {
   try {
@@ -79,6 +109,15 @@ exports.dispatchItem = async (req, res, next) => {
       lastAddedOn: Date.now(),
       lastAddedUnit: req.body.numberOfItems,
     };
+
+    let menuItemUpdateRequest = {
+      $inc: {available: (0 - req.body.numberOfItems)}
+    };
+    
+    await dbContext.MenuItem.updateOne(
+      {inventoryId: req.body.id},
+      menuItemUpdateRequest
+    )
 
     let result = await dbContext.Inventory.updateOne(
       { _id: req.body.id },

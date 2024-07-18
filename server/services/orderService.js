@@ -1,5 +1,6 @@
 const dbContext = require('../model');
 const conversion = require('../helper/conversion');
+const globalConstants = require('../constants/globalConstants');
 
 
 exports.createOrder = async (req, res, next) => {
@@ -73,6 +74,34 @@ exports.createOrder = async (req, res, next) => {
 
             io.emit('orderUpdated', newOrder);
         }
+
+        if(request.orders.forEach(async (order) =>{
+            console.log(order);
+            if(order.inventoryId){
+                console.log(order.inventoryId);
+                let inventoryAddRequest = {
+                    inventoryItemId: order.inventoryId,
+                    itemName:order.name,
+                    actionType: globalConstants.InventoryActionType.Dispatch,
+                    count: order.qty,
+                  };
+              
+                  await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
+              
+                  let inventoryUpdateRequest = {
+                    $inc: { availableUnit: (0 - req.body.qty) }, //decrement item
+                    lastAddedOn: Date.now(),
+                  };
+
+                  console.log(inventoryUpdateRequest);
+
+                  await dbContext.Inventory.updateOne(
+                    {_id: order.inventoryId},
+                    inventoryUpdateRequest
+                  );
+            }
+
+        }))
 
         return res.status(200).json({
             success: true,
