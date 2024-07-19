@@ -26,3 +26,8 @@ exports.InventoryActionType = Object.freeze({
 Receive: 0,
 Dispatch: 1
 });
+
+exports.PaymentType = Object.freeze({
+  Cash: 0,
+  Online: 1
+})

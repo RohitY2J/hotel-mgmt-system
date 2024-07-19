@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { HttpService } from '../../services/http-service.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,6 +10,20 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  
+  dashboardData: any = {};
+
+  constructor(private httpService: HttpService){}
+  ngOnInit(): void {
+    this.httpService.httpGet('/dashboard/getDashboardData').subscribe(
+      (res) => {
+        this.dashboardData = res;
+      },
+      (err) => {
+
+      }
+    )
+  }
   date: Date = new Date();
 }

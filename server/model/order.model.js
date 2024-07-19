@@ -11,34 +11,6 @@ const OrderSchema = new Schema({
   customerName: {
     type: String
   },
-  discountType:{
-    type: Number,
-    default: 0
-  },
-  taxType: {
-    type: Number,
-    default: 0
-  },
-  discountAmt: {
-    type: Number,
-    default: 0
-  },
-  taxAmt: {
-    type: Number,
-    default: 0
-  },
-  discountPercent:{
-    type: Number,
-    default: 0
-  },
-  taxPercent: {
-    type: Number,
-    default: 0
-  },
-  paymentType: {
-    type: Number, // 0-cash, 1-online
-    default: 0
-  },
   status: {type: Number, required: true}, // 0-pending, 1-served, 2-cancelled, 3-bulled
   orders: [
     {

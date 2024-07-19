@@ -10,3 +10,4 @@ exports.Order = require("./order.model");
 exports.InventoryReceiveAndDispatch = require("./inventory-receive-and-dispatch");
 exports.Table = require("./table.model");
 exports.Client = require("./client.model");
+exports.Bill = require("./bill.model");

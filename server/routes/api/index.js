@@ -149,6 +149,11 @@ router.use("/order", middleware, require("./orderController"));
 router.use("/inventory", middleware, require("./inventoryController"));
 
 router.use("/table", middleware, require("./tableController"));
+
+router.use("/dashboard", middleware, require("./dashboardController"));
+
+
+//router.use("/dashboard", require("./dashboardController"));
 // Function to check if a user with given email exists
 async function checkIfUserExists(email) {
     const user = await dbContext.User.findOne({ email: email });

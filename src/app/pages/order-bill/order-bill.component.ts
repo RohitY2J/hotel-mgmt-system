@@ -65,21 +65,21 @@ export class OrderBillComponent implements OnInit {
   };
 
   nextStep() {
-    this.amount.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
+    this.selectedOrder.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
     if (this.selectedOrder.discountType == 0) {
-      this.amount.discountAmt = this.selectedOrder.discountPercent * this.amount.subTotal / 100;
+      this.selectedOrder.discountAmt = this.selectedOrder.discountPercent * this.selectedOrder.subTotal / 100;
     }
     else {
-      this.amount.discountAmt = this.selectedOrder.discountAmt;
+      this.selectedOrder.discountAmt = this.selectedOrder.discountAmt;
     }
     if (this.selectedOrder.discountType == 0) {
-      let amtAfterDiscount = this.amount.subTotal - this.amount.discountAmt;
-      this.amount.taxAmt = this.selectedOrder.taxPercent * amtAfterDiscount / 100
+      let amtAfterDiscount = this.selectedOrder.subTotal - this.selectedOrder.discountAmt;
+      this.selectedOrder.taxAmt = this.selectedOrder.taxPercent * amtAfterDiscount / 100
     }
     else {
-      this.amount.taxAmt = this.selectedOrder.taxAmt;
+      this.selectedOrder.taxAmt = this.selectedOrder.taxAmt;
     }
-    this.amount.totalPayable = this.amount.subTotal - this.amount.discountAmt + this.amount.taxAmt;
+    this.selectedOrder.totalPayable = this.selectedOrder.subTotal - this.selectedOrder.discountAmt + this.selectedOrder.taxAmt;
 
     if (this.currentStep < this.steps.length - 1) {
       this.currentStep++;

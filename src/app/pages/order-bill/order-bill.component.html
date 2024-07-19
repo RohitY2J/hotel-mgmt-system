@@ -99,7 +99,7 @@
                                         Bill Info
                                     </h3>
                                 </div>
-                                <div class="h-56 overflow-y-scroll">
+                                <div class="max-h-56 overflow-y-scroll">
                                     <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                         <thead
                                             class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
@@ -150,7 +150,7 @@
                                             Sub total:
                                         </span>
                                         <span for="name" class="block text-sm font-medium text-gray-900 dark:text-white">
-                                            {{amount.subTotal}}
+                                            {{selectedOrder.subTotal}}
                                         </span>
                                     </div>
                                     <div class="flex items-center justify-end">
@@ -159,7 +159,7 @@
                                             Discount:
                                         </span>
                                         <span for="name" class="block text-sm font-medium text-gray-900 dark:text-white">
-                                            {{amount.discountAmt}}
+                                            {{selectedOrder.discountAmt}}
                                         </span>
                                     </div>
                                     <div class="flex items-center justify-end">
@@ -168,7 +168,7 @@
                                             Tax:
                                         </span>
                                         <span for="name" class="block text-sm font-medium text-gray-900 dark:text-white">
-                                            {{amount.taxAmt}}
+                                            {{selectedOrder.taxAmt}}
                                         </span>
                                     </div>
                                     <div class="flex items-center justify-end">
@@ -177,7 +177,7 @@
                                             Grand total:
                                         </span>
                                         <span for="name" class="block text-sm font-medium text-gray-900 dark:text-white">
-                                            {{amount.totalPayable}}
+                                            {{selectedOrder.totalPayable}}
                                         </span>
                                     </div>
                                 </div>
