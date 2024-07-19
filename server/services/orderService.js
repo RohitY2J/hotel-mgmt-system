@@ -62,7 +62,7 @@ exports.createOrder = async (req, res, next) => {
             const newOrder = new dbContext.Order({
                 tableNumber: request.tableNumber,
                 status: 0, // pending
-                clientId: conversion.ToObjectId(req.clientId)
+                clientId: req.user.clientId
             });
 
             request.orders.forEach(order => {
@@ -74,6 +74,7 @@ exports.createOrder = async (req, res, next) => {
                 });
             });
 
+
             await newOrder.save();
 
             const existingTable = await dbContext.Table.findOne({ _id: conversion.ToObjectId(request.tableNumber) });
@@ -84,34 +85,33 @@ exports.createOrder = async (req, res, next) => {
             io.emit('orderUpdated', newOrder);
         }
 
-        if (request.orders.forEach(async (order) => {
+        request.orders.forEach(async (order) =>{
             console.log(order);
             if (order.inventoryId) {
                 console.log(order.inventoryId);
-                let inventoryAddRequest = {
+                let inventoryDispatchRequest = {
                     inventoryItemId: order.inventoryId,
                     itemName: order.name,
                     actionType: globalConstants.InventoryActionType.Dispatch,
                     count: order.qty,
-                    clientId: req.clientId
-                };
+                    clientId: req.user.clientId
+                  };
+              
+                  await dbContext.InventoryReceiveAndDispatch(inventoryDispatchRequest).save();
 
-                await dbContext.InventoryReceiveAndDispatch(inventoryAddRequest).save();
-
-                let inventoryUpdateRequest = {
-                    $inc: { availableUnit: (0 - req.body.qty) }, //decrement item
+                  let inventoryUpdateRequest = {
+                    $inc: { availableUnit: (0 - order.qty) }, //decrement item
                     lastAddedOn: Date.now(),
                 };
 
-                console.log(inventoryUpdateRequest);
-
-                await dbContext.Inventory.updateOne(
-                    { _id: order.inventoryId },
+                  let updateResult = await dbContext.Inventory.updateOne(
+                    {_id: order.inventoryId},
                     inventoryUpdateRequest
-                );
+                  );
+                  console.log(updateResult);
             }
 
-        }))
+        });
 
             return res.status(200).json({
                 success: true,

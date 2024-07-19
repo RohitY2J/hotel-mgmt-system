@@ -10,6 +10,7 @@ exports.createTable = async (req, res, next) => {
     }
 
     table = req.body;
+    table.clientId = req.user.clientId;
 
     errors = [];
     if (!table.tableNumber) {
@@ -35,7 +36,7 @@ exports.createTable = async (req, res, next) => {
             location: table.location,
             status: table.status,
             capacity: table.capacity,
-            clientId: req.clientId
+            clientId: table.clientId
         });
 
         await newTable.save();
