@@ -2,11 +2,13 @@
 <app-loader *ngIf="isLoading"></app-loader>
 
 <div class="w-screen h-screen bg-gray-700 overflow-scroll xl:overflow-hidden">
-    <nav class="bg-gray-800 p-1">
-        <div class="container mx-auto">
-            <h1 class="text-white text-md sm:text-lg">Navbar</h1>
-        </div>
-    </nav>
+    <ng-container *ngIf="!isReservationView">
+        <nav class="bg-gray-800 p-1">
+            <div class="container mx-auto">
+                <h1 class="text-white text-md sm:text-lg">Navbar</h1>
+            </div>
+        </nav>
+    </ng-container>
     <div class="mx-4 my-4">
         <div class="flex flex-col sm:flex-row">
             <div class="w-full sm:w-2/3 bg-gray-600 p-4 rounded-lg shadow-md">
@@ -56,6 +58,16 @@
                         sm:text-sm  font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
                         <span>Clear</span>
                     </button>
+                    <button type="button" (click)="onClose.emit()"
+                class="p-2
+                sm:p-2.5
+                px-3 
+                sm:px-4 
+                ms-1
+                text-xs
+                sm:text-sm  font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-900 dark:bg-blue-600 dark:hover:bg-blue-700  ">
+                <span>Close</span>
+            </button>
                 </div>
 
                 <div class="mt-4 mb-4 grid grid-cols-4 gap-1 rounded-lg 
@@ -101,6 +113,8 @@
                     </div>
                 </div>
 
+                
+                
                 <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
                     [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
             </div>
@@ -126,7 +140,7 @@
                     </button>
                 </div>
 
-                <div>
+                <div *ngIf="!isReservationView">
                     <label for="name" class="block
                         text-sm 
                         mb-2

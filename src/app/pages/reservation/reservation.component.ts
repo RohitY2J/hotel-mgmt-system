@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
@@ -11,6 +11,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { InvoiceComponentComponent } from '../shared/invoice-component/invoice-component.component';
 import { finalize } from 'rxjs';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
+import { OrderItemComponent } from '../order-item/order-item.component';
 
 @Component({
   selector: 'app-reservation',
@@ -25,12 +26,14 @@ import { PaginationComponent } from '../shared/pagination/pagination.component';
     NgMultiSelectDropDownModule,
     OrderFormComponent,
     InvoiceComponentComponent,
-    PaginationComponent
+    PaginationComponent,
+    OrderItemComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
 })
 export class ReservationComponent implements OnInit {
+
   notificationParams: any;
   isConfirmDialogOpen: any = false;
   showNotification: any = false;
@@ -40,6 +43,7 @@ export class ReservationComponent implements OnInit {
   paymentStatus: any = [];
   initialStatus: any = [];
   allStatus: any = [];
+  isOrderComponentVisible: boolean = false;
 
   filter:any = { 
     searchText: "",
@@ -235,11 +239,14 @@ export class ReservationComponent implements OnInit {
 
   orderButtonClicked(reservationItem: any) {
     this.selectedReservation = reservationItem;
-    this.isOrdersFormVisible = true;
+    this.isOrderComponentVisible = true;
   }
   closeOrdersForm() {
     this.isOrdersFormVisible = false;
     this.getReservations();
+  }
+  closeOrderComponent(){
+    this.isOrderComponentVisible = false;
   }
   getOrderAmount(reservationItem:any){
 

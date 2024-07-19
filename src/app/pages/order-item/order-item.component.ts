@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpService } from '../../services/http-service.service';
 import { finalize } from 'rxjs';
 import { HttpListResponse, HttpSingleResponse } from '../../models/HttpResponse';
@@ -22,7 +22,8 @@ import { PaginationComponent } from '../shared/pagination/pagination.component';
   styleUrl: './order-item.component.scss'
 })
 export class OrderItemComponent implements OnInit {
-
+  @Input({ required: false }) isReservationView: boolean = false;
+  @Output() onClose = new EventEmitter<void>(); 
   isLoading: boolean = false;
   filter: any = {
     menuName: "",

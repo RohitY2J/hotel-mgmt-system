@@ -26,9 +26,24 @@ const CustomSchema = new Schema(
     billing: {
       orders: [
         {
-          summary: String, //Profile Pic, Citizenship, liscensce
-          amount: Number,
-          orderDateTime: { type: Date, default: Date.now },
+          menuId: {
+            type: Schema.Types.ObjectId,
+            ref: "MenuItem",
+            required: true,
+          },
+          name: {
+            type: String,
+            required: true,
+          },
+          price: {
+            type: Number,
+            required: true,
+          },
+          qty: {
+            type: Number,
+            required: true,
+            min: 1,
+          },
         },
       ],
       discountPercentage: Number,
@@ -42,10 +57,10 @@ const CustomSchema = new Schema(
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     clientId: {
-      type: mongoose.Schema.Types.ObjectId, 
-      ref:"Client",
-      required: true
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Client",
+      required: true,
+    },
   },
   { timestamps: true }
 );
