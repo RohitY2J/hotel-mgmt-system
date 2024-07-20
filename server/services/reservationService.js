@@ -120,7 +120,12 @@ exports.updateReservation = async (req, res, next) => {
 
 exports.getReservationById = async (req, res, next) => {
   try {
-    var result = await dbContext.Reservation.findById(req.query.id);
+    var result = await dbContext.Reservation.findById(req.query.id)
+    .populate({
+      path: "rooms",
+      select:
+        "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt pricePerDay",
+    });
     return res.status(200).send(result);
   } catch (ex) {
     console.error("Error occurred while getting room", ex);
@@ -156,7 +161,7 @@ exports.getReservations = async (req, res, next) => {
       .populate({
         path: "rooms",
         select:
-          "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt",
+          "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt pricePerDay",
       })
       .skip((req.query.pageNo - 1) * req.query.pageSize)
       .limit(req.query.pageSize);

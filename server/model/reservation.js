@@ -48,6 +48,7 @@ const CustomSchema = new Schema(
       ],
       discountPercentage: Number,
       taxPercentage: Number,
+      flatDiscount: Number,
       totalAmount: Number, //Sum(orders.amount)
       totalPayableAmount: Number, //totalAmount - discount + tax
     },

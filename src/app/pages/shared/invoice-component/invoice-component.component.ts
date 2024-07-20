@@ -16,7 +16,8 @@ export class InvoiceComponentComponent implements OnInit{
 
   getOrderAmount(){
     return this.reservation.billing.orders.reduce(
-      (a:any,o:any)=> a + o.amount, 0
-  );
+      (a: any, o: any) => a + o.qty * o.price,
+      0
+    );
 }
 }
