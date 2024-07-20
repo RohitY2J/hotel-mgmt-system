@@ -1,6 +1,7 @@
 const dbContext = require("../model");
 const globalConstants = require("../constants/globalConstants");
 const conversion = require("../helper/conversion");
+const dayjs = require("dayjs");
 
 exports.getDashboardData = async (req, res, next) => {
     try {
@@ -8,7 +9,8 @@ exports.getDashboardData = async (req, res, next) => {
             billToday: 0,
             orderToday: 0,
             reservationToday: 0,
-            salesToday: 0
+            salesToday: 0,
+            reservationThisWeek: []
         };
         if (!req.clientId) {
             return res.status(422).json({
@@ -40,7 +42,8 @@ exports.getDashboardData = async (req, res, next) => {
             }
         ]).exec(); // Convert aggregation cursor to array
 
-        dashboardData.salesToday = result[0].totalGrandTotal;
+        if (result.length > 0)
+            dashboardData.salesToday = result[0].totalGrandTotal;
 
         dashboardData.orderToday = await dbContext.Order.countDocuments({
             createdAt: {
@@ -77,10 +80,29 @@ exports.getDashboardData = async (req, res, next) => {
             }
         ]).exec(); // Convert aggregation cursor to array
 
-        dashboardData.billToday = cashInHandToday[0].totalGrandTotal;;
+        if (cashInHandToday.length > 0)
+            dashboardData.billToday = cashInHandToday[0].totalGrandTotal;
 
+        for (let i = 0; i < 7; i++) {
+            const startOfDay = dayjs().subtract(i, 'day').startOf('day').toDate();
+            const endOfDay = dayjs().subtract(i, 'day').endOf('day').toDate();
+
+            const reservationCount = await dbContext.Reservation.countDocuments({
+                createdAt: {
+                    $gte: startOfDay,
+                    $lt: endOfDay
+                },
+                clientId: conversion.ToObjectId(req.clientId) // Convert clientId to ObjectId
+            });
+
+            dashboardData.reservationThisWeek.unshift({ // Unshift to maintain ascending order
+                date: dayjs(startOfDay).format('DD MMM'),
+                count: reservationCount
+            });
+        }
 
         return res.status(200).send(dashboardData);
+
     } catch (err) {
         let errorRes = {
             message: "Error occurred while getting item.",

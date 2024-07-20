@@ -141,111 +141,37 @@
         </div>
     </div>
 
-    <!-- <h1 class="px-4 text-2xl pt-4 dark:text-white bold">Orders</h1>
-    <div class="grid grid-cols-4 gap-4 p-4">
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This Week
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This month
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-    </div>
+    <div class="flex justify-between p-4">
+        <div class="w-full me-4 rounded shadow">
 
-    <h1 class="px-4 text-2xl pt-4 dark:text-white bold">Rooms</h1>
-    <div class="grid grid-cols-4 gap-4 p-4">
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
+            <div class="w-full rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                <div class="flex justify-between mb-5">
+                    <div class="grid gap-4 grid-cols-2">
+                        <div>
+                            <h5
+                                class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
+                                Reservation This Week
+                            </h5>
+                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold">{{this.totalReservationThisWeek}}</p>
+                        </div>
+                        <!-- <div>
+                            <h5
+                                class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
+                                CPC
+                            </h5>
+                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold">$5.40</p>
+                        </div> -->
+                    </div>
                 </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
+                <div id="line-chart" #lineChart></div>
+                <div
+                    class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between mt-2.5">
+                    <div class="pt-5">
+                    </div>
                 </div>
             </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
+
         </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This Week
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This month
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-    </div> -->
-    <!-- <div class="flex justify-between p-4">
-        <div class="w-1/2 bg-white p-4 rounded shadow">Bar Chart</div>
-        <div class="w-1/2 bg-white p-4 rounded shadow">Doughnut Chart</div>
-    </div> -->
+        <!-- <div class="w-1/2 bg-white p-4 ms-4 rounded shadow">Doughnut Chart</div> -->
+    </div>
 </div>
