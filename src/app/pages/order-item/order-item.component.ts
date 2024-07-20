@@ -219,8 +219,8 @@ export class OrderItemComponent implements OnInit {
   }
 
   loadOrder() {
-    this.isLoading = true;
     if(this.reservationId){
+      this.isLoading = true;
       this.httpService
       .httpGet(`reservation/getReservationById?id=${this.reservationId}`)
       .pipe(finalize(()=>{
@@ -229,7 +229,8 @@ export class OrderItemComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.reservation = res;
-          this.orders = this.reservation.billing.orders;
+          if(this.reservation && this.reservation.billing)
+            this.orders = this.reservation.billing.orders;
 
         },
         error: (err) => console.log,
@@ -251,7 +252,7 @@ export class OrderItemComponent implements OnInit {
           next: (res) => {
             console.log(res);
             let response = res as HttpSingleResponse;
-            if (response.data.orders) {
+            if (response.data) {
               this.orders = response.data.orders;
               this.disableScreen = true;
             } else {
