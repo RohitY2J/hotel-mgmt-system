@@ -165,7 +165,7 @@ export class InventoryComponent implements OnInit {
             message: 'Inventory added successfully.',
             error: false,
           });
-          this.showInventoryForm = false;
+          this.closeInventoryForm();
         },
         error: (err) => {
           console.log(err);

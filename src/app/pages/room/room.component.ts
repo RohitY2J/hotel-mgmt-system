@@ -79,6 +79,7 @@ export class RoomComponent implements OnInit {
   }
   closeModal() {
     this.isRoomFormOpen = false;
+    this.createRoomRequest.reset();
     this.createRoomRequest.setValue({
       roomId: '',
       roomNumber: '',

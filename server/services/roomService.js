@@ -32,7 +32,7 @@ exports.createRoom = async (req, res, next) => {
 
     var room = new dbContext.Room(request);
     room.clientId = conversion.ToObjectId(req.clientId);
-    room.save();
+    await room.save();
     return res
       .status(200)
       .send({ success: true, message: "Room created successfully" });
