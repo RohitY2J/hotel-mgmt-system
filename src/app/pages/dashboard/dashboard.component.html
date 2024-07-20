@@ -1,83 +1,9 @@
-<!-- <div class="w-full">
-    <div class="bannerFondo bg-green-800 w-full	bg-left-top bg-auto bg-repeat-x"
-        style="background-image: url(./img/continuartl_4.png)">
-    </div>
-
-    <div class="-mt-64 ">
-        <div class="w-full text-center">
-            <p class="text-sm tracking-widest text-white uppercase">Welcome to</p>
-            <h1 class="font-bold text-5xl text-white uppercase">
-                Dashboard
-            </h1>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 ">
-
-            <div class="p-2 sm:p-10 text-center cursor-pointer">
-                <div
-                    class="py-16 max-w-sm rounded overflow-hidden shadow-lg hover:bg-white transition duration-500  bg-white">
-                    <div class="space-y-10">
-                        <i class="fa fa-people-roof" style="font-size:48px;"></i>
-
-                        <div class="px-6 py-4">
-                            <div class="space-y-5">
-                                <div class="font-bold text-xl mb-2">Reservation</div>
-                                <p class="text-gray-700 text-base">
-                                    View current reservations
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-2 sm:p-10 text-center cursor-pointer text-white">
-                <div
-                    class="py-16 max-w-sm rounded overflow-hidden shadow-lg bg-orange-500 hover:bg-orange-600 transition duration-500">
-                    <div class="space-y-10">
-                        <i class="fa fa-door-open" style="font-size:48px;"></i>
-                        <div class="px-6 py-4">
-                            <div class="space-y-5">
-                                <div class="font-bold text-xl mb-2">Rooms</div>
-                                <p class="text-base">
-                                    See available rooms
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-2 sm:p-10 text-center cursor-pointer translate-x-2">
-                <div
-                    class="py-16 max-w-sm rounded overflow-hidden shadow-lg hover:bg-white transition duration-500 bg-white ">
-                    <div class="space-y-10">
-                        <i class="fa fa-clock" style="font-size:48px;"></i>
-
-                        <div class="px-6 py-4">
-                            <div class="space-y-5">
-                                <div class="font-bold text-xl mb-2">Jobs</div>
-                                <p class="text-gray-700 text-base">
-                                    Schedule Jobs sdfsdf sdfsd
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div> -->
-
 <div class="container h-full overflow-y-scroll mx-auto dark:bg-gray-700">
-    <!-- <header class="bg-purple-600 text-white text-3xl p-4">K-WD</header> -->
     <h1 class="px-4 text-2xl pt-4 dark:text-white bold">Dashboard</h1>
     <div class="grid grid-cols-4 gap-4 p-4">
         <div class="bg-white p-4 rounded shadow flex justify-between">
             <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500 text-blue-700">
+                <div class="text-md text-gray-500 dark:text-blue-700">
                     Cash In Hand
                 </div>
                 <div class="text-xl py-1 font-bold">
@@ -141,111 +67,36 @@
         </div>
     </div>
 
-    <!-- <h1 class="px-4 text-2xl pt-4 dark:text-white bold">Orders</h1>
-    <div class="grid grid-cols-4 gap-4 p-4">
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
+    <div class="flex justify-between p-4">
+        <div class="w-full me-4 rounded shadow">
+
+            <div class="w-full rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                <div class="flex justify-between mb-5">
+                    <div class="grid gap-4 grid-cols-2">
+                        <div>
+                            <h5
+                                class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
+                                Reservation This Week
+                            </h5>
+                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold">{{this.totalReservationThisWeek}}</p>
+                        </div>
+                        <!-- <div>
+                            <h5
+                                class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
+                                CPC
+                            </h5>
+                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold">$5.40</p>
+                        </div> -->
+                    </div>
                 </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This Week
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This month
+                <div id="line-chart" #lineChart></div>
+                <div
+                    class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between mt-2.5">
+                    <div class="pt-5">
+                    </div>
                 </div>
             </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
+
         </div>
     </div>
-
-    <h1 class="px-4 text-2xl pt-4 dark:text-white bold">Rooms</h1>
-    <div class="grid grid-cols-4 gap-4 p-4">
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This Week
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500">
-                    Cash In Hand
-                </div>
-                <div class="text-xl py-1">
-                    $30,000
-                </div>
-                <div class="text-sm text-gray-500">
-                    This month
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-gray-400"></i>
-            </div>
-        </div>
-    </div> -->
-    <!-- <div class="flex justify-between p-4">
-        <div class="w-1/2 bg-white p-4 rounded shadow">Bar Chart</div>
-        <div class="w-1/2 bg-white p-4 rounded shadow">Doughnut Chart</div>
-    </div> -->
 </div>

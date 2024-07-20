@@ -101,7 +101,7 @@ exports.getRooms = async (req, res, next) => {
       request.maintainanceStatus = req.body.maintainanceStatus;
     }
 
-    if(req.body.occupancyStatus){
+    if (Number.isFinite(req.body.occupancyStatus)) {
       request.occupancyStatus = req.body.occupancyStatus;
     }
 
