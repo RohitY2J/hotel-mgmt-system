@@ -10,7 +10,8 @@ exports.getDashboardData = async (req, res, next) => {
             orderToday: 0,
             reservationToday: 0,
             salesToday: 0,
-            reservationThisWeek: []
+            reservationThisWeek: [],
+            orderThisWeek: []
         };
         if (!req.clientId) {
             return res.status(422).json({
@@ -98,6 +99,24 @@ exports.getDashboardData = async (req, res, next) => {
             dashboardData.reservationThisWeek.unshift({ // Unshift to maintain ascending order
                 date: dayjs(startOfDay).format('DD MMM'),
                 count: reservationCount
+            });
+        }
+
+        for (let i = 0; i < 7; i++) {
+            const startOfDay = dayjs().subtract(i, 'day').startOf('day').toDate();
+            const endOfDay = dayjs().subtract(i, 'day').endOf('day').toDate();
+
+            const orderCount = await dbContext.Order.countDocuments({
+                createdAt: {
+                    $gte: startOfDay,
+                    $lt: endOfDay
+                },
+                clientId: conversion.ToObjectId(req.clientId)
+            });
+
+            dashboardData.orderThisWeek.unshift({ // Unshift to maintain ascending order
+                date: dayjs(startOfDay).format('DD MMM'),
+                count: orderCount
             });
         }
 

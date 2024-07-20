@@ -46,7 +46,8 @@ export class DashboardComponent implements OnInit {
       },
       stroke: {
         width: 1,
-        curve: "smooth"
+        curve: "smooth",
+        colors: ["red"]
       },
       grid: {
         show: true,
@@ -91,11 +92,17 @@ export class DashboardComponent implements OnInit {
       (res) => {
         this.dashboardData = res;
         let thisWeekReservationData = this.dashboardData.reservationThisWeek.map((x: { count: any; }) => x.count);
+        let thisWeekOrder = this.dashboardData.orderThisWeek.map((x : {count : any}) => x.count);
         this.options.series = [
           {
             name: 'Reservations',
             data: thisWeekReservationData,
             color: "#1A56DB"
+          },
+          {
+            name: 'Orders',
+            data: thisWeekOrder,
+            color: "#1Affff"
           }
         ]
         this.chart?.updateOptions({

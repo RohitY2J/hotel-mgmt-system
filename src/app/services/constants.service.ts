@@ -33,7 +33,8 @@ export class ConstantsService {
     },
     roomOccupancyStatus: {
       0: "Available",
-      1: "Occupied",
+      1: "Booked",
+      2: "CheckedIn"
     },
     roomMaintainanceStatus: {
       0: "Dirty",
