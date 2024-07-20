@@ -26,7 +26,7 @@ exports.createReservation = async (req, res, next) => {
     request.createdAt = Date.now();
     request.updatedAt = Date.now();
 
-    var reservation = new dbContext.Reservation(request);
+    var reservation = new dbContext.Reservation(request); 
     reservation.clientId = conversion.ToObjectId(req.clientId);
     reservation.save();
     return res
@@ -42,18 +42,24 @@ exports.addOrdersForCustomer = async (req, res, nex) => {
   try {
     var request = req.body;
 
-    var reservationToUpdate = await dbContext.Reservation.findById(request.id);
+    var reservationToUpdate = await dbContext.Reservation.findById(request.id); 
     if (!reservationToUpdate)
       return res.status(400).send("No reservation found.");
 
-    reservationToUpdate.billing.orders.push(request.orders);
+    request.orders.forEach(order=>{
+      let existingOrders = reservationToUpdate.billing.orders.find(x=>x.menuId == order.menuId);
+      if(existingOrders)
+        existingOrders.qty += order.qty;
+      else reservationToUpdate.billing.orders.push(order);
+    });
 
     let result = await dbContext.Reservation.updateOne(
       { _id: request.id },
       reservationToUpdate
     );
 
-    return res.status(200).send("Orders added successfully");
+
+    return res.status(200).send({message: "Orders added successfully", isSuccess: true});
   } catch (ex) {
     console.error("Error updating room: ", ex);
     return res.status(500).send({ error: ex });

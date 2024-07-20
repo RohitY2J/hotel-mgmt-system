@@ -2,33 +2,50 @@
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-6 py-3">
-                    Summary
+                <th>
+                    S.N
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Amount
+                    Particular
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Qty
+                </th>
+                <th>
+                    Rate
+                </th>
+                <th>
+                    Total
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let order of reservation.billing.orders" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-4 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">
-                    {{order.summary}}
-                </th>
-                <td class="px-4 py-2">
-                    {{order.amount}}
+            <tr *ngFor="let order of reservation.billing.orders; index as i"
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td>
+                    {{i+1}}
                 </td>
+                <td>
+                    {{order.name}}
+                </td>
+                <td scope="row" class="px-4 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                    {{order.qty}}
+                </td>
+                <td class="px-4 py-2">
+                    {{order.price}}
+                </td>
+                <td>{{order.qty * order.price}}</td>
             </tr>
-
+        
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" class="px-4 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white text-bold">
-                   Total
+                    Total
                 </th>
                 <td class="px-4 py-4 text-bold">
                     {{getOrderAmount()}}
                 </td>
             </tr>
-
+        
         </tbody>
     </table>
 </div>

@@ -16,38 +16,41 @@ import { PaginationComponent } from '../shared/pagination/pagination.component';
     FormsModule,
     NotificationComponent,
     LoaderComponent,
-    PaginationComponent
+    PaginationComponent,
   ],
   templateUrl: './order-item.component.html',
-  styleUrl: './order-item.component.scss'
+  styleUrl: './order-item.component.scss',
 })
 export class OrderItemComponent implements OnInit {
   @Input({ required: false }) isReservationView: boolean = false;
-  @Output() onClose = new EventEmitter<void>(); 
+  @Output() onClose = new EventEmitter<void>();
+  @Input({ required: false }) reservationId: any;
   isLoading: boolean = false;
   filter: any = {
-    menuName: "",
+    menuName: '',
     pagination: {
       page: 1,
       pageSize: 8,
-      dataCount: 8
-    } 
+      dataCount: 8,
+    },
   };
   allMenus: any[] = [];
   showNotification: boolean = false;
   notificationParams: any = {};
-  tableNumber: Number | null = null
+  tableNumber: Number | null = null;
   disableScreen: boolean = false;
   allTables: any[] = [];
+  reservation: any = {};
 
   orders: any[] = [];
 
+  constructor(private httpService: HttpService) {}
 
-  constructor(private httpService: HttpService) { }
-
-  async ngOnInit(){
+  async ngOnInit() {
     await this.fetchMenuItems();
     this.fetchTables();
+    console.log(this.reservationId);
+    if(this.reservationId)this.loadOrder();
   }
 
   searchButtonClicked() {
@@ -56,30 +59,30 @@ export class OrderItemComponent implements OnInit {
 
   clearFilter() {
     this.filter = {
-      menuName: "",
+      menuName: '',
       pagination: {
         page: 1,
         pageSize: 8,
-        dataCount: 8
-      } 
+        dataCount: 8,
+      },
     };
     this.fetchMenuItems();
   }
 
   isSubmitButtonDisabled() {
-    return !(this.orders.length > 0 && this.tableNumber) || this.disableScreen;
+    if (this.disableScreen) return true;
+    return !(this.orders.length > 0 && (this.reservationId || this.tableNumber));
   }
 
-  async fetchTables(){
+  async fetchTables() {
     this.isLoading = true;
     this.httpService
-      .httpPost(
-        'table/getTables',
-        {}
+      .httpPost('table/getTables', {})
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
       )
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -87,23 +90,23 @@ export class OrderItemComponent implements OnInit {
           this.allTables = response.data;
           //this.filter.pagination.dataCount = response.data.length;
         },
-        error: (err) => this.triggerNotification({
-          message: "Failed to table data",
-          error: true
-        }),
+        error: (err) =>
+          this.triggerNotification({
+            message: 'Failed to table data',
+            error: true,
+          }),
       });
   }
 
   async fetchMenuItems() {
     this.isLoading = true;
     this.httpService
-      .httpPost(
-        'menu/getMenuItems',
-        this.filter
+      .httpPost('menu/getMenuItems', this.filter)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
       )
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -111,10 +114,11 @@ export class OrderItemComponent implements OnInit {
           this.allMenus = response.data;
           this.filter.pagination.dataCount = response.data.length;
         },
-        error: (err) => this.triggerNotification({
-          message: "Failed to retrieve data",
-          error: true
-        }),
+        error: (err) =>
+          this.triggerNotification({
+            message: 'Failed to retrieve data',
+            error: true,
+          }),
       });
   }
 
@@ -125,7 +129,9 @@ export class OrderItemComponent implements OnInit {
 
   menuItemSelected(menu: any) {
     if (!this.disableScreen) {
-      const existingOrder = this.orders.find(order => order.menuId === menu._id);
+      const existingOrder = this.orders.find(
+        (order) => order.menuId === menu._id
+      );
       if (existingOrder) {
         // If it exists, increment the quantity
         existingOrder.qty += 1;
@@ -135,79 +141,112 @@ export class OrderItemComponent implements OnInit {
           name: menu.name,
           price: menu.price,
           inventoryId: menu.inventoryId,
-          qty: 1
-        })
+          qty: 1,
+        });
       }
     }
   }
 
   minusMenuQty(selectedOrder: any) {
     if (!this.disableScreen) {
-      const existingOrder = this.orders.find(order => order.menuId === selectedOrder.menuId);
+      const existingOrder = this.orders.find(
+        (order) => order.menuId === selectedOrder.menuId
+      );
       if (existingOrder.qty > 1) {
         // If it exists, increment the quantity
         existingOrder.qty -= 1;
       } else {
-        this.orders = this.orders.filter(order => order.menuId !== selectedOrder.menuId);
+        this.orders = this.orders.filter(
+          (order) => order.menuId !== selectedOrder.menuId
+        );
       }
     }
   }
 
   plusMenuQty(selectedOrder: any) {
     if (!this.disableScreen) {
-      const existingOrder = this.orders.find(order => order.menuId === selectedOrder.menuId);
+      const existingOrder = this.orders.find(
+        (order) => order.menuId === selectedOrder.menuId
+      );
       existingOrder.qty += 1;
     }
   }
 
   calculateOrderTotal() {
     return this.orders.reduce((total, order) => {
-      return total + (order.price * order.qty);
+      return total + order.price * order.qty;
     }, 0);
   }
 
   submitOrder() {
     this.isLoading = true;
+    let requestUrl = ``;
+    let requestBody:any = {
+      orders: this.orders
+    };
+    if(this.reservationId){
+      requestBody.id = this.reservationId
+      requestUrl = `reservation/addCustomerOrders`
+    }
+    else{
+      requestBody.tableNumber = this.tableNumber;
+      requestUrl = `order/addOrder`;
+    }
+  
     this.httpService
-      .httpPost(
-        'order/addOrder',
-        {
-          tableNumber: this.tableNumber,
-          orders: this.orders
-        }
+      .httpPost(requestUrl, requestBody)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.loadOrder();
+        })
       )
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
       .subscribe({
         next: (res) => {
           console.log(res);
           this.clearOrder();
           this.triggerNotification({
-            message: "Order taken successfully",
-            error: false
-          })
+            message: 'Order taken successfully',
+            error: false,
+          });
         },
-        error: (err) => this.triggerNotification({
-          message: "Failed to add order",
-          error: true
-        }),
+        error: (err) =>
+          this.triggerNotification({
+            message: 'Failed to add order',
+            error: true,
+          }),
       });
   }
 
   loadOrder() {
-    if (this.tableNumber) {
-      this.isLoading = true;
+    this.isLoading = true;
+    if(this.reservationId){
       this.httpService
-        .httpPost(
-          'order/getSpecificOrder',
-          {
-            tableNumber: this.tableNumber
-          }
+      .httpGet(`reservation/getReservationById?id=${this.reservationId}`)
+      .pipe(finalize(()=>{
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res) => {
+          this.reservation = res;
+          this.orders = this.reservation.billing.orders;
+
+        },
+        error: (err) => console.log,
+        complete: () => (this.isLoading = false),
+      });
+    }
+    if (this.tableNumber) {
+      
+      this.httpService
+        .httpPost('order/getSpecificOrder', {
+          tableNumber: this.tableNumber,
+        })
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
         )
-        .pipe(finalize(() => {
-          this.isLoading = false;
-        }))
         .subscribe({
           next: (res) => {
             console.log(res);
@@ -215,16 +254,16 @@ export class OrderItemComponent implements OnInit {
             if (response.data.orders) {
               this.orders = response.data.orders;
               this.disableScreen = true;
-            }
-            else {
+            } else {
               this.orders = [];
               this.disableScreen = true;
             }
           },
-          error: (err) => this.triggerNotification({
-            message: "Failed to add order",
-            error: true
-          }),
+          error: (err) =>
+            this.triggerNotification({
+              message: 'Failed to add order',
+              error: true,
+            }),
         });
     }
   }
@@ -234,8 +273,8 @@ export class OrderItemComponent implements OnInit {
     this.orders = [];
     this.tableNumber = null;
   }
-  
-  updatePaginationPage(page: number){
+
+  updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
     this.fetchMenuItems();
   }

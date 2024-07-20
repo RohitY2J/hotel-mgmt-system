@@ -10,6 +10,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class InvoiceComponentComponent implements OnInit{
   ngOnInit(): void {
+    console.log(this.reservation);
   }
   @Input({ required: true }) reservation!: any;
 

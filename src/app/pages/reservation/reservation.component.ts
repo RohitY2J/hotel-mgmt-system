@@ -44,7 +44,9 @@ export class ReservationComponent implements OnInit {
   initialStatus: any = [];
   allStatus: any = [];
   isOrderComponentVisible: boolean = false;
+  isInvoceComponentVisible: boolean = false;
 
+  showInvoiceComponent: boolean = false;
   filter:any = { 
     searchText: "",
     filterObj: {
@@ -62,7 +64,7 @@ export class ReservationComponent implements OnInit {
   dropdownSettings: IDropdownSettings = {};
   allRooms: any = [];
   isOrdersFormVisible: boolean = false;
-  printInvoiceVisible: boolean = false;
+  printInvoiceVisible: boolean = true;
   selectedReservation: any = {};
   formMode: any = 'create';
 
@@ -177,16 +179,16 @@ export class ReservationComponent implements OnInit {
     let rooms: any = this.createReservationRequest.value.rooms?.map(
       (x: any) => {
         let room = this.allRooms.find((r: any) => r.id == x.id);
-        request.billing.orders.push({
-          summary: `Room: ${room.roomNumber}`,
-          amount:
-            room.pricePerDay *
-            Math.floor(
-              (Date.parse(request.checkOutDate) -
-                Date.parse(request.checkInDate)) /
-                (1000 * 60 * 60 * 24)
-            ),
-        });
+        // request.billing.orders.push({
+        //   summary: `Room: ${room.roomNumber}`,
+        //   amount:
+        //     room.pricePerDay *
+        //     Math.floor(
+        //       (Date.parse(request.checkOutDate) -
+        //         Date.parse(request.checkInDate)) /
+        //         (1000 * 60 * 60 * 24) 
+        //     ),
+        // });
         return room.id;
       }
     );
@@ -220,16 +222,10 @@ export class ReservationComponent implements OnInit {
       });
   }
 
-  submitOrder(reservationItem: any) {
-    if (this.ordersForm.invalid) {
-      this.showNotification = true;
-      this.notificationParams = {
-        message: 'Invalid form. Please fill all the required fields.',
-        error: true,
-      };
-      return;
-    }
-    console.log(this.ordersForm.value);
+
+  showInvoice(reservation:any){
+    this.selectedReservation = reservation;
+    this.isInvoceComponentVisible = true;
   }
 
   triggerNotification(message: any) {
@@ -251,7 +247,7 @@ export class ReservationComponent implements OnInit {
   getOrderAmount(reservationItem:any){
 
     return reservationItem.billing.orders.reduce(
-      (a:any,o:any)=> a + o.amount, 0
+      (a:any,o:any)=> a + (o.price * o.qty), 0
   );
 
   }

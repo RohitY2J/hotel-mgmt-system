@@ -25,7 +25,7 @@
             </div>
             <!-- Modal body -->
 
-            <app-order-item  [isReservationView]="true" (onClose)="closeOrderComponent()"></app-order-item>
+            <app-order-item  [isReservationView]="true" (onClose)="closeOrderComponent()" [reservationId]="selectedReservation.id"></app-order-item>
         </div>
     </div>
 </div>
@@ -221,8 +221,34 @@
         (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()"
         (updateReservation)="getReservations()"></app-order-form>
 </ng-container>
-<ng-container *ngIf="printInvoiceVisible">
-    <app-invoice-component [reservation]="selectedReservation"></app-invoice-component>
+<ng-container *ngIf="showInvoiceComponent">
+    <div tabindex="-1" aria-hidden="true"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
+    <div class="p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="bg-white rounded-lg shadow dark:bg-gray-700" style="width: 750px;">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Place Orders
+                </h3>
+                <button (click)="closeOrderComponent()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+
+            <app-invoice-component [reservation]="selectedReservation"></app-invoice-component>
+        </div>
+    </div>
+</div>
+
 </ng-container>
 
 <div class="flex h-screen">
@@ -311,7 +337,10 @@
                             Check In Date
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Total Order Amount
+                            Total Orders
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Orders
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Actions
@@ -358,11 +387,17 @@
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Cancel</button>
                             | -->
                             <button type="button" (click)="orderButtonClicked(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Orders</button>
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Add</button> | 
+                                <button type="button" (click)="orderButtonClicked(reservationItem)"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</button>
                             <!-- |
                                 <button type="button" (click)="printInvoice(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Print Invoice</button> -->
 
+                        </td>
+                        <td>
+                            <button type="button" (click)="orderButtonClicked(reservationItem)"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkout</button>
                         </td>
                     </tr>
                 </tbody>
