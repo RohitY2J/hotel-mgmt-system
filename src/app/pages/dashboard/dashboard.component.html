@@ -78,15 +78,17 @@
                                 class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
                                 Reservation This Week
                             </h5>
-                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold">{{this.totalReservationThisWeek}}</p>
+                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold
+                                flex justify-center">{{this.totalReservationThisWeek}}</p>
                         </div>
-                        <!-- <div>
+                        <div>
                             <h5
                                 class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
-                                CPC
+                                No. of Order This Week
                             </h5>
-                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold">$5.40</p>
-                        </div> -->
+                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold
+                                flex justify-center">{{this.totalOrderThisWeek}}</p>
+                        </div>
                     </div>
                 </div>
                 <div id="line-chart" #lineChart></div>

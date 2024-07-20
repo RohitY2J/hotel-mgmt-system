@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit {
   private chart: ApexCharts | null = null; // Define a private chart instance
   public options: any = {}; // Your chart options
   totalReservationThisWeek: Number = 0;
+  totalOrderThisWeek: Number = 0;
 
   constructor(private httpService: HttpService) {}
   ngOnInit(): void {
@@ -112,6 +113,7 @@ export class DashboardComponent implements OnInit {
         }, false, true); 
         this.chart?.updateSeries(this.options.series, true);
         this.totalReservationThisWeek = thisWeekReservationData.reduce((acc: number, count: number) => acc + count, 0);
+        this.totalOrderThisWeek = thisWeekOrder.reduce((acc: number, order: number) => acc+order, 0);
       },
       (err) => {
 

@@ -32,7 +32,7 @@ exports.createInventoryItem = async (req, res, next) => {
         file: item.file,
         clientId: req.clientId
       });
-      menuItem.save();
+      await menuItem.save();
       console.info("Menu item added from inventory item");
     }
 
