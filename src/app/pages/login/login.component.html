@@ -1,4 +1,5 @@
 <main>
+  <app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
     <section class="absolute w-full h-full">
       <div
         class="absolute top-0 w-full h-full bg-gray-900"
@@ -24,7 +25,8 @@
                   <strong class="font-bold">Error: </strong>
                   <span class="block sm:inline">Username and password is required</span>
                 </div>
-                <form [formGroup]="loginRequest">
+                
+                <form [formGroup]="loginRequest" (submit)="login()">
                   <div class="relative w-full mb-3">
                     <label
                       class="block uppercase text-gray-700 text-xs font-bold mb-2"
@@ -64,14 +66,23 @@
                     >
                   </div>
                   <div class="text-center mt-6">
-                    <button
+                    <button *ngIf="isLoading; else btnEnabled" disabled
                       class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                      type="button"
                       style="transition: all 0.15s ease 0s;"
-                      (click)="login()"
+                  
+                    >
+                      Signing In <i class="fas fa-spinner fa-spin"></i>
+                    </button>
+                    <ng-template #btnEnabled>
+                      <button
+                      class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+                      type="submit"
+                      style="transition: all 0.15s ease 0s;"
+                  
                     >
                       Sign In
                     </button>
+                    </ng-template>
                   </div>
                 </form>
               </div>

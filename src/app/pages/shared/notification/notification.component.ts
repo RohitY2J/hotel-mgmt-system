@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { Component, Input } from '@angular/core';
 import { Dismiss, DismissOptions } from 'flowbite';
 import { NotificationParameter } from '../../../models/Notification';
 

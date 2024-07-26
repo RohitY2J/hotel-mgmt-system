@@ -143,16 +143,15 @@ export class InventoryComponent implements OnInit {
     
     let request:any = this.inventoryRequest.value;
     let formData = new FormData();
-    if (this.selectedFile != null) formData.append('file', this.selectedFile!);
+    if (this.selectedFile) formData.append('file', this.selectedFile!);
 
     for (const key in request) {
-      formData.append(key, request);
+      formData.append(key, request[key]);
     }
-   
-    request.file = this.selectedFile?.name;
+    
     this.isLoading = true;
     this.httpService
-      .httpPost('inventory/createInventory', request)
+      .httpPost('inventory/createInventory', formData)
       .pipe(
         finalize(() => {
           this.isLoading = false;

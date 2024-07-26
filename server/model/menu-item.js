@@ -5,7 +5,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 // MenuItem Schema
 const MenuItemSchema = new Schema({
     name: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     price: { type: Number, required: true },
     category: { type: String, required: false },
     available: { type: Boolean, default: true },

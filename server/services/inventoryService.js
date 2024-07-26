@@ -29,7 +29,7 @@ exports.createInventoryItem = async (req, res, next) => {
         category: item.category,
         availableQuantity: item.availableUnit,
         inventoryId: inventoryItemId,
-        file: item.file,
+        file: req.file.filename,
         clientId: req.clientId
       });
       await menuItem.save();
