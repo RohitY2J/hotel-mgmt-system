@@ -67,10 +67,10 @@ export class OrderBillComponent implements OnInit {
   nextStep() {
     this.selectedOrder.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
     if (this.selectedOrder.discountType == 0) {
-      this.selectedOrder.discountAmt = this.selectedOrder.discountPercent * this.selectedOrder.subTotal / 100;
+      this.selectedOrder.discountAmt = this.selectedOrder.discountPercent ?? 0 * this.selectedOrder.subTotal / 100;
     }
     else {
-      this.selectedOrder.discountAmt = this.selectedOrder.discountAmt;
+      this.selectedOrder.discountAmt = this.selectedOrder.discountAmt ?? 0;
     }
     if (this.selectedOrder.discountType == 0) {
       let amtAfterDiscount = this.selectedOrder.subTotal - this.selectedOrder.discountAmt;
