@@ -155,8 +155,8 @@ exports.getOrders = async (req, res, next) => {
 
         filter = {clientId: conversion.ToObjectId(req.clientId)};
 
-        if (req.body.hasOwnProperty('status') && req.body.status != '') {
-            filter.status = req.body.status;
+        if (req.body.hasOwnProperty('status') && (typeof req.body.status === 'number' || req.body.status != '')) {
+            filter.status = conversion.convertStringToInt(req.body.status);
         }
 
         if (req.body.hasOwnProperty('tableNumber') && req.body.tableNumber != '') {
@@ -307,10 +307,10 @@ exports.billOrder = async (req, res, next) => {
         bill.discountAmt = order.discountAmt;
         bill.discountPercent = order.discountPercent;
         bill.taxType = order.taxType;
-        bill.taxAmt = order.taxAmt;
-        bill.taxPercent = order.taxPercent;
+        bill.taxAmt = order.taxAmt ?? 0;
+        bill.taxPercent = order.taxPercent ?? 0;
         bill.paymentType = order.paymentType;
-        bill.grandTotal = order.totalPayable;
+        bill.grandTotal = order.totalPayable ?? 0;
         bill.orderId = conversion.ToObjectId(order._id);
         bill.clientId = conversion.ToObjectId(req.clientId);
 
