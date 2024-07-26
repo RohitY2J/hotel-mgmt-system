@@ -9,6 +9,7 @@ const flash = require("connect-flash");
 const businessLogic = require("./business-logic");
 const cron = require("node-cron");
 const http = require('http');
+const environment = require('../env/nodeEnv');
 
 const app = express();
 const socketIo = require('socket.io');
@@ -20,8 +21,8 @@ const io = socketIo(server,{
   }
 });
 
-const port = 8000;
-const MONGO_DB = 'mongodb://127.0.0.1/hotel-mgmt-app'
+const port = environment.serverPort;
+const MONGO_DB = environment.databaseURL;
 
 
 try {

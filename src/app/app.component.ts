@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { SidebarComponent } from './pages/shared/sidebar/sidebar.component';
+import { environment } from '../../env/environment';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +13,10 @@ import { SidebarComponent } from './pages/shared/sidebar/sidebar.component';
 })
 export class AppComponent {
   title = 'angular-app';
+
+  constructor(){
+    console.log('API URL:', environment.serverUrl);
+    console.log('Base Href:', environment.baseHref);
+  }
+
 }

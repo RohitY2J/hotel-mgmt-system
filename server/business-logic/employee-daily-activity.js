@@ -1,5 +1,6 @@
 const dbContext = require('../model');
 const conversion = require('../helper/conversion');
+const env = require('../../env/nodeEnv');
 
 exports.createDailyActivityRecord = async () => {
   try {
@@ -97,7 +98,7 @@ exports.getEmployeeSchedules = async (filterParams) => {
     let profilePics = schedule.employee.documents.find(x => x.documentType === "ProfilePic");
     if (profilePics) {
       let fileName = profilePics.fileObject;
-      schedule.employee.profilePicUrl = "http://localhost:8000/uploads/" + fileName;
+      schedule.employee.profilePicUrl = env.serverUrl+"/uploads/" + fileName;
     }
     else {
       schedule.employee.profilePicUrl = null;

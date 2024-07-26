@@ -1,5 +1,6 @@
 const dbContext = require('../model');
 const conversion = require('../helper/conversion');
+const env = require('../../env/nodeEnv');
 
 
 exports.getEmployee = async (filterParams) => {
@@ -51,7 +52,7 @@ exports.getEmployee = async (filterParams) => {
         let profilePics = employee.documents.find(x => x.documentType === "ProfilePic");
         if(profilePics ){
             let fileName = profilePics.fileObject;
-            employee.profilePicUrl = "http://localhost:8000/uploads/"+fileName;
+            employee.profilePicUrl = env.serverUrl+"/uploads/"+fileName;
         }
         else{
             employee.profilePicUrl = null;

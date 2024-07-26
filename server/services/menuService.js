@@ -1,5 +1,6 @@
 const dbContext = require('../model');
 const conversion = require('../helper/conversion');
+const env = require('../../env/nodeEnv');
 
 exports.createMenuItem = async (req, res, next) => {
     if (!req.clientId) {
@@ -139,7 +140,7 @@ exports.getMenuItems = async (req, res, next) => {
 
     menus.forEach(menu => {
         if (menu.file) {
-            menu.file = "http://localhost:8000/uploads/" + menu.file;
+            menu.file = env.serverUrl+"/uploads/" + menu.file;
         }
     });
     return res.status(200).json({

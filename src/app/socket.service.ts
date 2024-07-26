@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
   private socket: Socket;
-  private readonly uri: string = 'http://localhost:8000'; // Your server URL
+  private readonly uri: string = environment.serverUrl; // Your server URL
 
   constructor() {
     this.socket = io(this.uri);

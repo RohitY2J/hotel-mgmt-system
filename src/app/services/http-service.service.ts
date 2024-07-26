@@ -1,5 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../../env/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,4 +22,4 @@ export class HttpService {
     });
   }
 }
-export const ApiURL = "http://localhost:8000/api"
+export const ApiURL = environment.serverUrl+"/api";
