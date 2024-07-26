@@ -54,7 +54,7 @@ export class MenuItemComponent implements OnInit {
     this.menuForm = this.fb.group({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.required),
+      description: new FormControl(''),
       price: new FormControl(0, Validators.required),
       category: new FormControl(''),
       available: new FormControl('', Validators.required),

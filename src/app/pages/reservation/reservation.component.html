@@ -490,7 +490,7 @@
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Print Invoice</button> -->
 
                         </td>
-                        <td>
+                        <td *ngIf="reservationItem.status != 2">
                             <button type="button" (click)="openCheckOutForm(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkout</button>
                         </td>
