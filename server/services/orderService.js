@@ -155,8 +155,8 @@ exports.getOrders = async (req, res, next) => {
 
         filter = {clientId: conversion.ToObjectId(req.clientId)};
 
-        if (req.body.hasOwnProperty('status') && req.body.status != '') {
-            filter.status = req.body.status;
+        if (req.body.hasOwnProperty('status') && (typeof req.body.status === 'number' || req.body.status != '')) {
+            filter.status = conversion.convertStringToInt(req.body.status);
         }
 
         if (req.body.hasOwnProperty('tableNumber') && req.body.tableNumber != '') {
