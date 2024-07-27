@@ -8,11 +8,12 @@ passport.use('local', new LocalStrategy({
   passReqToCallback: true
 }, async (req, email, password, done) => {
   try {
-    let user = await dbContext.User.findOne({ email: email });
+    let user = await dbContext.User.findOne({ email: email }).populate({
+      path: 'client'
+    });
     if (!user || !user.validatePassword(password)) {
       return done(null, false, { message: 'Incorrect email or password' });
     }
-
     return done(null, user);
   }
   catch (err) {

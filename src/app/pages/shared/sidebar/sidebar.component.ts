@@ -14,12 +14,13 @@ import { CommonModule } from '@angular/common';
 export class SidebarComponent {
   constructor(private authService: AuthService) {}
   collapseShow = "hidden";
+  clientName = "Default";
   ngOnInit(): void {
+    this.clientName = this.authService.getUser().client.clientName;
     initFlowbite();
   }
   logout() {
     this.authService.logout();
-    
   }
   toggleCollapseShow(classes: any) {
     this.collapseShow = classes;

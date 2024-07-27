@@ -4,7 +4,7 @@ const mongoose = require('mongoose'); //library to create a MongoDB schema.
 const Schema = mongoose.Schema;
 
 //defines the datatype and structure for user
-const CustomSchema = new Schema({
+const UserSchema = new Schema({
   meta: {
     isDeleted: {type: Boolean, default: false}
   },
@@ -21,14 +21,17 @@ const CustomSchema = new Schema({
     ref:"Client",
     required: true
   }
-}, {timestamps: true});
+}, {timestamps: true,
+  toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+  toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
+});
 
 /**
  * Encrypt password using pbkdf2
  *
  * @param {string} password - the password
  */
-CustomSchema.methods.setPassword = function(password) {
+UserSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
     .toString('hex');
@@ -40,7 +43,7 @@ CustomSchema.methods.setPassword = function(password) {
  * @param {string} password - the password
  * @returns {boolean} return if the password is correct
  */
-CustomSchema.methods.validatePassword = function(password) {
+UserSchema.methods.validatePassword = function(password) {
   if (this.salt) { // salt
     const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
       .toString('hex');
@@ -52,7 +55,7 @@ CustomSchema.methods.validatePassword = function(password) {
 };
 
 
-CustomSchema.methods.userSimplified = function(){
+UserSchema.methods.userSimplified = function(){
   return {
     _id: this._id,
     email: this.email,
@@ -60,8 +63,16 @@ CustomSchema.methods.userSimplified = function(){
     fullName: this.fullName,
     roleID: this.roleID,
     profilePic: this.profilePic || '/static/img/profile.png',
-    clientId: this.clientId
+    clientId: this.clientId,
+    client: this.client
   };
 };
 
-module.exports = mongoose.model('User', CustomSchema);
+UserSchema.virtual('client', {   
+  ref: 'Client', // the collection/model name
+  localField: 'clientId',
+  foreignField: '_id',
+  justOne: true, // default is false
+});
+
+module.exports = mongoose.model('User', UserSchema);
