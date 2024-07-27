@@ -11,10 +11,11 @@
   aria-label="Sidebar">
 
   <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-    <a href="#" class="flex items-center ps-2.5 mb-5">
+    <a href="#" class="flex items-center justify-center mb-3">
       <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 me-3 sm:h-7" alt="Flowbite Logo" /> -->
-      <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{this.clientName}}</span>
+      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{{this.clientName}}</span>
     </a>
+    <hr class="mb-3">
     <ul class="space-y-2 font-medium">
       <li>
         <a [routerLink]="['/admin', { outlets: { main: 'dashboard' } }]" routerLinkActive="router-link-active"
