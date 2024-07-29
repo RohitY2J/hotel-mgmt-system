@@ -220,9 +220,15 @@
                             <i class="fas fa-4x fa-bread-slice"></i>
                         </div>
                         <dt class="mb-2 text-3xl font-extrabold dark:text-gray-700">{{menu.roomNumber}}</dt>
-                        <dd class="text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            {{menu.name}} (Rs. {{menu.price}})
+                        <dd class="w-48 flex justify-center text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            <span class="max-w-32 text-ellipsis overflow-hidden whitespace-nowrap">
+                                {{menu.name}}
+                            </span>
+                            <span>
+                                (Rs. {{menu.price}})
+                            </span>
                         </dd>
+                        
                         <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
                             {{getMenuAvailabilityStatus(menu.available)}}
                         </dd>
