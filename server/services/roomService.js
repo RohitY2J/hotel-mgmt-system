@@ -1,5 +1,6 @@
 const dbContext = require("../model");
 const conversion = require("../helper/conversion");
+const globalConstants = require("../constants/globalConstants");
 
 
 exports.createRoom = async (req, res, next) => {
@@ -9,8 +10,8 @@ exports.createRoom = async (req, res, next) => {
     var errorMessage = [];
     let request = req.body;
     if (!request.roomNumber) errorMessage.push("Room number is required");
-    if (!request.occupancyStatus)
-      errorMessage.push("Occupancy status is requried");
+    // if (!request.occupancyStatus)
+    //   errorMessage.push("Occupancy status is requried");
     if (!request.maintainanceStatus)
       errorMessage.push("Maintainance status is requried");
     if (!req.clientId) errorMessage.push("Client Id is required");
@@ -20,6 +21,8 @@ exports.createRoom = async (req, res, next) => {
       return res.status(400).send(`invalidRequest: ${errorMessage}`);
     }
 
+    //set initial room status to available
+    request.occupancyStatus = globalConstants.RoomStatus.Available;
     let existingRoom = await dbContext.Room.findOne({ roomNumber: request.roomNumber, clientId: conversion.ToObjectId(req.clientId) });
     if (existingRoom) {
       return res

@@ -161,12 +161,12 @@ export class RoomComponent implements OnInit {
   updateRoomRequest(){
     if(this.isUpdate){
       this.createRoomRequest.get("roomNumber")?.disable();
-      this.createRoomRequest.get("occupancyStatus")?.disable();
     }
     else{
       this.createRoomRequest.get("roomNumber")?.enable();
-      this.createRoomRequest.get("occupancyStatus")?.enable();
+      this.createRoomRequest.get("occupancyStatus")?.setValue('0');
     }
+    this.createRoomRequest.get("occupancyStatus")?.disable();
   }
 
   getRoomNumber(){
