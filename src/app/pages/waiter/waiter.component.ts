@@ -7,7 +7,7 @@ import { HttpService } from '../../services/http-service.service';
 import { finalize } from 'rxjs';
 import { HttpListResponse } from '../../models/HttpResponse';
 import { ConstantsService } from '../../services/constants.service';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, UrlSerializer } from '@angular/router';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { AuthService } from '../../services/auth.service';
@@ -39,6 +39,7 @@ export class WaiterComponent implements OnInit {
   selectedItems: any[] = [];
   filter = {};
   orderForm: FormGroup = new FormGroup({});
+  userDetails: any = {};
 
   constructor(
     private fb: FormBuilder, 
@@ -50,6 +51,7 @@ export class WaiterComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.userDetails = this.authService.getUser();
     this.orderForm = this.fb.group({
       orderId: new FormControl(''),
       status: new FormControl('', Validators.required)

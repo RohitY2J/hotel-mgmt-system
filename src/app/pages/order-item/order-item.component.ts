@@ -7,6 +7,7 @@ import { LoaderComponent } from '../shared/loader/loader.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-order-item',
@@ -43,10 +44,12 @@ export class OrderItemComponent implements OnInit {
   reservation: any = {};
 
   orders: any[] = [];
+  userDetails: any = {};
 
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private authService: AuthService) {}
 
   async ngOnInit() {
+    this.userDetails = this.authService.getUser();
     await this.fetchMenuItems();
     this.fetchTables();
     console.log(this.reservationId);

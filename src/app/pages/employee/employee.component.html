@@ -11,12 +11,11 @@
                 <input type="text" formControlName="firstName" id="firstName"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Enter first name" required>
-                <div
-                    *ngIf="myForm.get('firstName')?.invalid 
+                <div *ngIf="myForm.get('firstName')?.invalid 
                         && (myForm.get('firstName')?.dirty 
                         || myForm.get('firstName')?.touched)">
-                    <div *ngIf="myForm.get('firstName')?.errors?.['required']"
-                        class="text-red-500 text-xs italic">First Name is required.</div>
+                    <div *ngIf="myForm.get('firstName')?.errors?.['required']" class="text-red-500 text-xs italic">First
+                        Name is required.</div>
                 </div>
             </div>
 
@@ -28,14 +27,13 @@
                     placeholder="Enter last name" required>
                 <div
                     *ngIf="myForm.get('lastName')?.invalid && (myForm.get('lastName')?.dirty || myForm.get('lastName')?.touched)">
-                    <div *ngIf="myForm.get('lastName')?.errors?.['required']"
-                        class="text-red-500 text-xs italic">Last Name is required.</div>
+                    <div *ngIf="myForm.get('lastName')?.errors?.['required']" class="text-red-500 text-xs italic">Last
+                        Name is required.</div>
                 </div>
             </div>
 
             <div class="col-span-2">
-                <label for="email"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                 <input type="email" formControlName="email" id="email"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Enter email" required>
@@ -49,16 +47,15 @@
             </div>
 
             <div class="col-span-2 sm:col-span-1">
-                <label for="phoneNumber"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
+                <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
                     Number</label>
                 <input type="tel" formControlName="phoneNumber" id="phoneNumber"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Enter phone number" required>
                 <div
                     *ngIf="myForm.get('phoneNumber')?.invalid && (myForm.get('phoneNumber')?.dirty || myForm.get('phoneNumber')?.touched)">
-                    <div *ngIf="myForm.get('phoneNumber')?.errors?.['required']"
-                        class="text-red-500 text-xs italic">Phone number is required.</div>
+                    <div *ngIf="myForm.get('phoneNumber')?.errors?.['required']" class="text-red-500 text-xs italic">
+                        Phone number is required.</div>
                 </div>
             </div>
 
@@ -71,16 +68,14 @@
             </div>
 
             <div class="col-span-2">
-                <label for="role"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
+                <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
                 <select formControlName="role" id="role"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="" disabled selected>Select a role</option>
                     <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
                     </option>
                 </select>
-                <div
-                    *ngIf="myForm.get('role')?.invalid && (myForm.get('role')?.dirty || myForm.get('role')?.touched)">
+                <div *ngIf="myForm.get('role')?.invalid && (myForm.get('role')?.dirty || myForm.get('role')?.touched)">
                     <div *ngIf="myForm.get('role')?.errors?.['required']" class="text-red-500 text-xs italic">
                         Role is required.</div>
                 </div>
@@ -88,8 +83,8 @@
 
             <div class="col-span-2">
 
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    for="file_input">Upload file</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload
+                    file</label>
                 <input
                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     id="file_input" type="file" (change)="onFileSelect($event)">
@@ -115,8 +110,8 @@
                     placeholder="Enter Role">
                 <div
                     *ngIf="myRoleForm.get('roleName')?.invalid && (myRoleForm.get('roleName')?.dirty || myRoleForm.get('roleName')?.touched)">
-                    <div *ngIf="myRoleForm.get('roleName')?.errors?.['required']"
-                        class="text-red-500 text-xs italic">Role Name is required.</div>
+                    <div *ngIf="myRoleForm.get('roleName')?.errors?.['required']" class="text-red-500 text-xs italic">
+                        Role Name is required.</div>
                 </div>
             </div>
             <div class="col-span-2 sm:col-span-1">
@@ -156,8 +151,8 @@
             </svg>
             <span class="sr-only">Close modal</span>
         </button>
-        <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
-            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor"
+            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd"
                 d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                 clip-rule="evenodd"></path>
@@ -186,55 +181,52 @@
 
     <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-    <div class="flex items-center">
+    <div class="flex items-center py-4">
         <div class="flex">
             <button (click)="openModalForCreatingEmployee()"
-                class="block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+                class="w-36 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
                 type="button">
                 Add Employee
             </button>
 
             <button (click)="openRoleModal()"
-                class="ms-2 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">
+                class="w-32 ms-2 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">
                 Create Roles
             </button>
-
         </div>
 
-        <div class="space-y-4 md:space-y-0 py-4 ml-48">
 
-            <div class="flex items-center max-w-md mr-auto me-4">
-                <select id="role" [(ngModel)]="filter.role"
-                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>All Role</option>
-                        <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
-                        </option>
-                    </select>
-                <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <i class="fas fa-user text-white"></i>
-                    </div>
-                    <input type="text" id="simple-search" (change)="searchInputChanged($event)"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search employee name.." required />
+        <div class="flex items-center w-full justify-end">
+            <select id="role" [(ngModel)]="filter.role"
+                class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <option value="" selected>All Role</option>
+                <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                </option>
+            </select>
+            <div class="relative w-80">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <i class="fas fa-user text-white"></i>
                 </div>
-                <button type="button" (click)="searchButtonClicked()"
-                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <!-- <i class="fas fa-search text-white"></i> -->
-                    <span>Apply</span>
-                </button>
-                <button type="button" (click)="clearFilter()"
-                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <!-- <i class="fas fa-search text-white"></i> -->
-                    <span>Clear</span>
-                </button>
+                <input type="text" id="simple-search" (change)="searchInputChanged($event)"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search employee name.." required />
             </div>
-    
+            <button type="button" (click)="searchButtonClicked()"
+                class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                <!-- <i class="fas fa-search text-white"></i> -->
+                <span>Apply</span>
+            </button>
+            <button type="button" (click)="clearFilter()"
+                class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                <!-- <i class="fas fa-search text-white"></i> -->
+                <span>Clear</span>
+            </button>
         </div>
+
 
     </div>
 
-    
+
 
     <div class="overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -308,11 +300,8 @@
                 </tr>
             </tbody>
         </table>
-        <app-pagination 
-                [dataCount]="filter.pagination.dataCount" 
-                [page]="filter.pagination.page"
-                [pageSize]="filter.pagination.pageSize"
-                (callback)="updatePaginationPage($event)"></app-pagination>
+        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
+            [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
     </div>
 
 
