@@ -12,7 +12,7 @@ const InventorySchema = new Schema({
   isVisibleInMenu: { type: Boolean }, //Show and link in menu if true
   lastAddedOn: { type: Date },
   lastAddedUnit: { type: Number },
-  minUnitToShowAlert: { type: Number, required: false }, //idea is if min quantity is reached some kind of alert should be shown
+  minUnitToShowAlert: { type: Number, default: 0 }, //idea is if min quantity is reached some kind of alert should be shown
   file: { type: String, required: false },
   //meta
   createdAt: { type: Date, default: Date.now },

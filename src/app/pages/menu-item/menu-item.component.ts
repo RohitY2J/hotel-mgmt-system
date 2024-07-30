@@ -57,8 +57,7 @@ export class MenuItemComponent implements OnInit {
       description: new FormControl(''),
       price: new FormControl(0, Validators.required),
       category: new FormControl(''),
-      available: new FormControl('', Validators.required),
-      inventoryId: new FormControl('')
+      available: new FormControl('', Validators.required)
     });
 
   }
@@ -106,7 +105,7 @@ export class MenuItemComponent implements OnInit {
       price: 0,
       category: '',
       available: '',
-      inventoryId: ''
+      //inventoryId: ''
     });
   }
   formSubmitted() {
@@ -183,7 +182,7 @@ export class MenuItemComponent implements OnInit {
       price: menu.price,
       category: menu.category,
       available: menu.available ? 1 : 0,
-      inventoryId: menu.inventoryId ?? ""
+      //inventoryId: menu.inventoryId ?? ""
     });
     this.isUpdate = true;
     this.updateMenuForm();

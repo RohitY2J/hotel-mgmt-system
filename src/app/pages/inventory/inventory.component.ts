@@ -62,6 +62,7 @@ export class InventoryComponent implements OnInit {
     searchText: '',
     filterObj: {
       itemType: '',
+      stockType: 0
     },
     pagination: {
       page: 1,
@@ -110,6 +111,12 @@ export class InventoryComponent implements OnInit {
       this.filter.filterObj.itemType != ''
     ) {
       searchRequest.itemType = this.filter.filterObj.itemType;
+    }
+    if (
+      this.filter.filterObj.stockType != null &&
+      this.filter.filterObj.stockType
+    ) {
+      searchRequest.stockType = this.filter.filterObj.stockType;
     }
     if (this.filter.filterObj)
       this.httpService
@@ -177,6 +184,17 @@ export class InventoryComponent implements OnInit {
   }
   closeInventoryForm() {
     this.inventoryRequest.reset();
+    this.inventoryRequest.setValue({
+      name: '',
+      description: '',
+      itemType: 0,
+      quantityUnitType: 0,
+      pricePerUnit: '',
+      availableUnit: 0,
+      minUnitToShowAlert: 0,
+      file: ''
+    });
+    
     this.showInventoryForm = false;
   }
   openInventoryForm() {
@@ -187,6 +205,7 @@ export class InventoryComponent implements OnInit {
       searchText: '',
       filterObj: {
         itemType: '',
+        stockType: 0
       },
       pagination: {
         page: 1,

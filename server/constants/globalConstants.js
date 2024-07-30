@@ -31,3 +31,8 @@ exports.PaymentType = Object.freeze({
   Cash: 0,
   Online: 1
 })
+
+exports.StockType = Object.freeze({
+  LowInStock: 1,
+  OutOfStock: 2
+})

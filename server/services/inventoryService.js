@@ -29,9 +29,11 @@ exports.createInventoryItem = async (req, res, next) => {
         category: item.category,
         availableQuantity: item.availableUnit,
         inventoryId: inventoryItemId,
-        file: req.file.filename,
         clientId: req.clientId
       });
+      if(req.file && req.file.filename){
+        menuItem.file = req.file.filename;
+      }
       await menuItem.save();
       console.info("Menu item added from inventory item");
     }
@@ -175,6 +177,15 @@ exports.getItems = async (req, res, next) => {
       });
     }
     req.body.clientId = conversion.ToObjectId(req.clientId);
+    if(req.body.stockType){
+      if(req.body.stockType == globalConstants.StockType.LowInStock){
+        req.body.availableUnit = { "$lt": 100 };
+      }
+      else if(req.body.stockType == globalConstants.StockType.OutOfStock){
+        req.body.availableUnit = 0;
+      }
+      delete req.body.stockType;
+    }
     let results = await dbContext.Inventory.find(req.body)
     .select('_id name description itemType quantityUnitType pricePerUnit availableUnit minUnitToShowAlert')
     .skip((req.query.pageNo - 1) * req.query.pageSize)

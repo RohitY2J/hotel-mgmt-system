@@ -72,7 +72,13 @@ export class ConstantsService {
     tableAvailableStatus:{
       0: "Occupied",
       1: "Available"
+    },
+    stockAvailable:{
+      0: "All Stock",
+      1: "Low in Stock",
+      2: "Out of Stock"
     }
+    
   };
 
 

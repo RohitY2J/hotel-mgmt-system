@@ -12,4 +12,5 @@ export interface StatusMaps {
     inventoryItemType: {[key: number]: string};
     quantityUnitType: {[key: number]: string};
     tableAvailableStatus: {[key: number]: string};
+    stockAvailable: {[key: number]: string};
 }

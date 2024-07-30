@@ -3,12 +3,14 @@ import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { HttpService } from '../../services/http-service.service';
 import ApexCharts from 'apexcharts';
-import dayjs from 'dayjs';
+import { finalize } from 'rxjs';
+import { LoaderComponent } from '../shared/loader/loader.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SidebarComponent, NavbarComponent],
+  imports: [SidebarComponent, NavbarComponent, LoaderComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -19,6 +21,7 @@ export class DashboardComponent implements OnInit {
   public options: any = {}; // Your chart options
   totalReservationThisWeek: Number = 0;
   totalOrderThisWeek: Number = 0;
+  isLoading: boolean = false;
 
   constructor(private httpService: HttpService) {}
   ngOnInit(): void {
@@ -89,7 +92,12 @@ export class DashboardComponent implements OnInit {
       this.chart.render();
     }
 
-    this.httpService.httpGet('/dashboard/getDashboardData').subscribe(
+    this.isLoading = true;
+    this.httpService.httpGet('/dashboard/getDashboardData')
+    .pipe(finalize(() => {
+      this.isLoading = false;
+    }))
+    .subscribe(
       (res) => {
         this.dashboardData = res;
         let thisWeekReservationData = this.dashboardData.reservationThisWeek.map((x: { count: any; }) => x.count);

@@ -266,52 +266,59 @@
 
     <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-    <div class="flex items-center justify-between">
-        <div class="flex">
+    <div class="flex items-center justify-between py-4">
+        <div class="flex w-48">
             <button (click)="openInventoryForm()"
-                class="block mr-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+                class="block mr-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-3 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
                 type="button">
                 Add Inventory
             </button>
 
-            <div class="flex me-4 ml-2">
+        </div>
+
+        <div class="flex items-center w-full justify-end">
+            <div class="flex ml-2">
                 <select id="role" [(ngModel)]="filter.filterObj.itemType"
-                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    <option class="text-gray-400" value="" selected>All Item Types</option>
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block py-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option class="text-gray-400" value="" selected>All Types</option>
                     <option *ngFor="let status of constService.getStatusValuesAsDictionary('inventoryItemType')"
                         [value]="status.key">{{ status.value }}
                     </option>
                 </select>
 
             </div>
-        </div>
 
-        <div class="space-y-4 md:space-y-0 py-4">
+            <div class="flex ml-2">
+                <select id="role" [(ngModel)]="filter.filterObj.stockType"
+                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block py-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option *ngFor="let stockStatus of constService.getStatusValuesAsDictionary('stockAvailable')"
+                        [value]="stockStatus.key">{{ stockStatus.value }}
+                    </option>
+                </select>
 
-            <div class="flex items-center max-w-md ml-auto me-4">
-                <label for="simple-search" class="sr-only">Search</label>
-                <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <i class="fa-solid fa-box text-white"></i>
-                    </div>
-                    <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search by name" required />
-                </div>
-                <button type="button" (click)="fetchInventoryItems()" (change)="fetchInventoryItems()"
-                    class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <i class="fas fa-search text-white"></i>
-                    <span class="sr-only">Search</span>
-                </button>
-                <button type="button" (click)="clearFilter()"
-                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <!-- <i class="fas fa-search text-white"></i> -->
-                    <span>Clear</span>
-                </button>
             </div>
-
-
+            <label for="simple-search" class="sr-only">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <i class="fa-solid fa-box text-white"></i>
+                </div>
+                <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search by name" required />
+            </div>
+            <button type="button" (click)="fetchInventoryItems()" (change)="fetchInventoryItems()"
+                class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                <i class="fas fa-search text-white"></i>
+                <span class="sr-only">Search</span>
+            </button>
+            <button type="button" (click)="clearFilter()"
+                class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                <!-- <i class="fas fa-search text-white"></i> -->
+                <span>Clear</span>
+            </button>
         </div>
+
+
 
     </div>
 
