@@ -177,3 +177,6 @@ Thumbs.db
 
 
 server/uploads/
+
+.wwebjs_cache/
+.wwebjs_auth/
