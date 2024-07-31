@@ -135,7 +135,8 @@ exports.getMenuItems = async (req, res, next) => {
 
     const menus = await dbContext.MenuItem.find(filter)
         .skip(skip)
-        .limit(limit);
+        .limit(limit)
+        .populate('inventoryId');
 
 
     menus.forEach(menu => {

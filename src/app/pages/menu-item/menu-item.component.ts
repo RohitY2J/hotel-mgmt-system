@@ -221,8 +221,39 @@ export class MenuItemComponent implements OnInit {
     }
   }
 
-  getMenuAvailabilityStatus(menuStatus: boolean){
-    return this.constantService.getStatusString("menuAvailabilityStatus", menuStatus ? 1 : 0);
+  getMenuAvailabilityStatus(menu: any){
+    if(menu.inventoryId != null && menu.inventoryId.availableUnit < 10){
+      if(menu.inventoryId.availableUnit <= 0){
+        return "OutOfStock";
+      }else{
+        return "LowInStock";
+      }
+    }
+    else{
+      return this.constantService.getStatusString("menuAvailabilityStatus", menu.available ? 1 : 0);
+    }
+  }
+
+  isMenuAvailable(menu: any){
+    if(menu.inventoryId == null){
+      return menu.available == 1 ? true : false; 
+    }else{
+      return menu.inventoryId.availableUnit >= 10;
+    }
+  }
+
+  isMenuLowInStock(menu: any){
+    if(menu.inventoryId != null){
+      return menu.inventoryId.availableUnit < 10 && menu.inventoryId.availableUnit > 0;
+    }
+    return false;
+  }
+
+  isMenuOutOfStock(menu: any){
+    if(menu.inventoryId != null){
+      return menu.inventoryId.availableUnit <= 0;
+    }
+    return false;
   }
 
   updatePaginationPage(page: number){

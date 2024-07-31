@@ -10,7 +10,7 @@ const MenuItemSchema = new Schema({
     category: { type: String, required: false },
     available: { type: Boolean, default: true },
     availableQuantity: {type: Number},
-    inventoryId: { type: ObjectId, ref: 'Stocks' },
+    inventoryId: { type: ObjectId, ref: 'Inventory' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date },
     file: {type: String},
