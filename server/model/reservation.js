@@ -21,8 +21,17 @@ const CustomSchema = new Schema(
       },
     },
     numberOfIndividuals: Number, // How many people?
-    checkInDate: { type: Date, default: Date.now }, //required
-    checkOutDate: { type: Date, default: null },
+    checkInDate: { 
+      type: Date, 
+      required: true, 
+      default: Date.now 
+    },
+    checkOutDate: { 
+      type: Date, 
+      required: true, 
+      default: null,
+      validate: [dateValidator, 'Check-out date must be later than check-in date.']
+    },
     billing: {
       orders: [
         {
@@ -67,6 +76,10 @@ const CustomSchema = new Schema(
 );
 
 
+// function that validate the startDate and endDate
+function dateValidator(value) {
+  return this.checkInDate <= value;
+}
 CustomSchema.methods.calculateTotalAmount = ()=> {
     let totalOrderAmt = this.billing.orders.reduce(
         (a,o)=> a + o.amount, 0

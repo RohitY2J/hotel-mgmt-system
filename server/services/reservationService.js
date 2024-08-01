@@ -82,6 +82,10 @@ exports.updateReservation = async (req, res, next) => {
     if (request.customerContact) reservationUpdateRequest.customerContact = request.customerContact;
     reservationUpdateRequest.updatedAt = Date.now();
 
+    if(request.checkInDate > request.checkOutDate)
+      return res
+        .status(400)
+        .send(`Checkout date cannot be earlier than check in date`);
     let result = await dbContext.Reservation.updateOne(
       { _id: request.id },
       reservationUpdateRequest
@@ -157,12 +161,13 @@ exports.getReservations = async (req, res, next) => {
       filter.customerFullName = req.body.customerFullName;
     }
 
-    var result = await dbContext.Reservation.find(filter)
+    var result = await dbContext.Reservation.find(filter) 
       .populate({
         path: "rooms",
         select:
           "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt pricePerDay",
       })
+      .sort({ checkInDate: -1 })
       .skip((req.query.pageNo - 1) * req.query.pageSize)
       .limit(req.query.pageSize);
     return res.status(200).send(result.map(this.mapUiResponse));
