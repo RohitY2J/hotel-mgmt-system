@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  private userDetails = {};
+  private userDetails:any = {};
   constructor(private httpService: HttpService, private router: Router) { }
 
   login(loginRequest: any) {
@@ -37,6 +37,7 @@ export class AuthService {
       this.getUserDetails().subscribe({
         next: (res: any) => {
           this.userDetails = res; // Assuming the response has a 'role' property
+          localStorage.setItem('clientName',this.userDetails?.client.clientName)
           resolve(this.userDetails);
         },
         error: (err) => reject({}),

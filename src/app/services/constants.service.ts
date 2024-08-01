@@ -43,7 +43,7 @@ export class ConstantsService {
     paymentStatus: {
       0: "Unpaid",
       1: "Paid",
-      2: "PartiallyPaid"
+      2: "Partially Paid"
     },
     reservationStatus: {
       0: "Booked",

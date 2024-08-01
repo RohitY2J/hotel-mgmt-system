@@ -51,6 +51,7 @@ export class ReservationComponent implements OnInit {
   isLoading: any = false;
   reservations: any = [];
   isReservationFormOpen: any = false;
+  isUpdateMode: any = false;
   paymentStatus: any = [];
   initialStatus: any = [];
   allStatus: any = [];
@@ -125,6 +126,7 @@ export class ReservationComponent implements OnInit {
       }),
       rooms: new FormControl([], Validators.required),
       paymentStatus: new FormControl('', Validators.required),
+      totalPaidAmount: new FormControl(0)
     },
     {
       validators: dateRangeValidator('checkInDate', 'checkOutDate'),
@@ -213,28 +215,19 @@ export class ReservationComponent implements OnInit {
     }
 
     let request: any = this.createReservationRequest.value;
-    request.billing = { orders: [] };
+    request.billing = { orders: [], totalPaidAmount: this.createReservationRequest.value.totalPaidAmount };
     let rooms: any = this.createReservationRequest.value.rooms?.map(
       (x: any) => {
         let room = this.allRooms.find((r: any) => r.id == x.id);
-        // request.billing.orders.push({
-        //   summary: `Room: ${room.roomNumber}`,
-        //   amount:
-        //     room.pricePerDay *
-        //     Math.floor(
-        //       (Date.parse(request.checkOutDate) -
-        //         Date.parse(request.checkInDate)) /
-        //         (1000 * 60 * 60 * 24)
-        //     ),
-        // });
         return room.id;
       }
     );
     request.rooms = rooms;
+    console.log(request);
     this.httpService
       .httpPost(
         'reservation/createReservation',
-        this.createReservationRequest.value
+        request
       )
       .pipe(
         finalize(() => {
@@ -293,6 +286,24 @@ export class ReservationComponent implements OnInit {
       0
     );
   }
+  checkIn(reservation: any){
+    this.httpService
+    .httpPost(`reservation/updateReservation`, {id: reservation.id, status: 1})
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.showNotification = true;
+      })
+    )
+    .subscribe({
+      next: (res)=>{
+        this.notificationParams = {message: 'Checked In successfully.', error: false};
+      },
+      error: (err) => {
+        this.notificationParams = {message: 'Invalid CheckIn request.', error: true};
+      },
+    });
+  }
 
   clearFilter() {
     this.filter = {
@@ -328,6 +339,7 @@ export class ReservationComponent implements OnInit {
       },
       rooms: [],
       paymentStatus: '',
+      totalPaidAmount:0
     });
   }
 
@@ -375,6 +387,7 @@ export class ReservationComponent implements OnInit {
         },
       });
   }
+
   printInvoice() {
     this.router.navigate(['/print-invoice'], {
       queryParams: { id: this.selectedReservation.id },

@@ -60,6 +60,7 @@ const CustomSchema = new Schema(
       flatDiscount: Number,
       totalAmount: Number, //Sum(orders.amount)
       totalPayableAmount: Number, //totalAmount - discount + tax
+      totalPaidAmount: Number
     },
     rooms: [{ type: ObjectId, ref: "Room" }],
     status: Number, //Booked, CheckedIn (update check in date), CheckedOut(update check out time), Closed, Canceled

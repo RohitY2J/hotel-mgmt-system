@@ -61,7 +61,7 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount (%)</label>
                         <input type="number"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Customer Full Name" style="transition: all 0.15s ease 0s;"
+                            placeholder="Discount in percentage" style="transition: all 0.15s ease 0s;"
                             [(ngModel)]="checkOutModel.discount" />
                       
                     </div>
@@ -70,7 +70,7 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Flat Discount</label>
                         <input type="number"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Customer Full Name" style="transition: all 0.15s ease 0s;"
+                            placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
                             [(ngModel)]="checkOutModel.flatDiscount" />
                       
                     </div>
@@ -161,7 +161,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Create Reservation
+                    {{isUpdateMode ? 'Update' : 'Create'}} Reservation
                 </h3>
                 <button (click)="closeModal()" type="button"
                     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -290,6 +290,14 @@
                             </option>
                         </select>
                     </div>
+                    <div class="col-span-1">
+                        <label for="paidAmt"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount Paid</label>
+                        <input type="number"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Paid Amount" style="transition: all 0.15s ease 0s;"
+                            formControlName="totalPaidAmount" />
+                    </div>
 
                 </div>
                 <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
@@ -299,6 +307,7 @@
                     <button (click)="closeModal()" type="button"
                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
                 </div>
+                
             </form>
         </div>
     </div>
@@ -430,7 +439,7 @@
                             Total Orders
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Room Number
+                            Payment Status
                         </th>
 
                         <th scope="col" class="px-6 py-3">
@@ -481,22 +490,27 @@
                         </td>
                         
                         <td class="px-6 py-4">
-                            <!-- Modal toggle -->
-                            <!-- <button type="button" (click)="update(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Cancel</button>
-                            | -->
-                            <button type="button" (click)="orderButtonClicked(reservationItem)"
+                            <ng-container *ngIf="reservationItem.status != 2">
+                                <button type="button" (click)="orderButtonClicked(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Add</button> | 
+                            </ng-container>
                                 <button type="button" (click)="showInvoice(reservationItem)"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</button>
-                            <!-- |
-                                <button type="button" (click)="printInvoice(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Print Invoice</button> -->
 
                         </td>
-                        <td *ngIf="reservationItem.status != 2">
-                            <button type="button" (click)="openCheckOutForm(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkout</button>
+                        <td>
+                        
+                            <ng-container *ngIf="reservationItem.status != 2"> 
+                                <button *ngIf="reservationItem.status == 0" type="button" (click)="checkIn(reservationItem)"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkin</button>
+                                <button *ngIf="reservationItem.status == 1" type="button" (click)="openCheckOutForm(reservationItem)"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkout</button> 
+                                    <!-- |
+                        
+                                <button type="button" (click)="openCheckOutForm(reservationItem)"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button> -->
+                                
+                                </ng-container>
                         </td>
                     </tr>
                 </tbody>

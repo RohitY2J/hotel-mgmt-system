@@ -28,7 +28,7 @@ export class FoodInvoiceLayoutComponent implements OnInit {
   table: any = {};
 
   filter: any = {};
-
+ clientName: any = "Default";
   amount: any = {
     subTotal: 0,
     discountAmt: 0,
@@ -37,6 +37,7 @@ export class FoodInvoiceLayoutComponent implements OnInit {
   };
 
   async ngOnInit(){
+    this.clientName = localStorage.getItem('clientName');
     this.filter.id = this.route.snapshot.queryParamMap.get('id');
     await this.getOrderForBilling();
     setTimeout(() => {

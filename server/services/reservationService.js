@@ -99,8 +99,10 @@ exports.updateReservation = async (req, res, next) => {
         .send(`Invalid request. No record found for updated.`);
 
 
-    let roomIds = [];
-    request.rooms.map(x => roomIds.push(x.id));
+        let roomIds = [];
+        if(request.rooms){
+          request.rooms.map(x => roomIds.push(x.id));
+        }
 
     let roomsUpdateRequest = {};
 

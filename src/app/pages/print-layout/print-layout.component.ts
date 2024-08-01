@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { InvoiceComponentComponent } from '../shared/invoice-component/invoice-component.component';
 import { HttpService } from '../../services/http-service.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-print-layout',
@@ -27,7 +28,9 @@ export class PrintLayoutComponent implements OnInit {
   invoiceDate: any = Date.now();
   rooms: any = [];
   roomTotal: any = 0;
+  clientName:any = "Default";
   async ngOnInit() {
+    this.clientName = localStorage.getItem('clientName');
     this.reservationId = this.route.snapshot.queryParamMap.get('id');
     console.log(this.reservationId);
     await this.getReservation();
