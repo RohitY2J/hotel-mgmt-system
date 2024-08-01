@@ -179,7 +179,7 @@ exports.getItems = async (req, res, next) => {
     req.body.clientId = conversion.ToObjectId(req.clientId);
     if(req.body.stockType){
       if(req.body.stockType == globalConstants.StockType.LowInStock){
-        req.body.availableUnit = { "$lt": 100 };
+        req.body.availableUnit = { "$lt": 10 };
       }
       else if(req.body.stockType == globalConstants.StockType.OutOfStock){
         req.body.availableUnit = 0;

@@ -221,8 +221,21 @@ export class MenuItemComponent implements OnInit {
     }
   }
 
-  getMenuAvailabilityStatus(menuStatus: boolean){
-    return this.constantService.getStatusString("menuAvailabilityStatus", menuStatus ? 1 : 0);
+  getMenuAvailabilityStatus(menu: any){
+    return this.constantService.getStatusString("menuAvailabilityStatus", menu.available ? 1 : 0);
+  }
+
+  getInventoryStatus(menu: any){
+    if(menu.inventory != null && menu.inventory.availableUnit < 10){
+      if(menu.inventory.availableUnit <= 0){
+        return "OutOfStock";
+      }else{
+        return "LowInStock";
+      }
+    }
+    else{
+      return "InStock"
+    }
   }
 
   updatePaginationPage(page: number){

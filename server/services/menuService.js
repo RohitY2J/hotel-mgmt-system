@@ -119,9 +119,10 @@ exports.getMenuItems = async (req, res, next) => {
     }
     
     filter = {clientId: conversion.ToObjectId(req.clientId)};
+    afterFilter = {};
 
     if (req.body.availableStatus) {
-        filter.available = req.body.availableStatus;
+        filter.available = req.body.availableStatus.toLowerCase() === 'true';
     }
 
     if (req.body.menuName) {
@@ -133,9 +134,34 @@ exports.getMenuItems = async (req, res, next) => {
     const limit = parseInt(req.body.pagination?.count) || 8;  // Default to 10 items per page if not provided
     const skip = (page - 1) * limit;
 
-    const menus = await dbContext.MenuItem.find(filter)
-        .skip(skip)
-        .limit(limit);
+    const pipeline = [
+        { $match: filter },
+        {
+            $lookup: {
+                from: 'inventories', // The collection name of the referenced model
+                localField: 'inventoryId',
+                foreignField: '_id',
+                as: 'inventory'
+            }
+        },
+        {
+            $unwind: {
+                path: '$inventory',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $addFields: {
+                inventory: {
+                    $ifNull: ['$inventory', null]
+                }
+            }
+        },
+        //{ $match: afterFilter },
+        { $skip: skip },
+        { $limit: limit },
+    ];
+    const menus = await dbContext.MenuItem.aggregate(pipeline).exec();
 
 
     menus.forEach(menu => {

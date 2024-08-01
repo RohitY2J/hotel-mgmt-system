@@ -188,8 +188,9 @@
             class="grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-4 xs:grid-cols-1 lg:gap-2 justify-center h-96">
             <!-- logo - start -->
             <div *ngFor="let menu of allMenus"
-                class="w-48 flexh-16 items-center justify-center rounded-lg bg-gray-100 p-4 text-gray-400 sm:h-40">
-                <div class="card-content">
+                class="w-48 h-16 items-center justify-center rounded-lg bg-gray-100 text-gray-400 sm:h-40">
+                <div class="card-content p-4">
+                    
                     <div class="flex flex-col items-center justify-center">
                         <img *ngIf="menu.file" class="w-16 h-16 rounded-lg" [src]="menu.file">
                         <div *ngIf="!menu.file">
@@ -205,9 +206,18 @@
                             </span>
                         </dd>
                         
-                        <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            {{getMenuAvailabilityStatus(menu.available)}}
-                        </dd>
+                        <div class="flex justify-center mb-1">
+                            <span [ngClass]="{'dark:bg-green-900 dark:text-green-300': menu.available,
+                                          'dark:bg-red-900 dark:text-red-300': !menu.available}" class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                {{getMenuAvailabilityStatus(menu)}}
+                            </span>
+                            <span *ngIf="menu.inventoryId"
+                                [ngClass]="{'dark:bg-green-900 dark:text-green-300': menu.inventory.availableUnit >= 10,
+                                            'dark:bg-yellow-900 dark:text-yellow-300': menu.inventory.availableUnit < 10 && menu.inventory.availableUnit > 0,
+                                            'dark:bg-red-900 dark:text-red-300': menu.inventory.availableUnit <= 0}" class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                {{getInventoryStatus(menu)}}
+                            </span>
+                        </div>
                         <dd class="text-gray-600 text-sm font-semibold dark:text-blue-600 uppercase cursor-pointer">
                             <span role="button" (click)="openUpdateForm(menu)">Update <i
                                     class="fa-solid fa-pen text-xs"></i></span>
