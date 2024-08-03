@@ -23,6 +23,7 @@ import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { Router, RouterModule } from '@angular/router';
 import { dateRangeValidator } from '../../services/dateRangeValidator';
+import { MultiSelectComponent } from '../shared/multi-select/multi-select.component';
 
 @Component({
   selector: 'app-reservation',
@@ -40,6 +41,7 @@ import { dateRangeValidator } from '../../services/dateRangeValidator';
     PaginationComponent,
     OrderItemComponent,
     RouterModule,
+    MultiSelectComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
@@ -59,6 +61,20 @@ export class ReservationComponent implements OnInit {
   isInvoceComponentVisible: boolean = false;
   isCheckOutFormVisible: boolean = false;
   showPrintInvoiceMessage: boolean = false;
+
+  // customOptionTemplate = true;
+  // selectedOptions: string[] = [];
+  // options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+  // isSelected(option: string): boolean {
+  //   return this.selectedOptions.includes(option);
+  // }
+  // toggleOption(option: string) {
+  //   if (this.selectedOptions.includes(option)) {
+  //     this.selectedOptions = this.selectedOptions.filter(o => o !== option);
+  //   } else {
+  //     this.selectedOptions.push(option);
+  //   }
+  // } 
 
   filter: any = {
     searchText: '',

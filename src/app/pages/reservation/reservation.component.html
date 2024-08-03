@@ -355,7 +355,14 @@
     <div class="flex-1 p-4 bg-gray-800">
         <div class="flex items-center justify-between mb-2">
             <div class="text-lg font-semibold dark:text-white">Reservation</div>
-
+            <!-- <app-multi-select [customTemplate]="customOptionTemplate">
+                <ng-template #customOptionTemplate let-options="options" let-toggleOption="toggleOption" let-isSelected="isSelected">
+                  <div *ngFor="let option of options" class="custom-option" (click)="toggleOption(option)">
+                    <input type="checkbox" [checked]="isSelected(option)" class="mr-2">
+                    <span>{{ option }}</span>
+                  </div>
+                </ng-template>
+              </app-multi-select> -->
         </div>
 
         <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">

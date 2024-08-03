@@ -1,0 +1,9 @@
+<app-multi-select [customTemplate]="customOptionTemplate">
+    <ng-template #customOptionTemplate let-options="options" let-toggleOption="toggleOption"
+        let-isSelected="isSelected">
+        <div *ngFor="let option of options" class="custom-option" (click)="toggleOption(option)">
+            <input type="checkbox" [checked]="isSelected(option)" class="mr-2">
+            <span>{{ option }}</span>
+        </div>
+    </ng-template>
+</app-multi-select>
