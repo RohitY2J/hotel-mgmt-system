@@ -1,0 +1,48 @@
+<div class="relative inline-block w-64">
+  <div class="flex flex-col items-center relative">
+    <div class="w-full">
+      <div class="my-2 p-1 flex border border-gray-200 bg-white rounded">
+        <div class="flex flex-auto flex-wrap max-h-32 overflow-y-auto">
+          <div *ngFor="let option of selectedOptions" class="flex items-center m-1 font-medium py-1 px-2 bg-white rounded-full text-teal-700 bg-teal-100 border border-teal-300">
+            <div class="text-xs font-normal leading-none max-w-full flex-initial">{{option}}</div>
+            <div class="flex flex-auto flex-row-reverse">
+              <div (click)="removeOption(option)">
+                <svg class="fill-current h-4 w-4 " role="button" viewBox="0 0 20 20">
+                  <path d="M14.348 14.849a1.2 1.2 0 001.702 0 1.2 1.2 0 000-1.702L11.702 10l4.348-4.348a1.2 1.2 0 10-1.702-1.702L10 8.298 5.652 3.95a1.2 1.2 0 10-1.702 1.702L8.298 10l-4.348 4.348a1.2 1.2 0 101.702 1.702L10 11.702l4.348 4.348z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1">
+            <input *ngIf="selectedOptions.length == 0" placeholder="Select options" class="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-gray-800" readonly>
+          </div>
+        </div>
+        <div role="button" (click)="toggleDropdown()" class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200">
+          <button class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+              <path d="M7 10l5 5 5-5H7z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="dropdownOpen" class="absolute shadow top-full bg-white z-40 w-full lef-0 rounded max-h-select overflow-y-auto">
+    <div class="flex flex-col w-full">
+      <input type="text" placeholder="Search..." class="p-2 border-b" [(ngModel)]="searchTerm" (input)="filterOptions()">
+      <ng-container *ngIf="customTemplate; else defaultTemplate">
+        <ng-container *ngTemplateOutlet="customTemplate; context: { options: filteredOptions, toggleOption: toggleOption.bind(this), isSelected: isSelected.bind(this) }"></ng-container>
+      </ng-container>
+      <ng-template #defaultTemplate>
+        <div *ngFor="let option of filteredOptions" class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100" (click)="toggleOption(option)">
+          <div class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-teal-100">
+            <input type="checkbox" [checked]="isSelected(option)" class="mr-2">
+            <div class="w-full items-center flex justify-between">
+              <div class="mx-2 leading-6">{{option}}</div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
