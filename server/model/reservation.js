@@ -21,14 +21,14 @@ const CustomSchema = new Schema(
       },
     },
     numberOfIndividuals: Number, // How many people?
-    checkInDate: { 
-      type: Date, 
-      required: true, 
-      default: Date.now 
+    checkInDate: {
+      type: Date,
+      required: true,
+      default: Date.now
     },
-    checkOutDate: { 
-      type: Date, 
-      required: true, 
+    checkOutDate: {
+      type: Date,
+      required: true,
       default: null,
       validate: [dateValidator, 'Check-out date must be later than check-in date.']
     },
@@ -62,7 +62,10 @@ const CustomSchema = new Schema(
       totalPayableAmount: Number, //totalAmount - discount + tax
       totalPaidAmount: Number
     },
-    rooms: [{ type: ObjectId, ref: "Room" }],
+    rooms: [{
+      roomId: { type: ObjectId, ref: "Room" },
+      price: { type: Number, required: true }
+    }],
     status: Number, //Booked, CheckedIn (update check in date), CheckedOut(update check out time), Closed, Canceled
     paymentStatus: Number, //Unpaid, PartiallyPaid, Paid
     createdAt: { type: Date, default: Date.now },
@@ -81,16 +84,16 @@ const CustomSchema = new Schema(
 function dateValidator(value) {
   return this.checkInDate <= value;
 }
-CustomSchema.methods.calculateTotalAmount = ()=> {
-    let totalOrderAmt = this.billing.orders.reduce(
-        (a,o)=> a + o.amount, 0
-    );
-    this.billing.totalAmount = totalOrderAmt;
+CustomSchema.methods.calculateTotalAmount = () => {
+  let totalOrderAmt = this.billing.orders.reduce(
+    (a, o) => a + o.amount, 0
+  );
+  this.billing.totalAmount = totalOrderAmt;
 
-    let discount = (totalOrderAmt / 100) * this.billing.discountPercentage;
-    let tax = (totalOrderAmt / 100) * this.billing.taxPercentage;
+  let discount = (totalOrderAmt / 100) * this.billing.discountPercentage;
+  let tax = (totalOrderAmt / 100) * this.billing.taxPercentage;
 
-    this.billing.totalPayableAmount = totalOrderAmt - discount + tax;
-  };
+  this.billing.totalPayableAmount = totalOrderAmt - discount + tax;
+};
 
 module.exports = mongoose.model('Reservation', CustomSchema);
