@@ -99,8 +99,6 @@ export class ReservationComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getReservations();
-    this.fetchRooms();
-
     this.initialStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
@@ -127,8 +125,7 @@ export class ReservationComponent implements OnInit {
   search() {
     this.getReservations();
   }
-  closeConfirmDialog() {}
-  confirmButtonClicked() {}
+
   searchInputChanged(e: any) {}
 
   getReservations() {
@@ -160,32 +157,14 @@ export class ReservationComponent implements OnInit {
         complete: () => (this.isLoading = false),
       });
   }
-  fetchRooms() {
-    this.httpService
-      .httpPost(`room/getRooms?pageSize=100&pageNo=1`, {
-        occupancyStatus: 0,
-      })
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.allRooms = res;
-        },
-        error: (err) => console.log,
-      });
-  }
 
   closeReservationModal() {
     this.isReservationFormOpen = false;
+    this.getReservations();
   }
   openCreateReservationForm(formMode: String = "create") {
     this.formMode = formMode;
     this.isReservationFormOpen = true;
-  }
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
   }
 
   showInvoice(reservation: any) {

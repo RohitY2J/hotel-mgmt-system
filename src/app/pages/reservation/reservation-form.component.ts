@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConstantsService } from '../../services/constants.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,16 +16,16 @@ import { ModalComponent } from '../shared/modal/modal.component';
     FormsModule,
     ReactiveFormsModule,
     NgMultiSelectDropDownModule,
-    ModalComponent
+    ModalComponent,
   ],
   templateUrl: './reservation-form.component.html',
- styleUrl: './reservation.component.scss',
+  styleUrl: './reservation.component.scss',
 })
-export class ReservationFormComponent {
+export class ReservationFormComponent implements OnInit {
   @Output() onLoader = new EventEmitter<boolean>();
   @Output() onAlert = new EventEmitter<any>();
   @Output() onModalClose = new EventEmitter<void>();
-  @Input ({required: true}) openMode: String = 'create';
+  @Input({ required: true }) openMode: String = 'create';
 
   constructor(
     private httpService: HttpService,
@@ -33,11 +33,15 @@ export class ReservationFormComponent {
   ) {
     this._constService = constService;
   }
+  ngOnInit(): void {
+    this.getRooms();
+  }
 
   _constService: any = null;
   allRooms: any = [];
   selectedRoom: any = {};
-  showAddRooms:boolean = false;
+  selectedRooms: any[] = [];
+  showAddRooms: boolean = false;
   initialStatus: any = [
     { item_id: 0, item_text: 'Booked' },
     { item_id: 1, item_text: 'Checked In' },
@@ -50,6 +54,7 @@ export class ReservationFormComponent {
     unSelectAllText: 'UnSelect All',
     itemsShowLimit: 3,
     allowSearchFilter: true,
+    enableCheckAll: false,
   };
 
   createReservationRequest = new FormGroup(
@@ -63,8 +68,6 @@ export class ReservationFormComponent {
         phone: new FormControl('', Validators.required),
         address: new FormControl(''),
       }),
-      rooms: new FormControl([], Validators.required),
-      paymentStatus: new FormControl('', Validators.required),
       totalPaidAmount: new FormControl(0),
     },
     {
@@ -73,10 +76,9 @@ export class ReservationFormComponent {
   );
 
   addRoomForm = new FormGroup({
-    roomNumber: new FormControl('', Validators.required),
-    price: new FormControl(this.selectedRoom.pricePerDay, Validators.required)
+    roomNumber: new FormControl([], Validators.required),
+    price: new FormControl(this.selectedRoom.pricePerDay, Validators.required),
   });
-
 
   getRooms() {
     this.httpService
@@ -97,39 +99,36 @@ export class ReservationFormComponent {
   closeLoader = () => this.onLoader.emit(false);
   showAlert = (message: any) => this.onAlert.emit(message);
   onFormSubmittedSuccessfully = () => {
-    this.resetForm();;
+    this.resetForm();
     this.closeModal();
   };
 
   submit() {
-    this.onLoader.emit(true);
     console.log(this.createReservationRequest.value);
+    this.onLoader.emit(true);
     if (this.createReservationRequest.invalid) {
       let notificationParams = { message: 'Invalid form', error: true };
-      this.onAlert.emit(notificationParams);
-      this.onLoader.emit(false);
+      this.showAlert(notificationParams);
+      this.showLoader();
       this.createReservationRequest.markAllAsTouched();
       return;
     }
 
     let request: any = this.createReservationRequest.value;
+
     request.billing = {
       orders: [],
       totalPaidAmount: this.createReservationRequest.value.totalPaidAmount,
     };
-    let rooms: any = this.createReservationRequest.value.rooms?.map(
-      (x: any) => {
-        let room = this.allRooms.find((r: any) => r.id == x.id);
-        return room.id;
-      }
-    );
+    let rooms: any = this.selectedRooms;
+    request.paymentStatus = request.totalPaidAmount > 0 ? 2:0;
+
     request.rooms = rooms;
-    console.log(request);
     this.httpService
       .httpPost('reservation/createReservation', request)
       .pipe(
         finalize(() => {
-          this.onAlert.emit(false);
+          this.closeLoader();
           this.closeModal();
         })
       )
@@ -139,7 +138,6 @@ export class ReservationFormComponent {
             message: 'Reservation created successfully.',
             error: false,
           });
-
           this.onFormSubmittedSuccessfully();
         },
         error: (err) => {
@@ -151,9 +149,7 @@ export class ReservationFormComponent {
         },
       });
   }
-  update(){
-
-  }
+  update() {}
   resetForm() {
     this.createReservationRequest.reset();
     this.createReservationRequest.setValue({
@@ -166,13 +162,35 @@ export class ReservationFormComponent {
         phone: '',
         address: '',
       },
-      rooms: [],
-      paymentStatus: '',
-      totalPaidAmount:0
+      totalPaidAmount: 0,
     });
   }
-  onRoomSelect(item: any){
+  onRoomSelect(item: any) {
+    this.showAddRooms = true;
+  }
 
+  addRooms() {
+    if (this.addRoomForm.invalid) {
+      this.showAlert({
+        message: 'Please enter room number and price',
+        error: true,
+      });
+      return;
+    }
+    let price = this.addRoomForm.value.price;
+    this.addRoomForm.value.roomNumber?.map((room: any) => {
+      this.selectedRooms.push({
+        id: room.id,
+        roomNumber: room.roomNumber,
+        price: price,
+      });
+    });
+    console.log(this.selectedRooms);
+    this.addRoomForm.reset();
+  }
+  removeRoom(room: any) {
+    this.selectedRooms = this.selectedRooms.filter((x) => x.id != room.id);
+    console.log(this.selectedRooms);
   }
 }
 

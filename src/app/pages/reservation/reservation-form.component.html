@@ -5,8 +5,7 @@
                 Name</label>
             <input type="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Customer Full Name"
-                formControlName="customerFullName" />
+                placeholder="Customer Full Name" formControlName="customerFullName" />
             <div
                 *ngIf="createReservationRequest.get('customerFullName')?.invalid && (createReservationRequest.get('customerFullName')?.dirty || createReservationRequest.get('customerFullName')?.touched)">
                 <div *ngIf="createReservationRequest.get('customerFullName')?.errors?.['required']"
@@ -19,8 +18,7 @@
                 individuals</label>
             <input type="number"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Number of individuals"
-                formControlName="numberOfIndividuals" />
+                placeholder="Number of individuals" formControlName="numberOfIndividuals" />
         </div>
         <ng-container formGroupName="customerContact">
             <div class="col-span-2 sm:col-span-1">
@@ -50,20 +48,12 @@
                 </div>
             </div>
         </ng-container>
-
-        <div class="col-span-1">
-            <label for="rooms" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rooms</label>
-            <ng-multiselect-dropdown class="dark:bg-gray-500 dark:text-gray-400 text-sm"
-                [placeholder]="'Available Rooms'" [settings]="dropdownSettings" [data]="allRooms"
-                formControlName="rooms" (onSelect)="onRoomSelect($event)">
-            </ng-multiselect-dropdown>
-        </div>
         <div class="col-span-1">
             <label for="checkInDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Check In
                 Date</label>
             <input type="date"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-             formControlName="checkInDate" />
+                formControlName="checkInDate" />
             <div
                 *ngIf="createReservationRequest.get('checkInDate')?.invalid && (createReservationRequest.get('checkInDate')?.dirty || createReservationRequest.get('checkInDate')?.touched)">
                 <div *ngIf="createReservationRequest.get('checkInDate')?.errors?.['required']"
@@ -76,7 +66,7 @@
                 Date</label>
             <input type="date"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-             formControlName="checkOutDate" />
+                formControlName="checkOutDate" />
             <div
                 *ngIf="createReservationRequest.get('checkOutDate')?.invalid && (createReservationRequest.get('checkOutDate')?.dirty || createReservationRequest.get('checkOutDate')?.touched)">
                 <div *ngIf="createReservationRequest.get('checkOutDate')?.errors?.['required']"
@@ -87,17 +77,7 @@
                 Check-out date must be later than check-in date.
             </div>
         </div>
-        <div class="col-span-1">
-            <label for="paymentStatus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment
-                Status</label>
-            <select id="role" formControlName="paymentStatus"
-                class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                <option class="text-gray-400" value="" selected>Payment Status</option>
-                <option *ngFor="let status of _constService.getStatusValuesAsDictionary('paymentStatus')"
-                    [value]="status.key">{{ status.value }}
-                </option>
-            </select>
-        </div>
+
         <div class="col-span-1">
             <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
             <select id="role" formControlName="status"
@@ -130,33 +110,51 @@
 </form>
 
 
-<app-modal [title]="'Add Rooms'" [isVisible]="showAddRooms"
-    (close)="showAddRooms = !showAddRooms">
+<app-modal [title]="'Add Rooms'" [isVisible]="showAddRooms" (close)="showAddRooms = !showAddRooms">
 
     <form [formGroup]="addRoomForm" class="p-4 md:p-5">
 
-        <div class="grid gap-4 mb-4 grid-cols-2">
-            <div class="col-span-1">
+        <div class="grid gap-4 mb-4 grid-cols-5">
+            <div class="col-span-2">
                 <label for="rooms" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Room</label>
-                <ng-multiselect-dropdown class="dark:bg-gray-500 dark:text-gray-400 text-sm"
+                <ng-multiselect-dropdown class="dark:bg-gray-500 dark:text-gray-400 text-sm z-0"
                     [placeholder]="'Available Rooms'" [settings]="dropdownSettings" [data]="allRooms"
                     formControlName="roomNumber" (onSelect)="onRoomSelect($event)">
                 </ng-multiselect-dropdown>
             </div>
-            <div class="col-span-1">
-                <label for="paidAmt" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
-                    Paid</label>
+            <div class="col-span-2">
+                <label for="paidAmt" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Per Room
+                    Price</label>
                 <input type="number"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-1.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Price" formControlName="price" />
             </div>
+            <div class="col-span-1">
+                <button type="submit" (click)="addRooms()"
+                    class="mt-7 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-md text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Add</button>
+            </div>
+            <div class="col-span-5">
+                <h4 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selected Rooms</h4>
+                <hr/>
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 col-span-5 mt-2">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <th>Room</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody >
+                        <tr *ngIf="selectedRooms.length == 0" class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
+                            <td colspan="3" class="p-3"> No rooms selected</td>
+                        </tr>
+                        <tr *ngFor="let room of selectedRooms">
+                            <td>{{room.roomNumber}}</td>
+                            <td>{{room.price}}</td>
+                            <td class="text-blue-500 cursor-pointer" (click)="removeRoom(room)">Remove</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
-        style="margin: -1.25rem; margin-top: 0.5rem">
-        <button type="submit" (click)="submit()"
-            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg ms-3 text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
-        <button (click)="closeModal()" type="button"
-            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
-    </div>
+      
     </form>
 </app-modal>

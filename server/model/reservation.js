@@ -63,8 +63,9 @@ const CustomSchema = new Schema(
       totalPaidAmount: Number
     },
     rooms: [{
-      roomId: { type: ObjectId, ref: "Room" },
-      price: { type: Number, required: true }
+      id: { type: ObjectId, ref: "Room" },
+      price: { type: Number, required: true },
+      roomNumber: { type: String, required: true }
     }],
     status: Number, //Booked, CheckedIn (update check in date), CheckedOut(update check out time), Closed, Canceled
     paymentStatus: Number, //Unpaid, PartiallyPaid, Paid
