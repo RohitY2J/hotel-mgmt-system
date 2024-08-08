@@ -59,7 +59,7 @@ export class ReservationComponent implements OnInit {
   initialStatus: any = [];
   allStatus: any = [];
   isOrderComponentVisible: boolean = false;
-  isInvoceComponentVisible: boolean = false;
+  isInvoiceComponentVisible: boolean = false;
   isCheckOutFormVisible: boolean = false;
   showPrintInvoiceMessage: boolean = false;
 
@@ -89,7 +89,7 @@ export class ReservationComponent implements OnInit {
   allRooms: any = [];
   isOrdersFormVisible: boolean = false;
   printInvoiceVisible: boolean = true;
-  selectedReservation: any = {};
+  selectedReservation: any;
   formMode: any = 'create';
 
   constructor(
@@ -169,11 +169,11 @@ export class ReservationComponent implements OnInit {
 
   showInvoice(reservation: any) {
     this.selectedReservation = reservation;
-    this.isInvoceComponentVisible = true;
+    this.isInvoiceComponentVisible = true;
   }
 
   closeInvoce() {
-    this.isInvoceComponentVisible = false;
+    this.isInvoiceComponentVisible = false;
   }
 
   triggerNotification(message: any) {
@@ -217,6 +217,7 @@ export class ReservationComponent implements OnInit {
             message: 'Checked In successfully.',
             error: false,
           };
+          this.getReservations();
         },
         error: (err) => {
           this.notificationParams = {
@@ -284,9 +285,6 @@ export class ReservationComponent implements OnInit {
             message: 'Check out successfully.',
             error: false,
           };
-          this.router.navigate(['/print-invoice'], {
-            queryParams: { id: this.selectedReservation.id },
-          });
         },
         error: (err) => {
           this.notificationParams = {
