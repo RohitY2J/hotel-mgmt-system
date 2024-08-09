@@ -170,7 +170,7 @@
 
 
         <div
-            class="mt-4 grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-4 xs:grid-cols-1 lg:gap-6 justify-center">
+            class="mt-4 mb-4 grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-4 xs:grid-cols-1 lg:gap-6 justify-center">
             <!-- logo - start -->
             <div *ngFor="let room of allRooms"
                 class="width-200 flex h-16 items-center justify-center rounded-lg bg-gray-100 p-4 text-gray-400 sm:h-32">
@@ -188,5 +188,8 @@
                 </div>
             </div>
         </div>
+        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
+                [pageSize]="filter.pagination.pageSize" [hasNoItems]="allRooms.length == 0"
+                (callback)="updatePaginationPage($event)"></app-pagination>
     </div>
 </div>

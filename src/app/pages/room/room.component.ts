@@ -6,6 +6,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ConstantsService } from '../../services/constants.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { finalize } from 'rxjs';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-room',
@@ -15,7 +16,8 @@ import { finalize } from 'rxjs';
     CommonModule, 
     FormsModule, 
     ReactiveFormsModule,
-    LoaderComponent
+    LoaderComponent,
+    PaginationComponent
   ],
   templateUrl: './room.component.html',
   styleUrl: './room.component.scss',
@@ -39,7 +41,12 @@ export class RoomComponent implements OnInit {
   filter: any = {
     roomNumber: "",
     occupancyStatus: "",
-    maintainanceStatus: ""
+    maintainanceStatus: "",
+    pagination: {
+      page: 1,
+      pageSize: 10,
+      dataCount: 10,
+    },
   }
   
   constructor(private httpService: HttpService, public constantService: ConstantsService) {}
@@ -58,7 +65,7 @@ export class RoomComponent implements OnInit {
     this.isLoading = true;
     this.httpService
       .httpPost(
-        `room/getRooms?pageSize=${this.pageSize}&pageNo=${this.pageNo}`,
+        `room/getRooms?pageSize=${this.filter.pagination.pageSize}&pageNo=${this.filter.pagination.page}`,
         this.filter
       )
       .pipe(finalize(() => {
@@ -183,6 +190,11 @@ export class RoomComponent implements OnInit {
       occupancyStatus: "",
       maintainanceStatus: ""
     };
+    this.fetchRooms();
+  }
+
+  updatePaginationPage(page: number) {
+    this.filter.pagination.page = page;
     this.fetchRooms();
   }
 }
