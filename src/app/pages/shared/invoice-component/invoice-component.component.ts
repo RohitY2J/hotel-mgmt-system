@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invoice-component',
@@ -9,18 +9,39 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './invoice-component.component.html',
   styleUrl: './invoice-component.component.scss',
 })
-export class InvoiceComponentComponent implements OnChanges {
+export class InvoiceComponentComponent implements OnChanges, DoCheck {
   @Input({ required: true }) reservation!: any;
+  @Input() showSummaryOnly = false;
 
-  ngOnChanges(): void {
+  private previousDscPer: any = 0;
+  private previousDscFlat: any = 0;
+  private previousTotal: any = 0;
+  ngOnChanges() {
+    console.log('onChg');
+    this.resetValues();
     if (this.reservation != null && this.reservation != undefined) {
       console.log(this.reservation);
-      this.resetValues();
       this.getOrderAmount();
       this.getReservationAmount();
     }
   }
 
+  ngDoCheck(): void {
+    if (this.reservation != null && this.reservation != undefined) {
+      if (
+        this.reservation.billing.discountPercentage != this.previousDscPer ||
+        this.reservation.billing.flatDiscount != this.previousDscFlat ||
+        this.reservation.billing.totalPaidAmount != this.previousTotal
+      ) {
+        this.resetValues();
+        this.getOrderAmount();
+        this.getReservationAmount();
+        this.previousDscPer = this.reservation.billing.discountPercentage;
+        this.previousTotal = this.reservation.billing.flatDiscount;
+        this.previousDscFlat = this.reservation.billing.totalPaidAmount;
+      }
+    }
+  }
 
   constructor(private router: Router) {}
 
@@ -54,9 +75,14 @@ export class InvoiceComponentComponent implements OnChanges {
         Date.parse(this.reservation.checkInDate)) /
         (1000 * 60 * 60 * 24)
     );
+
+    console.log((Date.parse(this.reservation.checkOutDate) -
+    Date.parse(this.reservation.checkInDate)));
+    console.log("nd ", noOfDays);
+
     //cannot book room for less than a day
     if (noOfDays <= 0) noOfDays = 1;
-
+ console.log("n ", noOfDays);
     this.reservation.rooms.forEach((room: any) => {
       let x = {
         roomNumber: room.roomNumber,
@@ -78,11 +104,6 @@ export class InvoiceComponentComponent implements OnChanges {
           (Number(total) / 100) * this.reservation.billing.discountPercentage
         );
       this.discount += this.reservation?.billing?.flatDiscount ?? 0;
-      // if (this.reservation.billing.taxPercentage > 0)
-      //   this.tax = Math.round(
-      //     ((total - Number(this.discount)) / 100) *
-      //       this.reservation.billing.taxPercentage
-      //   );
       this.totalPayable = Math.round(
         total - Number(this.discount) + Number(this.tax)
       );
@@ -92,7 +113,6 @@ export class InvoiceComponentComponent implements OnChanges {
     this.totalRemainingAmount =
       Number(this.totalPayable) - Number(this.totalPaidAmount);
     this.totalRemainingAmountAbs = Math.abs(this.totalRemainingAmount);
-    console.log(this.rooms);
   }
 
   getOrderAmount() {

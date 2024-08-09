@@ -62,6 +62,7 @@ export class ReservationComponent implements OnInit {
   isInvoiceComponentVisible: boolean = false;
   isCheckOutFormVisible: boolean = false;
   showPrintInvoiceMessage: boolean = false;
+  initialTotalAmountForSelected: number = 0;
 
   filter: any = {
     searchText: '',
@@ -80,6 +81,7 @@ export class ReservationComponent implements OnInit {
     tax: 0,
     flatDiscount: 0,
     checkOutDate: Date.now(),
+    paidAmount: 0
   };
 
   checkOutModel = this.defaultCheckOutModel;
@@ -162,7 +164,7 @@ export class ReservationComponent implements OnInit {
     this.isReservationFormOpen = false;
     this.getReservations();
   }
-  openCreateReservationForm(formMode: String = "create") {
+  openCreateReservationForm(formMode: String = 'create') {
     this.formMode = formMode;
     this.isReservationFormOpen = true;
   }
@@ -250,26 +252,38 @@ export class ReservationComponent implements OnInit {
 
   openCheckOutForm(reservation: any) {
     this.selectedReservation = reservation;
-    this.checkOutModel = this.defaultCheckOutModel;
+    this.initialTotalAmountForSelected = reservation.billing.totalPaidAmount;
     this.checkOutModel.checkOutDate = this.selectedReservation.checkOutDate;
     console.log(this.checkOutModel.checkOutDate);
     this.isCheckOutFormVisible = true;
   }
   closeCheckOutForm() {
     this.isCheckOutFormVisible = false;
+    this.initialTotalAmountForSelected = 0;
+    this.resetCheckOutModal();
     this.getReservations();
   }
 
+  resetCheckOutModal(){
+    this.checkOutModel  = {
+      discount: 0,
+      tax: 0,
+      flatDiscount: 0,
+      checkOutDate: Date.now(),
+      paidAmount: 0
+    };
+  }
   checkOutAndPrintInvoice() {
     this.isLoading = true;
-    this.selectedReservation.billing.discountPercentage =
-      this.checkOutModel.discount;
-    this.selectedReservation.billing.taxPercentage = this.checkOutModel.tax;
-    this.selectedReservation.billing.flatDiscount =
-      this.checkOutModel.flatDiscount;
-    this.selectedReservation.checkOutDate = this.checkOutModel.checkOutDate;
+    // this.selectedReservation.billing.discountPercentage =
+    //   this.checkOutModel.discount;
+    // this.selectedReservation.billing.taxPercentage = this.checkOutModel.tax;
+    // this.selectedReservation.billing.flatDiscount =
+    //   this.checkOutModel.flatDiscount;
+    // this.selectedReservation.checkOutDate = this.checkOutModel.checkOutDate;
 
     this.selectedReservation.status = 2; //checkout
+    this.selectedReservation.paymentStatus = 1; //paid
 
     this.httpService
       .httpPost(`reservation/updateReservation`, this.selectedReservation)
@@ -285,6 +299,8 @@ export class ReservationComponent implements OnInit {
             message: 'Check out successfully.',
             error: false,
           };
+          this.isCheckOutFormVisible = false;
+          this.printInvoice();
         },
         error: (err) => {
           this.notificationParams = {
@@ -302,5 +318,14 @@ export class ReservationComponent implements OnInit {
     this.router.navigate(['/print-invoice'], {
       queryParams: { id: this.selectedReservation.id },
     });
+  }
+  onCheckOutFormChange() {
+    this.selectedReservation.billing.discountPercentage =
+      this.checkOutModel.discount;
+    this.selectedReservation.billing.taxPercentage = this.checkOutModel.tax;
+    this.selectedReservation.billing.flatDiscount =
+      this.checkOutModel.flatDiscount;
+    this.selectedReservation.checkOutDate = this.checkOutModel.checkOutDate;
+    this.selectedReservation.billing.totalPaidAmount = this.initialTotalAmountForSelected + this.checkOutModel.paidAmount;
   }
 }

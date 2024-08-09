@@ -28,6 +28,7 @@ export class PrintLayoutComponent implements OnInit {
   rooms: any = [];
   roomTotal: any = 0;
   clientName:any = "Default";
+  
   async ngOnInit() {
     this.clientName = localStorage.getItem('clientName');
     this.reservationId = this.route.snapshot.queryParamMap.get('id');

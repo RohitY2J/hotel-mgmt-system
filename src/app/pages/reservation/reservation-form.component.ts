@@ -105,11 +105,11 @@ export class ReservationFormComponent implements OnInit {
 
   submit() {
     console.log(this.createReservationRequest.value);
-    this.onLoader.emit(true);
+    this.showLoader();
     if (this.createReservationRequest.invalid) {
       let notificationParams = { message: 'Invalid form', error: true };
       this.showAlert(notificationParams);
-      this.showLoader();
+      this.closeLoader();
       this.createReservationRequest.markAllAsTouched();
       return;
     }

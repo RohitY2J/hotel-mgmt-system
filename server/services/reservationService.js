@@ -190,7 +190,7 @@ exports.mapUiResponse = (reservation) => {
     customerFullName: reservation.customerFullName,
     numberOfIndividuals: reservation.numberOfIndividuals,
     checkInDate: reservation.checkInDate,
-    checkOutDate: reservation.checkInDate,
+    checkOutDate: reservation.checkOutDate,
     rooms: reservation.rooms,
     status: reservation.status,
     paymentStatus: reservation.paymentStatus,
