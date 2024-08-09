@@ -87,7 +87,6 @@ export class ReservationFormComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.allRooms = res;
         },
         error: (err) => console.log,
@@ -104,7 +103,6 @@ export class ReservationFormComponent implements OnInit {
   };
 
   submit() {
-    console.log(this.createReservationRequest.value);
     this.showLoader();
     if (this.createReservationRequest.invalid) {
       let notificationParams = { message: 'Invalid form', error: true };
@@ -185,12 +183,10 @@ export class ReservationFormComponent implements OnInit {
         price: price,
       });
     });
-    console.log(this.selectedRooms);
     this.addRoomForm.reset();
   }
   removeRoom(room: any) {
     this.selectedRooms = this.selectedRooms.filter((x) => x.id != room.id);
-    console.log(this.selectedRooms);
   }
 }
 

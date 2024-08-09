@@ -17,10 +17,8 @@ export class InvoiceComponentComponent implements OnChanges, DoCheck {
   private previousDscFlat: any = 0;
   private previousTotal: any = 0;
   ngOnChanges() {
-    console.log('onChg');
     this.resetValues();
     if (this.reservation != null && this.reservation != undefined) {
-      console.log(this.reservation);
       this.getOrderAmount();
       this.getReservationAmount();
     }
@@ -76,13 +74,8 @@ export class InvoiceComponentComponent implements OnChanges, DoCheck {
         (1000 * 60 * 60 * 24)
     );
 
-    console.log((Date.parse(this.reservation.checkOutDate) -
-    Date.parse(this.reservation.checkInDate)));
-    console.log("nd ", noOfDays);
-
     //cannot book room for less than a day
     if (noOfDays <= 0) noOfDays = 1;
- console.log("n ", noOfDays);
     this.reservation.rooms.forEach((room: any) => {
       let x = {
         roomNumber: room.roomNumber,
