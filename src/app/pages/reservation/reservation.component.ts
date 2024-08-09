@@ -42,8 +42,7 @@ import { ModalComponent } from '../shared/modal/modal.component';
     OrderItemComponent,
     RouterModule,
     ReservationFormComponent,
-    ModalComponent,
-    MultiSelectComponent
+    ModalComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
