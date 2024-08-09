@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { InvoiceComponentComponent } from '../shared/invoice-component/invoice-component.component';
 import { HttpService } from '../../services/http-service.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-print-layout',
@@ -29,6 +28,7 @@ export class PrintLayoutComponent implements OnInit {
   rooms: any = [];
   roomTotal: any = 0;
   clientName:any = "Default";
+  
   async ngOnInit() {
     this.clientName = localStorage.getItem('clientName');
     this.reservationId = this.route.snapshot.queryParamMap.get('id');
@@ -52,14 +52,14 @@ export class PrintLayoutComponent implements OnInit {
               (1000 * 60 * 60 * 24)
           );
           //cannot book room for less than a day
-          if (noOfDays == 0) noOfDays = 1;
-
+          if (noOfDays <= 0) noOfDays = 1;
+      
           this.reservation.rooms.forEach((room: any) => {
             let x = {
               roomNumber: room.roomNumber,
-              price: room.pricePerDay,
+              price: room.price,
               qty: noOfDays,
-              total: room.pricePerDay * noOfDays,
+              total: room.price * noOfDays,
             };
             this.rooms.push(x);
             this.roomTotal += x.total;
@@ -76,12 +76,12 @@ export class PrintLayoutComponent implements OnInit {
                   (Number(total) / 100) *
                     this.reservation.billing.discountPercentage
                 );
-                this.discount +=  this.reservation.billing.flatDiscount;
-            if (this.reservation.billing.taxPercentage > 0)
-              this.tax = Math.round(
-                ((total - Number(this.discount)) / 100) *
-                  this.reservation.billing.taxPercentage
-              );
+                this.discount += this.reservation?.billing?.flatDiscount ?? 0;
+            // if (this.reservation.billing.taxPercentage > 0)
+            //   this.tax = Math.round(
+            //     ((total - Number(this.discount)) / 100) *
+            //       this.reservation.billing.taxPercentage
+            //   );
             this.totalPayable = Math.round(
               total - Number(this.discount) + Number(this.tax)
             );

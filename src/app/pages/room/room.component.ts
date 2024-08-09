@@ -73,7 +73,6 @@ export class RoomComponent implements OnInit {
       }))
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.allRooms = res;
           this.filter.pagination.dataCount = this.allRooms.length;
         },
@@ -174,7 +173,7 @@ export class RoomComponent implements OnInit {
       this.createRoomRequest.get("roomNumber")?.enable();
       this.createRoomRequest.get("occupancyStatus")?.setValue('0');
     }
-    this.createRoomRequest.get("occupancyStatus")?.disable();
+    this.createRoomRequest.get("occupancyStatus")?.enable();
   }
 
   getRoomNumber(){

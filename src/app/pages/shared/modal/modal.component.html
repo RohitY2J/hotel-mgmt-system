@@ -1,10 +1,11 @@
 <div *ngIf="isVisible" tabindex="-1" aria-hidden="true"
     class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
-    <div class="relative p-4 w-full max-w-md max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full" [ngClass]="{largeModal: isLargeModal}">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" [ngStyle]="{width: modalWidth}" style="width: 500px">
             <!-- Modal header -->
-            <div *ngIf="isTitleVisible" class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+            <div *ngIf="isTitleVisible"
+                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                     {{ title }}
                 </h3>
@@ -19,10 +20,10 @@
                 </button>
             </div>
             <!-- Modal body -->
-             <div class="modal-body">
-                 <ng-content></ng-content>
-             </div>
-             <div class="modal-footer">
+            <div class="modal-body">
+                <ng-content></ng-content>
+            </div>
+            <div class="modal-footer">
                 <ng-content select="footer"></ng-content>
             </div>
         </div>

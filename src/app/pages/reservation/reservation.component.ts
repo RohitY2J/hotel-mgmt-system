@@ -22,8 +22,8 @@ import { finalize } from 'rxjs';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { Router, RouterModule } from '@angular/router';
-import { dateRangeValidator } from '../../services/dateRangeValidator';
-import { MultiSelectComponent } from '../shared/multi-select/multi-select.component';
+import { ReservationFormComponent } from './reservation-form.component';
+import { ModalComponent } from '../shared/modal/modal.component';
 
 @Component({
   selector: 'app-reservation',
@@ -41,6 +41,8 @@ import { MultiSelectComponent } from '../shared/multi-select/multi-select.compon
     PaginationComponent,
     OrderItemComponent,
     RouterModule,
+    ReservationFormComponent,
+    ModalComponent,
     MultiSelectComponent
   ],
   templateUrl: './reservation.component.html',
@@ -58,9 +60,10 @@ export class ReservationComponent implements OnInit {
   initialStatus: any = [];
   allStatus: any = [];
   isOrderComponentVisible: boolean = false;
-  isInvoceComponentVisible: boolean = false;
+  isInvoiceComponentVisible: boolean = false;
   isCheckOutFormVisible: boolean = false;
   showPrintInvoiceMessage: boolean = false;
+  initialTotalAmountForSelected: number = 0;
 
   // customOptionTemplate = true;
   // selectedOptions: string[] = [];
@@ -93,6 +96,7 @@ export class ReservationComponent implements OnInit {
     tax: 0,
     flatDiscount: 0,
     checkOutDate: Date.now(),
+    paidAmount: 0
   };
 
   checkOutModel = this.defaultCheckOutModel;
@@ -102,7 +106,7 @@ export class ReservationComponent implements OnInit {
   allRooms: any = [];
   isOrdersFormVisible: boolean = false;
   printInvoiceVisible: boolean = true;
-  selectedReservation: any = {};
+  selectedReservation: any;
   formMode: any = 'create';
 
   constructor(
@@ -112,8 +116,6 @@ export class ReservationComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getReservations();
-    this.fetchRooms();
-
     this.initialStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
@@ -129,25 +131,7 @@ export class ReservationComponent implements OnInit {
       allowSearchFilter: true,
     };
   }
-  createReservationRequest = new FormGroup(
-    {
-      customerFullName: new FormControl('', Validators.required),
-      numberOfIndividuals: new FormControl('', Validators.required),
-      checkInDate: new FormControl('', Validators.required),
-      checkOutDate: new FormControl('', Validators.required),
-      status: new FormControl('', Validators.required),
-      customerContact: new FormGroup({
-        phone: new FormControl('', Validators.required),
-        address: new FormControl(''),
-      }),
-      rooms: new FormControl([], Validators.required),
-      paymentStatus: new FormControl('', Validators.required),
-      totalPaidAmount: new FormControl(0)
-    },
-    {
-      validators: dateRangeValidator('checkInDate', 'checkOutDate'),
-    }
-  );
+
   ordersForm = new FormGroup({
     orderSummary: new FormControl('', Validators.required),
     orderPrice: new FormControl('', Validators.required),
@@ -158,8 +142,7 @@ export class ReservationComponent implements OnInit {
   search() {
     this.getReservations();
   }
-  closeConfirmDialog() {}
-  confirmButtonClicked() {}
+
   searchInputChanged(e: any) {}
 
   getReservations() {
@@ -191,92 +174,23 @@ export class ReservationComponent implements OnInit {
         complete: () => (this.isLoading = false),
       });
   }
-  fetchRooms() {
-    this.httpService
-      .httpPost(`room/getRooms?pageSize=100&pageNo=1`, {
-        occupancyStatus: 0,
-      })
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.allRooms = res;
-        },
-        error: (err) => console.log,
-      });
-  }
 
-  closeModal() {
-    this.resetForm();
+  closeReservationModal() {
     this.isReservationFormOpen = false;
+    this.getReservations();
   }
-  openCreateReservationForm() {
-    this.formMode = 'create';
+  openCreateReservationForm(formMode: String = 'create') {
+    this.formMode = formMode;
     this.isReservationFormOpen = true;
-  }
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
-  }
-  formSubmitted() {
-    this.isLoading = true;
-    console.log(this.createReservationRequest.value);
-    if (this.createReservationRequest.invalid) {
-      this.showNotification = true;
-      this.notificationParams = { message: 'Invalid form', error: true };
-      this.createReservationRequest.markAllAsTouched();
-      this.isLoading = false;
-      return;
-    }
-
-    let request: any = this.createReservationRequest.value;
-    request.billing = { orders: [], totalPaidAmount: this.createReservationRequest.value.totalPaidAmount };
-    let rooms: any = this.createReservationRequest.value.rooms?.map(
-      (x: any) => {
-        let room = this.allRooms.find((r: any) => r.id == x.id);
-        return room.id;
-      }
-    );
-    request.rooms = rooms;
-    console.log(request);
-    this.httpService
-      .httpPost(
-        'reservation/createReservation',
-        request
-      )
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.closeModal();
-        })
-      )
-      .subscribe({
-        next: () => {
-          this.showNotification = true;
-          this.notificationParams = {
-            message: 'Reservation created successfully.',
-            error: false,
-          };
-          this.getReservations();
-        },
-        error: (err) => {
-          this.showNotification = true;
-          this.notificationParams = {
-            message: 'Could not create reservation',
-            error: true,
-          };
-        },
-      });
   }
 
   showInvoice(reservation: any) {
     this.selectedReservation = reservation;
-    this.isInvoceComponentVisible = true;
+    this.isInvoiceComponentVisible = true;
   }
 
   closeInvoce() {
-    this.isInvoceComponentVisible = false;
+    this.isInvoiceComponentVisible = false;
   }
 
   triggerNotification(message: any) {
@@ -302,23 +216,33 @@ export class ReservationComponent implements OnInit {
       0
     );
   }
-  checkIn(reservation: any){
+  checkIn(reservation: any) {
     this.httpService
-    .httpPost(`reservation/updateReservation`, {id: reservation.id, status: 1})
-    .pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.showNotification = true;
+      .httpPost(`reservation/updateReservation`, {
+        id: reservation.id,
+        status: 1,
       })
-    )
-    .subscribe({
-      next: (res)=>{
-        this.notificationParams = {message: 'Checked In successfully.', error: false};
-      },
-      error: (err) => {
-        this.notificationParams = {message: 'Invalid CheckIn request.', error: true};
-      },
-    });
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.showNotification = true;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.notificationParams = {
+            message: 'Checked In successfully.',
+            error: false,
+          };
+          this.getReservations();
+        },
+        error: (err) => {
+          this.notificationParams = {
+            message: 'Invalid CheckIn request.',
+            error: true,
+          };
+        },
+      });
   }
 
   clearFilter() {
@@ -341,47 +265,40 @@ export class ReservationComponent implements OnInit {
     this.getReservations();
   }
 
-  resetForm() {
-    this.createReservationRequest.reset();
-    this.createReservationRequest.setValue({
-      customerFullName: '',
-      numberOfIndividuals: '',
-      checkInDate: '',
-      checkOutDate: '',
-      status: '',
-      customerContact: {
-        phone: '',
-        address: '',
-      },
-      rooms: [],
-      paymentStatus: '',
-      totalPaidAmount:0
-    });
-  }
-
   openCheckOutForm(reservation: any) {
     this.selectedReservation = reservation;
-    this.checkOutModel = this.defaultCheckOutModel;
+    this.initialTotalAmountForSelected = reservation.billing.totalPaidAmount;
     this.checkOutModel.checkOutDate = this.selectedReservation.checkOutDate;
     console.log(this.checkOutModel.checkOutDate);
     this.isCheckOutFormVisible = true;
   }
   closeCheckOutForm() {
     this.isCheckOutFormVisible = false;
+    this.initialTotalAmountForSelected = 0;
+    this.resetCheckOutModal();
     this.getReservations();
   }
 
+  resetCheckOutModal(){
+    this.checkOutModel  = {
+      discount: 0,
+      tax: 0,
+      flatDiscount: 0,
+      checkOutDate: Date.now(),
+      paidAmount: 0
+    };
+  }
   checkOutAndPrintInvoice() {
-
     this.isLoading = true;
-    this.selectedReservation.billing.discountPercentage =
-      this.checkOutModel.discount;
-    this.selectedReservation.billing.taxPercentage = this.checkOutModel.tax;
-    this.selectedReservation.billing.flatDiscount =
-      this.checkOutModel.flatDiscount;
-    this.selectedReservation.checkOutDate = this.checkOutModel.checkOutDate;
+    // this.selectedReservation.billing.discountPercentage =
+    //   this.checkOutModel.discount;
+    // this.selectedReservation.billing.taxPercentage = this.checkOutModel.tax;
+    // this.selectedReservation.billing.flatDiscount =
+    //   this.checkOutModel.flatDiscount;
+    // this.selectedReservation.checkOutDate = this.checkOutModel.checkOutDate;
 
     this.selectedReservation.status = 2; //checkout
+    this.selectedReservation.paymentStatus = 1; //paid
 
     this.httpService
       .httpPost(`reservation/updateReservation`, this.selectedReservation)
@@ -392,21 +309,38 @@ export class ReservationComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (res)=>{
-          this.notificationParams = {message: 'Check out successfully.', error: false};
-          this.router.navigate(['/print-invoice'], {
-            queryParams: { id: this.selectedReservation.id },
-          });
+        next: (res) => {
+          this.notificationParams = {
+            message: 'Check out successfully.',
+            error: false,
+          };
+          this.isCheckOutFormVisible = false;
+          this.printInvoice();
         },
         error: (err) => {
-          this.notificationParams = {message: 'Invalid checkout request.', error: true};
+          this.notificationParams = {
+            message: 'Invalid checkout request.',
+            error: true,
+          };
         },
       });
+  }
+  toggleLoader(toggleVal: boolean) {
+    this.isLoading = toggleVal;
   }
 
   printInvoice() {
     this.router.navigate(['/print-invoice'], {
       queryParams: { id: this.selectedReservation.id },
     });
+  }
+  onCheckOutFormChange() {
+    this.selectedReservation.billing.discountPercentage =
+      this.checkOutModel.discount;
+    this.selectedReservation.billing.taxPercentage = this.checkOutModel.tax;
+    this.selectedReservation.billing.flatDiscount =
+      this.checkOutModel.flatDiscount;
+    this.selectedReservation.checkOutDate = this.checkOutModel.checkOutDate;
+    this.selectedReservation.billing.totalPaidAmount = this.initialTotalAmountForSelected + this.checkOutModel.paidAmount;
   }
 }
