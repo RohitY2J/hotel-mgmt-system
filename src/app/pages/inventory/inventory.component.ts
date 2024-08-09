@@ -132,6 +132,7 @@ export class InventoryComponent implements OnInit {
         .subscribe({
           next: (res) => {
             this.inventoryItems = res;
+            this.filter.pagination.dataCount = this.inventoryItems.length;
           },
           error: (err) => {
             this.triggerNotification({

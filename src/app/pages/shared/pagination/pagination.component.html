@@ -1,8 +1,10 @@
-<p *ngIf="hasNoItems" class="my-16 justify-center text-center dark:text-gray-400">No items available</p>
+<!-- <p *ngIf="hasNoItems" class="my-16 justify-center text-center dark:text-gray-400">No items available</p> -->
 <div
     class="py-3 px-2 flex justify-between items-center text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
     <div>
-        Showing <b>{{((page-1)*pageSize)+1}}</b>-<b>{{((page-1)*pageSize)+dataCount}}</b>
+        <span *ngIf="dataCount > 0">
+            Showing <b>{{((page-1)*pageSize)+1}}</b>-<b>{{((page-1)*pageSize)+dataCount}}</b>
+        </span>
     </div>
     <div aria-label="Page navigation example">
         <ul class="inline-flex -space-x-px text-sm">
@@ -13,7 +15,7 @@
                 </button>
             </li>
             <input readonly type="text" [(ngModel)]="page"
-                class="w-10 rounded-sm text-center focus:ring-0 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" />
+                class="w-14 rounded-sm text-center focus:ring-0 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" />
             <li>
                 <button (click)="nextButtonClicked()" [disabled]="this.pageSize != this.dataCount"
                     class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">

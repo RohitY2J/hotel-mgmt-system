@@ -322,7 +322,7 @@
 
     </div>
 
-    
+    <div class="h-96 mb-4">
         <div class="grid gap-4 mb-4 grid-cols-3">
             <ng-container *ngFor="let item of inventoryItems">
                 <div  class="max-w-sm rounded dark:bg-gray-400 overflow-hidden my-2 shadow-lg col-span-1">
@@ -356,8 +356,10 @@
                             (click)="showItemHistory(item)">History</button>
                     </div>
                 </div>
+                
             </ng-container>
         </div>
+    </div>
     <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
         [pageSize]="filter.pagination.pageSize" [hasNoItems]="inventoryItems.length == 0"
         (callback)="updatePaginationPage($event)"></app-pagination>

@@ -168,7 +168,7 @@
         </div>
 
 
-
+        <div class="min-h-96 mb-4">
         <div
             class="mt-4 mb-4 grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-4 xs:grid-cols-1 lg:gap-6 justify-center">
             <!-- logo - start -->
@@ -188,6 +188,7 @@
                 </div>
             </div>
         </div>
+    </div>
         <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
                 [pageSize]="filter.pagination.pageSize" [hasNoItems]="allRooms.length == 0"
                 (callback)="updatePaginationPage($event)"></app-pagination>

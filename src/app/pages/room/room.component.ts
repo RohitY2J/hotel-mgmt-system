@@ -44,8 +44,8 @@ export class RoomComponent implements OnInit {
     maintainanceStatus: "",
     pagination: {
       page: 1,
-      pageSize: 10,
-      dataCount: 10,
+      pageSize: 12,
+      dataCount: 12,
     },
   }
   
@@ -75,6 +75,7 @@ export class RoomComponent implements OnInit {
         next: (res) => {
           console.log(res);
           this.allRooms = res;
+          this.filter.pagination.dataCount = this.allRooms.length;
         },
         error: (err) => this.triggerNotification({ message: err, error: true }),
       });
