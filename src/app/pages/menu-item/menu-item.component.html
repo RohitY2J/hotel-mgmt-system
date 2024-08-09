@@ -166,14 +166,15 @@
                     <!-- <input type="text" id="simple-search" [(ngModel)]="filter.menuName"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search menu item name.." required /> -->
-                    <div class="autocomplete-container">
+                    <!-- <div class="autocomplete-container">
                         <input type="text" [formControl]="searchControl" placeholder="Search menu item name.." class="autocomplete-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <div *ngIf="filteredOptions.length > 0 && searchControl.value" class="autocomplete-suggestions">
                             <div *ngFor="let option of filteredOptions" (click)="selectOption(option)" class="autocomplete-suggestion">
                                 {{ option }}
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                    <app-autocomplete [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
                 </div>
                 <button type="button" (click)="searchButtonClicked()"
                     class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">

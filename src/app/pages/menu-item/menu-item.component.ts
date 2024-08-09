@@ -11,6 +11,7 @@ import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { debounceTime } from 'rxjs';
 import { switchMap, catchError } from 'rxjs';
 import { response } from 'express';
+import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 
 @Component({
   selector: 'app-menu-item',
@@ -21,7 +22,8 @@ import { response } from 'express';
     FormsModule,
     ReactiveFormsModule,
     LoaderComponent,
-    PaginationComponent
+    PaginationComponent,
+    AutocompleteComponent
   ],
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss'
@@ -36,7 +38,7 @@ export class MenuItemComponent implements OnInit {
   isLoading: boolean = false;
   isUpdate: boolean = false;
   menuForm: FormGroup = new FormGroup({});
-  
+
   selectedFile: File | undefined;
 
   filter: any = {
@@ -50,7 +52,6 @@ export class MenuItemComponent implements OnInit {
   }
 
   searchControl = new FormControl();
-  menuItems: string[] = ["Pizza", "Burger", "Pasta", "Salad", "Sushi", "Steak", "Tacos", "Sandwich", "Soup", "Fries", "Ice Cream", "Cake", "Pie", "Donut", "Muffin"];
   filteredOptions: string[] = [];
 
 
@@ -77,21 +78,21 @@ export class MenuItemComponent implements OnInit {
   async filterOptions(value: string): Promise<string[]> {
     const filterValue = value.toLowerCase();
     try {
-        const res: any = await this.httpService.httpPost(`menu/getMenuName`, { query: filterValue }).toPromise();
-        return res.data || [];
+      const res: any = await this.httpService.httpPost(`menu/getMenuName`, { query: filterValue }).toPromise();
+      return res.data || [];
     } catch (err) {
-        this.triggerNotification({
-            message: 'Failed to get menu names',
-            error: true
-        });
-        return [];
+      this.triggerNotification({
+        message: 'Failed to get menu names',
+        error: true
+      });
+      return [];
     }
-}
-
-  selectOption(option: string) {
-    this.searchControl.setValue(option, { emitEvent: false });
-    this.filteredOptions = [];
   }
+
+  async updateFilterOptions(value: string) {
+    this.filteredOptions = await this.filterOptions(value);
+  }
+
 
   openMenuForm() {
     this.isUpdate = false;

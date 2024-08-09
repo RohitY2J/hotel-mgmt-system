@@ -1,0 +1,26 @@
+.autocomplete-container {
+    position: relative;
+    width: 300px;
+}
+.autocomplete-input {
+    width: 100%;
+    padding: 10px;
+    //border: 1px solid #ccc;
+    //border-radius: 4px;
+}
+.autocomplete-suggestions {
+    border: 1px solid #e4e4e4;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #fff;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+.autocomplete-suggestion {
+    padding: 10px;
+    cursor: pointer;
+}
+.autocomplete-suggestion:hover {
+    background-color: #e4e4e4;
+}
