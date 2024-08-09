@@ -37,7 +37,7 @@ export class AuthService {
       this.getUserDetails().subscribe({
         next: (res: any) => {
           this.userDetails = res; // Assuming the response has a 'role' property
-          localStorage.setItem('clientName',this.userDetails?.client.clientName)
+          localStorage.setItem('clientName',this.userDetails?.client?.clientName)
           resolve(this.userDetails);
         },
         error: (err) => reject({}),

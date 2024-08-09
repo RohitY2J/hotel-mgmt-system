@@ -19,7 +19,7 @@ exports.createReservation = async (req, res, next) => {
       return res.status(400).send(`invalidRequest: ${errorMessage}`);
     }
     let roomIds = [];
-    request.rooms.map(x => roomIds.push(x));
+    request.rooms.map(x => roomIds.push(x.id));
 
     await dbContext.Room.updateMany({ _id: { $in: roomIds } }, { occupancyStatus: globalConstants.RoomStatus.Occupied });
 
@@ -190,8 +190,8 @@ exports.mapUiResponse = (reservation) => {
     customerFullName: reservation.customerFullName,
     numberOfIndividuals: reservation.numberOfIndividuals,
     checkInDate: reservation.checkInDate,
-    checkOutDate: reservation.checkInDate,
-    rooms: reservation.rooms.map(roomService.mapUiResponse),
+    checkOutDate: reservation.checkOutDate,
+    rooms: reservation.rooms,
     status: reservation.status,
     paymentStatus: reservation.paymentStatus,
     createdAt: reservation.createdAt,
