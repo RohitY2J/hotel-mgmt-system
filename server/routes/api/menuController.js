@@ -9,4 +9,6 @@ router.post('/updateMenuItem', FileUpload.single('file'), service.menuService.up
 
 router.post('/getMenuItems', service.menuService.getMenuItems)
 
+router.post('/getMenuName', service.menuService.getMenuNames)
+
 module.exports = router;

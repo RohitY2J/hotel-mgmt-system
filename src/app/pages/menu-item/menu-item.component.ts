@@ -5,9 +5,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConstantsService } from '../../services/constants.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
-import { finalize } from 'rxjs';
+import { finalize, of } from 'rxjs';
 import { HttpListResponse } from '../../models/HttpResponse';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
+import { debounceTime } from 'rxjs';
+import { switchMap, catchError } from 'rxjs';
+import { response } from 'express';
 
 @Component({
   selector: 'app-menu-item',
@@ -32,8 +35,8 @@ export class MenuItemComponent implements OnInit {
   isMenuFormOpen: any = false;
   isLoading: boolean = false;
   isUpdate: boolean = false;
-  menuForm: FormGroup = new FormGroup({}); 
-
+  menuForm: FormGroup = new FormGroup({});
+  
   selectedFile: File | undefined;
 
   filter: any = {
@@ -45,6 +48,11 @@ export class MenuItemComponent implements OnInit {
       dataCount: 8
     }
   }
+
+  searchControl = new FormControl();
+  menuItems: string[] = ["Pizza", "Burger", "Pasta", "Salad", "Sushi", "Steak", "Tacos", "Sandwich", "Soup", "Fries", "Ice Cream", "Cake", "Pie", "Donut", "Muffin"];
+  filteredOptions: string[] = [];
+
 
   constructor(private fb: FormBuilder, private httpService: HttpService, public constantService: ConstantsService) { }
 
@@ -60,6 +68,29 @@ export class MenuItemComponent implements OnInit {
       available: new FormControl('', Validators.required)
     });
 
+    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(async value => {
+      this.filteredOptions = await this.filterOptions(value);
+    });
+
+  }
+
+  async filterOptions(value: string): Promise<string[]> {
+    const filterValue = value.toLowerCase();
+    try {
+        const res: any = await this.httpService.httpPost(`menu/getMenuName`, { query: filterValue }).toPromise();
+        return res.data || [];
+    } catch (err) {
+        this.triggerNotification({
+            message: 'Failed to get menu names',
+            error: true
+        });
+        return [];
+    }
+}
+
+  selectOption(option: string) {
+    this.searchControl.setValue(option, { emitEvent: false });
+    this.filteredOptions = [];
   }
 
   openMenuForm() {
@@ -70,6 +101,7 @@ export class MenuItemComponent implements OnInit {
 
   fetchMenuItems() {
     this.isLoading = true;
+    this.filter.menuName = this.searchControl.value;
     this.httpService
       .httpPost(
         'menu/getMenuItems',
@@ -81,13 +113,14 @@ export class MenuItemComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
-          let response = res as HttpListResponse; 
+          let response = res as HttpListResponse;
           this.allMenus = response.data;
           this.filter.pagination.dataCount = response.data.length;
         },
-        error: (err) => this.triggerNotification({ 
-          message: "Failed to retrieve data", 
-          error: true }),
+        error: (err) => this.triggerNotification({
+          message: "Failed to retrieve data",
+          error: true
+        }),
       });
   }
 
@@ -199,6 +232,7 @@ export class MenuItemComponent implements OnInit {
   }
 
   searchButtonClicked() {
+    this.filter.pagination.page = 1;
     this.fetchMenuItems();
   }
 
@@ -212,6 +246,7 @@ export class MenuItemComponent implements OnInit {
         dataCount: 8
       }
     };
+    this.searchControl.setValue("");
     this.fetchMenuItems();
   }
 
@@ -221,24 +256,24 @@ export class MenuItemComponent implements OnInit {
     }
   }
 
-  getMenuAvailabilityStatus(menu: any){
+  getMenuAvailabilityStatus(menu: any) {
     return this.constantService.getStatusString("menuAvailabilityStatus", menu.available ? 1 : 0);
   }
 
-  getInventoryStatus(menu: any){
-    if(menu.inventory != null && menu.inventory.availableUnit < 10){
-      if(menu.inventory.availableUnit <= 0){
+  getInventoryStatus(menu: any) {
+    if (menu.inventory != null && menu.inventory.availableUnit < 10) {
+      if (menu.inventory.availableUnit <= 0) {
         return "OutOfStock";
-      }else{
+      } else {
         return "LowInStock";
       }
     }
-    else{
+    else {
       return "InStock"
     }
   }
 
-  updatePaginationPage(page: number){
+  updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
     this.fetchMenuItems();
   }

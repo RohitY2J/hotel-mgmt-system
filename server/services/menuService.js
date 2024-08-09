@@ -110,6 +110,23 @@ exports.updateMenuItem = async (req, res, next) => {
 
 }
 
+exports.getMenuNames = async (req, res, next) => {
+    if (!req.clientId) {
+        return res.status(422).json({
+            success: false,
+            msg: 'Client Id is required'
+        });
+    }
+
+    const filterValue = req.body.query;
+    const menus = await dbContext.MenuItem.find({ name: { $regex: filterValue, $options: 'i' } }).select('name');
+    return res.status(200).json({
+        success: true,
+        msg: 'menu name successfully retrieved',
+        data: menus.map(menu => menu.name)
+    });
+}
+
 exports.getMenuItems = async (req, res, next) => {
     if (!req.clientId) {
         return res.status(422).json({
@@ -117,8 +134,8 @@ exports.getMenuItems = async (req, res, next) => {
             msg: 'Client Id is required'
         });
     }
-    
-    filter = {clientId: conversion.ToObjectId(req.clientId)};
+
+    filter = { clientId: conversion.ToObjectId(req.clientId) };
     afterFilter = {};
 
     if (req.body.availableStatus) {
@@ -166,7 +183,7 @@ exports.getMenuItems = async (req, res, next) => {
 
     menus.forEach(menu => {
         if (menu.file) {
-            menu.file = env.serverUrl+"/uploads/" + menu.file;
+            menu.file = env.serverUrl + "/uploads/" + menu.file;
         }
     });
     return res.status(200).json({
