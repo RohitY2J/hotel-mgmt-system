@@ -153,14 +153,18 @@ exports.getOrders = async (req, res, next) => {
             });
         }
 
-        filter = {clientId: conversion.ToObjectId(req.clientId)};
+        let filter = {clientId: conversion.ToObjectId(req.clientId)};
 
         if (req.body.hasOwnProperty('status') && (typeof req.body.status === 'number' || req.body.status != '')) {
             filter.status = conversion.convertStringToInt(req.body.status);
         }
 
         if (req.body.hasOwnProperty('tableNumber') && req.body.tableNumber != '') {
-            filter.tableNumber = req.body.tableNumber;
+            filter.tableNumber = conversion.ToObjectId(req.body.tableNumber);
+        }
+
+        if (req.body.customerName){
+            filter.customerName = req.body.customerName;
         }
 
         if (req.body.hasOwnProperty('id')) {
@@ -359,3 +363,32 @@ exports.updateStatus = async (req, res, next) => {
         });
     }
 }   
+
+exports.getCustomerName = async(req, res, next) => {
+    try {
+        if (!req.clientId) {
+            return res.status(422).json({
+                success: false,
+                msg: 'Client Id is required'
+            });
+        }
+
+        let filter = {clientId: conversion.ToObjectId(req.clientId)};
+        if(req.body.filterValue){
+            filter.customerName = { $regex: req.body.filterValue, $options: 'i' };
+        }
+
+        const uniqueCustomerNames = await dbContext.Order.distinct('customerName', filter);
+        return res.status(200).json({
+            success: true,
+            msg: 'customers retrived successfully',
+            data: uniqueCustomerNames
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            msg: "Error encountered:" + err.message
+        });
+    }
+}

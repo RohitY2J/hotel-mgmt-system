@@ -174,7 +174,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <app-autocomplete [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
+                    <app-autocomplete [searchControl]="searchControl" [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
                 </div>
                 <button type="button" (click)="searchButtonClicked()"
                     class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">

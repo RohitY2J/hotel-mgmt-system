@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { HttpService } from '../../services/http-service.service';
-import { finalize } from 'rxjs';
+import { debounceTime, finalize } from 'rxjs';
 import { HttpListResponse } from '../../models/HttpResponse';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ConstantsService } from '../../services/constants.service';
 import { Router } from '@angular/router';
 import { Datepicker, DatepickerOptions, InstanceOptions } from 'flowbite';
+import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 
 
 @Component({
@@ -20,7 +21,9 @@ import { Datepicker, DatepickerOptions, InstanceOptions } from 'flowbite';
     FormsModule,
     PaginationComponent,
     NotificationComponent,
-    LoaderComponent
+    LoaderComponent,
+    AutocompleteComponent,
+    ReactiveFormsModule
   ],
   templateUrl: './order-bill.component.html',
   styleUrl: './order-bill.component.scss'
@@ -63,6 +66,10 @@ export class OrderBillComponent implements OnInit {
     taxAmt: 0,
     totalPayable: 0
   };
+
+  filteredOptions: string[] = [];
+  searchControl = new FormControl();
+
 
   nextStep() {
     this.selectedOrder.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
@@ -136,6 +143,12 @@ export class OrderBillComponent implements OnInit {
       debugger;
       this.filter.date = this.datepicker?.getDate() as string;
     })
+
+    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(async value => {
+      this.filteredOptions = await this.filterOptions(value);
+    });
+
+    this.fetchTables();
   }
 
   constructor(private httpService: HttpService,
@@ -155,6 +168,7 @@ export class OrderBillComponent implements OnInit {
         dataCount: 5
       }
     };
+    this.searchControl.reset();
     this.fetchOrders();
   }
   searchButtonClicked() {
@@ -183,6 +197,7 @@ export class OrderBillComponent implements OnInit {
   fetchOrders() {
     this.isLoading = true;
     this.showNotification = false;
+    this.filter.customerName = this.searchControl.value;
     this.httpService.httpPost("order/getOrders", this.filter)
       .pipe(finalize(() => {
         this.isLoading = false;
@@ -201,19 +216,28 @@ export class OrderBillComponent implements OnInit {
       )
   }
 
-  fetchAllTableNumber() {
-    this.httpService.httpGet('order/getTableNumbers')
-      .subscribe(
-        (res) => {
-          this.tableNumbers = (res as HttpListResponse).data;
-        },
-        (err) => {
-          this.triggerNotification({
-            message: "Failed to get table numbers",
-            error: true
-          })
-        }
+  async fetchTables() {
+    this.isLoading = true;
+    this.httpService
+      .httpPost('table/getTables', {})
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
       )
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          let response = res as HttpListResponse;
+          this.tableNumbers = response.data;
+          //this.filter.pagination.dataCount = response.data.length;
+        },
+        error: (err) =>
+          this.triggerNotification({
+            message: 'Failed to table data',
+            error: true,
+          }),
+      });
   }
 
   triggerNotification(notificationContent: any) {
@@ -262,6 +286,24 @@ export class OrderBillComponent implements OnInit {
           })
         },
       });
+  }
+
+  async filterOptions(value: string): Promise<string[]> {
+    const filterValue = value.toLowerCase();
+    try {
+      const res: any = await this.httpService.httpPost(`order/getCustomerName`, { filterValue }).toPromise();
+      return res.data || [];
+    } catch (err) {
+      this.triggerNotification({
+        message: 'Failed to get menu names',
+        error: true
+      });
+      return [];
+    }
+  }
+
+  async updateFilterOptions(value: string) {
+    this.filteredOptions = await this.filterOptions(value);
   }
 
 }

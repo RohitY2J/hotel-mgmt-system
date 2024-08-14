@@ -18,7 +18,7 @@ export class AutocompleteComponent {
   @Input() filteredOptions: string[] = [];
   @Output() callback = new EventEmitter<string>(); 
 
-  searchControl = new FormControl();
+  @Input() searchControl = new FormControl();
   
   ngOnInit(): void {
     this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(async value => {

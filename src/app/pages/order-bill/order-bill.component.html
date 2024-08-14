@@ -221,14 +221,14 @@
         <div class="space-y-4 md:space-y-0 py-4">
 
             <div class="flex items-center">
-                <div class="relative max-w-sm mx-2">
+                <!-- <div class="relative max-w-sm mx-2">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="fas fa-calendar text-gray-200"></i>
                     </div>
                     <input [(ngModel)]="filter.date" id="datepicker-filter" type="text"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Select date">
-                </div>
+                </div> -->
                 <select id="role" [(ngModel)]="filter.status"
                     class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="" class="bg-gray-700" selected>All Status</option>
@@ -238,17 +238,18 @@
                 <select id="role" [(ngModel)]="filter.tableNumber"
                     class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="" class="bg-gray-700" selected>All Table</option>
-                    <option *ngFor="let role of roles" [value]="role._id">{{ role.roleName }}
+                    <option *ngFor="let table of tableNumbers" [value]="table._id">{{ table.tableNumber }}
                     </option>
                 </select>
                 <div class="relative">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <!-- <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="fas fa-user text-white"></i>
                     </div>
                     <input type="text" id="simple-search" [(ngModel)]="filter.customerName"
                         (change)="searchInputChanged($event)"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search employee name.." required />
+                        placeholder="Search employee name.." required /> -->
+                        <app-autocomplete [searchControl]="searchControl" [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
                 </div>
                 <button type="button" (click)="searchButtonClicked()"
                     class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
