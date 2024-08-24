@@ -214,9 +214,8 @@ export class MenuItemComponent implements OnInit {
       name: menu.name,
       description: menu.description,
       price: menu.price,
-      category: menu.category,
-      available: menu.available ? 1 : 0,
-      //inventoryId: menu.inventoryId ?? ""
+      category: menu.category != null ? menu.category : "",
+      available: menu.available ? 1 : 0
     });
     this.isUpdate = true;
     this.updateMenuForm();
