@@ -24,6 +24,7 @@ import { OrderItemComponent } from '../order-item/order-item.component';
 import { Router, RouterModule } from '@angular/router';
 import { ReservationFormComponent } from './reservation-form.component';
 import { ModalComponent } from '../shared/modal/modal.component';
+import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 
 @Component({
   selector: 'app-reservation',
@@ -42,7 +43,8 @@ import { ModalComponent } from '../shared/modal/modal.component';
     OrderItemComponent,
     RouterModule,
     ReservationFormComponent,
-    ModalComponent
+    ModalComponent,
+    AutocompleteComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
@@ -108,6 +110,10 @@ export class ReservationComponent implements OnInit {
   selectedReservation: any;
   formMode: any = 'create';
 
+  searchControl = new FormControl();
+  filteredOptions: string[] = [];
+
+
   constructor(
     private httpService: HttpService,
     public constService: ConstantsService,
@@ -131,6 +137,24 @@ export class ReservationComponent implements OnInit {
     };
   }
 
+  async updateFilterOptions(value: string) {
+    this.filteredOptions = await this.filterOptions(value);
+  }
+
+  async filterOptions(value: string): Promise<string[]> {
+    const filterValue = value.toLowerCase();
+    try {
+      const res: any = await this.httpService.httpPost(`reservation/getCustomerName`, { filterValue }).toPromise();
+      return res.data || [];
+    } catch (err) {
+      this.triggerNotification({
+        message: 'Failed to get customer names',
+        error: true
+      });
+      return [];
+    }
+  }
+
   ordersForm = new FormGroup({
     orderSummary: new FormControl('', Validators.required),
     orderPrice: new FormControl('', Validators.required),
@@ -146,10 +170,7 @@ export class ReservationComponent implements OnInit {
 
   getReservations() {
     this.isLoading = true;
-    this.filter.filterObj.customerFullName = {
-      $regex: this.filter.searchText,
-      $options: 'i',
-    };
+    this.filter.filterObj.customerFullName = this.searchControl.value
     this.httpService
       .httpPost(
         `reservation/getReservations?pageNo=${this.filter.pagination.page}&pageSize=${this.filter.pagination.pageSize}`,
@@ -257,6 +278,7 @@ export class ReservationComponent implements OnInit {
         dataCount: 5,
       },
     };
+    this.searchControl.setValue("");
     this.getReservations();
   }
   updatePaginationPage(page: number) {

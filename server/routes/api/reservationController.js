@@ -17,4 +17,7 @@ router.get(
 );
 router.post("/getReservations", services.reservationService.getReservations);
 
+router.post('/getCustomerName', services.reservationService.getCustomerName);
+
+
 module.exports = router;

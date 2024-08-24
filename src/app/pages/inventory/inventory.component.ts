@@ -13,6 +13,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { HttpService } from '../../services/http-service.service';
 import { finalize } from 'rxjs';
+import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 
 @Component({
   selector: 'app-inventory',
@@ -25,6 +26,7 @@ import { finalize } from 'rxjs';
     PaginationComponent,
     FormsModule,
     ReactiveFormsModule,
+    AutocompleteComponent
   ],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.scss',
@@ -72,6 +74,11 @@ export class InventoryComponent implements OnInit {
   };
 
   constService: ConstantsService;
+  searchControl = new FormControl();
+  filteredOptions: string[] = [];
+
+
+
   constructor(
     constService: ConstantsService,
     private httpService: HttpService
@@ -80,6 +87,24 @@ export class InventoryComponent implements OnInit {
   }
   ngOnInit(): void {
     this.fetchInventoryItems();
+  }
+
+  async updateFilterOptions(value: string) {
+    this.filteredOptions = await this.filterOptions(value);
+  }
+
+  async filterOptions(value: string): Promise<string[]> {
+    const filterValue = value.toLowerCase();
+    try {
+      const res: any = await this.httpService.httpPost(`inventory/getInventoryName`, { query: filterValue }).toPromise();
+      return res.data || [];
+    } catch (err) {
+      this.triggerNotification({
+        message: 'Failed to get inventory names',
+        error: true
+      });
+      return [];
+    }
   }
 
   inventoryRequest = new FormGroup({
@@ -103,9 +128,12 @@ export class InventoryComponent implements OnInit {
   fetchInventoryItems() {
     this.isLoading = true;
     let searchRequest: any = {};
-    if (this.filter.searchText != null) {
-      searchRequest.name = { $regex: this.filter.searchText, $options: 'i' };
+    if(this.searchControl.value){
+      searchRequest.name = this.searchControl.value
     }
+    // if (this.filter.searchText != null) {
+    //   searchRequest.name = { $regex: this.filter.searchText, $options: 'i' };
+    // }
     if (
       this.filter.filterObj.itemType != null &&
       this.filter.filterObj.itemType != ''
@@ -201,6 +229,7 @@ export class InventoryComponent implements OnInit {
   openInventoryForm() {
     this.showInventoryForm = true;
   }
+  
   clearFilter() {
     this.filter = {
       searchText: '',
@@ -214,12 +243,19 @@ export class InventoryComponent implements OnInit {
         dataCount: 5,
       },
     };
+    this.searchControl.setValue("");
+    this.fetchInventoryItems();
   }
-  search() {}
+
+  search() {
+
+  }
+
   updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
     this.fetchInventoryItems();
   }
+
   triggerNotification(message: any) {
     this.showNotification = false;
     this.notificationParams = null;

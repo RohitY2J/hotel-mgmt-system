@@ -134,27 +134,19 @@
 
         <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-        <div class="flex items-center py-6">
-            
-            <button (click)="openMenuForm()"
-                    class="w-28 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+        <div class="flex items-center py-6 justify-between">
+
+            <div class="flex w-32">
+                <button (click)="openMenuForm()"
+                    class="block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
                     type="button">
                     Add Menu
-            </button>
+                </button>
+            </div>
 
-
-            <div class="flex items-center ml-72">
-                <!-- <select id="occupancyStatus" ngModel)]="filter.occupancyStatus"
-                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option value="" selected>All Occupancy</option>
-                        <option
-                            *ngFor="let status of constantService.getStatusValuesAsDictionary('roomOccupancyStatus')"
-                            [value]="status.key">{{status.value}}
-                        </option>
-                    </select> -->
-
+            <div class="flex items-center">
                 <select id="availableStatus" [(ngModel)]="filter.availableStatus"
-                    class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    class="me-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option class="text-gray-600" value="" selected>Available Status</option>
                     <option value="false">Not Available </option>
                     <option value="true">Available </option>
@@ -163,18 +155,8 @@
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="fas fa-user text-white"></i>
                     </div>
-                    <!-- <input type="text" id="simple-search" [(ngModel)]="filter.menuName"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search menu item name.." required /> -->
-                    <!-- <div class="autocomplete-container">
-                        <input type="text" [formControl]="searchControl" placeholder="Search menu item name.." class="autocomplete-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <div *ngIf="filteredOptions.length > 0 && searchControl.value" class="autocomplete-suggestions">
-                            <div *ngFor="let option of filteredOptions" (click)="selectOption(option)" class="autocomplete-suggestion">
-                                {{ option }}
-                            </div>
-                        </div>
-                    </div> -->
-                    <app-autocomplete [searchControl]="searchControl" [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
+                    <app-autocomplete [searchControl]="searchControl" [filteredOptions]="filteredOptions"
+                        (callback)="updateFilterOptions($event)"></app-autocomplete>
                 </div>
                 <button type="button" (click)="searchButtonClicked()"
                     class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
@@ -199,31 +181,34 @@
             <div *ngFor="let menu of allMenus"
                 class="w-48 h-16 items-center justify-center rounded-lg bg-gray-100 text-gray-400 sm:h-40">
                 <div class="card-content p-4">
-                    
+
                     <div class="flex flex-col items-center justify-center">
                         <img *ngIf="menu.file" class="w-16 h-16 rounded-lg" [src]="menu.file">
                         <div *ngIf="!menu.file">
                             <i class="fas fa-4x fa-bread-slice"></i>
                         </div>
                         <dt class="mb-2 text-3xl font-extrabold dark:text-gray-700">{{menu.roomNumber}}</dt>
-                        <dd class="w-48 flex justify-center text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            <span class="max-w-32 text-ellipsis overflow-hidden whitespace-nowrap" title="{{menu.name}}">
+                        <dd
+                            class="w-48 flex justify-center text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
+                            <span class="max-w-32 text-ellipsis overflow-hidden whitespace-nowrap"
+                                title="{{menu.name}}">
                                 {{menu.name}}
                             </span>
                             <span>
                                 (Rs. {{menu.price}})
                             </span>
                         </dd>
-                        
+
                         <div class="flex justify-center mb-1">
                             <span [ngClass]="{'dark:bg-green-900 dark:text-green-300': menu.available,
-                                          'dark:bg-red-900 dark:text-red-300': !menu.available}" class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                          'dark:bg-red-900 dark:text-red-300': !menu.available}"
+                                class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
                                 {{getMenuAvailabilityStatus(menu)}}
                             </span>
-                            <span *ngIf="menu.inventoryId"
-                                [ngClass]="{'dark:bg-green-900 dark:text-green-300': menu.inventory.availableUnit >= 10,
+                            <span *ngIf="menu.inventoryId" [ngClass]="{'dark:bg-green-900 dark:text-green-300': menu.inventory.availableUnit >= 10,
                                             'dark:bg-yellow-900 dark:text-yellow-300': menu.inventory.availableUnit < 10 && menu.inventory.availableUnit > 0,
-                                            'dark:bg-red-900 dark:text-red-300': menu.inventory.availableUnit <= 0}" class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                            'dark:bg-red-900 dark:text-red-300': menu.inventory.availableUnit <= 0}"
+                                class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
                                 {{getInventoryStatus(menu)}}
                             </span>
                         </div>
@@ -235,9 +220,7 @@
                 </div>
             </div>
         </div>
-        <app-pagination [dataCount]="filter.pagination.dataCount" 
-        [page]="filter.pagination.page"
-        [pageSize]="filter.pagination.pageSize"
-        (callback)="updatePaginationPage($event)"></app-pagination>
+        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
+            [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
     </div>
 </div>

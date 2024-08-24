@@ -26,7 +26,7 @@ exports.createReservation = async (req, res, next) => {
     request.createdAt = Date.now();
     request.updatedAt = Date.now();
 
-    var reservation = new dbContext.Reservation(request); 
+    var reservation = new dbContext.Reservation(request);
     reservation.clientId = conversion.ToObjectId(req.clientId);
     reservation.save();
     return res
@@ -42,13 +42,13 @@ exports.addOrdersForCustomer = async (req, res, nex) => {
   try {
     var request = req.body;
 
-    var reservationToUpdate = await dbContext.Reservation.findById(request.id); 
+    var reservationToUpdate = await dbContext.Reservation.findById(request.id);
     if (!reservationToUpdate)
       return res.status(400).send("No reservation found.");
 
-    request.orders.forEach(order=>{
-      let existingOrders = reservationToUpdate.billing.orders.find(x=>x.menuId == order.menuId);
-      if(existingOrders)
+    request.orders.forEach(order => {
+      let existingOrders = reservationToUpdate.billing.orders.find(x => x.menuId == order.menuId);
+      if (existingOrders)
         existingOrders.qty += order.qty;
       else reservationToUpdate.billing.orders.push(order);
     });
@@ -59,7 +59,7 @@ exports.addOrdersForCustomer = async (req, res, nex) => {
     );
 
 
-    return res.status(200).send({message: "Orders added successfully", isSuccess: true});
+    return res.status(200).send({ message: "Orders added successfully", isSuccess: true });
   } catch (ex) {
     console.error("Error updating room: ", ex);
     return res.status(500).send({ error: ex });
@@ -82,7 +82,7 @@ exports.updateReservation = async (req, res, next) => {
     if (request.customerContact) reservationUpdateRequest.customerContact = request.customerContact;
     reservationUpdateRequest.updatedAt = Date.now();
 
-    if(request.checkInDate > request.checkOutDate)
+    if (request.checkInDate > request.checkOutDate)
       return res
         .status(400)
         .send(`Checkout date cannot be earlier than check in date`);
@@ -99,10 +99,10 @@ exports.updateReservation = async (req, res, next) => {
         .send(`Invalid request. No record found for updated.`);
 
 
-        let roomIds = [];
-        if(request.rooms){
-          request.rooms.map(x => roomIds.push(x.id));
-        }
+    let roomIds = [];
+    if (request.rooms) {
+      request.rooms.map(x => roomIds.push(x.id));
+    }
 
     let roomsUpdateRequest = {};
 
@@ -127,17 +127,46 @@ exports.updateReservation = async (req, res, next) => {
 exports.getReservationById = async (req, res, next) => {
   try {
     var result = await dbContext.Reservation.findById(req.query.id)
-    .populate({
-      path: "rooms",
-      select:
-        "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt pricePerDay",
-    });
+      .populate({
+        path: "rooms",
+        select:
+          "_id roomNumber occupancyStatus maintainanceStatus lastCleanedAt pricePerDay",
+      });
     return res.status(200).send(result);
   } catch (ex) {
     console.error("Error occurred while getting room", ex);
     return res.status(500).send({ error: ex });
   }
 };
+
+exports.getCustomerName = async (req, res, next) => {
+  try {
+    if (!req.clientId) {
+      return res.status(422).json({
+        success: false,
+        msg: 'Client Id is required'
+      });
+    }
+
+    let filter = { clientId: conversion.ToObjectId(req.clientId) };
+    if (req.body.filterValue) {
+      filter.customerFullName = { $regex: req.body.filterValue, $options: 'i' };
+    }
+
+    const uniqueCustomerNames = await dbContext.Reservation.distinct('customerFullName', filter);
+    return res.status(200).json({
+      success: true,
+      msg: 'customers retrived successfully',
+      data: uniqueCustomerNames
+    });
+  }
+  catch (err) {
+    return res.status(500).json({
+      success: false,
+      msg: "Error encountered:" + err.message
+    });
+  }
+}
 
 exports.getReservations = async (req, res, next) => {
   try {
@@ -149,7 +178,7 @@ exports.getReservations = async (req, res, next) => {
       });
     }
 
-    filter = {clientId: conversion.ToObjectId(req.clientId)};
+    filter = { clientId: conversion.ToObjectId(req.clientId) };
 
     if (req.body.paymentStatus) {
       filter.paymentStatus = req.body.paymentStatus;
@@ -163,7 +192,7 @@ exports.getReservations = async (req, res, next) => {
       filter.customerFullName = req.body.customerFullName;
     }
 
-    var result = await dbContext.Reservation.find(filter) 
+    var result = await dbContext.Reservation.find(filter)
       .populate({
         path: "rooms",
         select:

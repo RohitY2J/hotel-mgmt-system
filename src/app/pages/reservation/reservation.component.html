@@ -32,61 +32,54 @@
     </div>
 </ng-container>
 
-<app-modal [title]="'Checkout'" [isVisible]="isCheckOutFormVisible"
-    (close)="closeCheckOutForm()" [modalWidth]="'750px'" [isLargeModal]="true">
-        <div class="grid gap-1 mb-4 grid-cols-5">
-            <div class="col-span-4 grid gap-1 my-2 grid-cols-2 border-r-0" style="border-right: 1px solid #fff;">
-                <div class="col-span-1 px-5 py-5">
-                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount
-                        (%)</label>
-                    <input type="number"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="Discount in percentage" style="transition: all 0.15s ease 0s;"
-                        [(ngModel)]="checkOutModel.discount"
-                        (change)="onCheckOutFormChange()" />
-            
-                </div>
-                <div class="col-span-1 px-5 py-5">
-                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Flat
-                        Discount</label>
-                    <input type="number"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
-                        [(ngModel)]="checkOutModel.flatDiscount"
-                        (change)="onCheckOutFormChange()"
-                        />
-            
-                </div>
-            
-                <div class="col-span-1 px-5 py-5">
-                    <label for="checkOutDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Checkout
-                        Date (optional) </label>
-                    <input type="date"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="Customer Full Name" style="transition: all 0.15s ease 0s;"
-                        [(ngModel)]="checkOutModel.checkOutDate"
-                        (change)="onCheckOutFormChange()"
-                        />
-            
-                </div>
-            
-                <div class="col-span-1 px-5 py-5">
-                    <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
-                        Paid</label>
-                    <input type="number"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
-                        [(ngModel)]="checkOutModel.paidAmount"
-                        (change)="onCheckOutFormChange()"
-                        />
-            
-                </div>
+<app-modal [title]="'Checkout'" [isVisible]="isCheckOutFormVisible" (close)="closeCheckOutForm()" [modalWidth]="'750px'"
+    [isLargeModal]="true">
+    <div class="grid gap-1 mb-4 grid-cols-5">
+        <div class="col-span-4 grid gap-1 my-2 grid-cols-2 border-r-0" style="border-right: 1px solid #fff;">
+            <div class="col-span-1 px-5 py-5">
+                <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount
+                    (%)</label>
+                <input type="number"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Discount in percentage" style="transition: all 0.15s ease 0s;"
+                    [(ngModel)]="checkOutModel.discount" (change)="onCheckOutFormChange()" />
+
             </div>
-            <div class="col-span-1">
-                <h3 class="mt-4 text-lg font-bold text-white">Order Summary</h3>
-                <app-invoice-component [reservation]="selectedReservation" [showSummaryOnly]="true"></app-invoice-component>
+            <div class="col-span-1 px-5 py-5">
+                <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Flat
+                    Discount</label>
+                <input type="number"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
+                    [(ngModel)]="checkOutModel.flatDiscount" (change)="onCheckOutFormChange()" />
+
+            </div>
+
+            <div class="col-span-1 px-5 py-5">
+                <label for="checkOutDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Checkout
+                    Date (optional) </label>
+                <input type="date"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Customer Full Name" style="transition: all 0.15s ease 0s;"
+                    [(ngModel)]="checkOutModel.checkOutDate" (change)="onCheckOutFormChange()" />
+
+            </div>
+
+            <div class="col-span-1 px-5 py-5">
+                <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
+                    Paid</label>
+                <input type="number"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
+                    [(ngModel)]="checkOutModel.paidAmount" (change)="onCheckOutFormChange()" />
+
             </div>
         </div>
+        <div class="col-span-1">
+            <h3 class="mt-4 text-lg font-bold text-white">Order Summary</h3>
+            <app-invoice-component [reservation]="selectedReservation" [showSummaryOnly]="true"></app-invoice-component>
+        </div>
+    </div>
 
     <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 px-5"
         style="margin: -1.25rem; margin-top: 0.5rem">
@@ -95,7 +88,7 @@
             Checkout</button>
         <button type="submit" (click)="showInvoice(selectedReservation)"
             class="ml-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Order
-            Detail</button>       
+            Detail</button>
         <button (click)="closeCheckOutForm()" type="button"
             class="ml-5 py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
     </div>
@@ -135,57 +128,58 @@
         </div>
         <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
 
-        <div class="flex items-center justify-between">
-            <div class="flex">
+        <div class="flex items-center justify-between py-4">
+            <div class="flex w-60">
                 <button (click)="isReservationFormOpen = true"
                     class="block mr-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
                     type="button">
                     Add Reservation
                 </button>
+            </div>
 
-                <div class="flex me-4 ml-2">
+            <div class="flex items-center w-full justify-end">
+                <div class="flex me-1">
                     <select id="role" [(ngModel)]="filter.filterObj.status"
-                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option class="text-gray-400" value="" selected>All Bookings</option>
                         <option *ngFor="let status of constService.getStatusValuesAsDictionary('reservationStatus')"
                             [value]="status.key">{{ status.value }}
                         </option>
                     </select>
+                </div>
+                <div class="flex me-1">
                     <select id="role" [(ngModel)]="filter.filterObj.paymentStatus"
-                        class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option class="text-gray-400" value="" selected>All Payments</option>
                         <option *ngFor="let status of constService.getStatusValuesAsDictionary('paymentStatus')"
                             [value]="status.key">{{ status.value }}
                         </option>
                     </select>
-
-
                 </div>
-            </div>
 
-            <div class="space-y-4 md:space-y-0 py-4">
-
-                <div class="flex items-center max-w-md ml-auto me-4">
-                    <label for="simple-search" class="sr-only">Search</label>
-                    <div class="relative w-full">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <i class="fas fa-user text-white"></i>
-                        </div>
-                        <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Search customer name.." required />
+                <label for="simple-search" class="sr-only">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-user text-white"></i>
                     </div>
-                    <button type="button" (click)="search()" (change)="search()"
-                        class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                        <i class="fas fa-search text-white"></i>
-                        <span class="sr-only">Search</span>
-                    </button>
-                    <button type="button" (click)="clearFilter()"
-                        class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                        <!-- <i class="fas fa-search text-white"></i> -->
-                        <span>Clear</span>
-                    </button>
+                    <!-- <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Search customer name.." required /> -->
+                    <app-autocomplete [placeHolder]="'Search customer name..'" [searchControl]="searchControl"
+                        [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
+
                 </div>
+                <button type="button" (click)="search()" (change)="search()"
+                    class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <i class="fas fa-search text-white"></i>
+                    <span class="sr-only">Search</span>
+                </button>
+                <button type="button" (click)="clearFilter()"
+                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
+                    <!-- <i class="fas fa-search text-white"></i> -->
+                    <span>Clear</span>
+                </button>
+
 
             </div>
 
@@ -230,7 +224,7 @@
                 </thead>
                 <tbody>
                     <tr *ngIf="reservations.length === 0">
-                        <td colspan="7" class="text-center text-xl py-16">
+                        <td colspan="9" class="text-center text-xl py-16">
                             No records found
                         </td>
                     </tr>

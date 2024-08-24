@@ -119,7 +119,7 @@ exports.getMenuNames = async (req, res, next) => {
     }
 
     const filterValue = req.body.query;
-    const menus = await dbContext.MenuItem.find({ name: { $regex: filterValue, $options: 'i' } }).select('name');
+    const menus = await dbContext.MenuItem.find({ name: { $regex: filterValue, $options: 'i' }, clientId: req.clientId }).select('name');
     return res.status(200).json({
         success: true,
         msg: 'menu name successfully retrieved',

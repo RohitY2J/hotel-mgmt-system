@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { HttpService } from '../../services/http-service.service';
 import { HttpListResponse } from '../../models/HttpResponse';
@@ -13,6 +13,7 @@ import { ModalComponent } from '../shared/modal/modal.component';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 import { firstValueFrom } from 'rxjs';
+import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 
 
 @Component({
@@ -26,7 +27,9 @@ import { firstValueFrom } from 'rxjs';
     LoaderComponent,
     NotificationComponent,
     ModalComponent,
-    PaginationComponent
+    PaginationComponent,
+    AutocompleteComponent,
+    NotificationComponent
   ],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.scss'
@@ -59,6 +62,9 @@ export class EmployeeComponent {
   roles: any[] = [];
   employees: any[] = [];
 
+  searchControl = new FormControl();
+  filteredOptions: string[] = [];
+
   constructor(private fb: FormBuilder, private httpService: HttpService) { }
 
   async ngOnInit(){
@@ -78,10 +84,24 @@ export class EmployeeComponent {
 
     await this.loadRoles();
     this.loadEmployees();
+  }
 
+  async updateFilterOptions(value: string) {
+    this.filteredOptions = await this.filterOptions(value);
+  }
 
-  
-  
+  async filterOptions(value: string): Promise<string[]> {
+    const filterValue = value.toLowerCase();
+    try {
+      const res: any = await this.httpService.httpPost(`admin/getEmployeeName`, { filterValue }).toPromise();
+      return res.data || [];
+    } catch (err) {
+      // this.triggerNotification({
+      //   message: 'Failed to get inventory names',
+      //   error: true
+      // });
+      return [];
+    }
   }
 
   onFileSelect(event: any) {
@@ -243,6 +263,7 @@ export class EmployeeComponent {
 
   loadEmployees() {
     this.isLoading = true;
+    this.filter.searchText = this.searchControl.value;
     this.httpService.httpPost("admin/getEmployees", this.filter)
     .pipe(finalize(() => {
       this.isLoading = false;
@@ -278,6 +299,7 @@ export class EmployeeComponent {
         dataCount: 5
       } 
     }
+    this.searchControl.setValue("");
     this.loadEmployees();
   }
 

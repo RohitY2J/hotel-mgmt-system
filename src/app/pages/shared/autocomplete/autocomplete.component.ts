@@ -16,7 +16,8 @@ import { debounceTime } from 'rxjs';
 export class AutocompleteComponent {
 
   @Input() filteredOptions: string[] = [];
-  @Output() callback = new EventEmitter<string>(); 
+  @Output() callback = new EventEmitter<string>();
+  @Input() placeHolder: string = "Enter search value.."; 
 
   @Input() searchControl = new FormControl();
   

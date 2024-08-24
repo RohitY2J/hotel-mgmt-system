@@ -2,6 +2,7 @@ const dbContext = require("../model");
 const globalConstants = require("../constants/globalConstants");
 const mongoose = require('mongoose');
 const conversion = require("../helper/conversion");
+const inventory = require("../model/inventory");
 
 
 exports.createInventoryItem = async (req, res, next) => {
@@ -31,7 +32,7 @@ exports.createInventoryItem = async (req, res, next) => {
         inventoryId: inventoryItemId,
         clientId: req.clientId
       });
-      if(req.file && req.file.filename){
+      if (req.file && req.file.filename) {
         menuItem.file = req.file.filename;
       }
       await menuItem.save();
@@ -74,7 +75,7 @@ exports.addItem = async (req, res, next) => {
       lastAddedUnit: req.body.numberOfItems,
     };
 
-   
+
 
     let result = await dbContext.Inventory.updateOne(
       { _id: req.body.id },
@@ -82,11 +83,11 @@ exports.addItem = async (req, res, next) => {
     );
 
     let menuItemUpdateRequest = {
-      $inc: {available: req.body.numberOfItems}
+      $inc: { available: req.body.numberOfItems }
     };
-    
+
     await dbContext.MenuItem.updateOne(
-      {inventoryId: req.body.id},
+      { inventoryId: req.body.id },
       menuItemUpdateRequest
     )
 
@@ -125,11 +126,11 @@ exports.dispatchItem = async (req, res, next) => {
     };
 
     let menuItemUpdateRequest = {
-      $inc: {available: (0 - req.body.numberOfItems)}
+      $inc: { available: (0 - req.body.numberOfItems) }
     };
-    
+
     await dbContext.MenuItem.updateOne(
-      {inventoryId: req.body.id},
+      { inventoryId: req.body.id },
       menuItemUpdateRequest
     )
 
@@ -169,7 +170,7 @@ exports.getItemById = async (req, res, next) => {
 };
 
 exports.getItems = async (req, res, next) => {
-  try{
+  try {
     if (!req.clientId) {
       return res.status(422).json({
         success: false,
@@ -177,21 +178,21 @@ exports.getItems = async (req, res, next) => {
       });
     }
     req.body.clientId = conversion.ToObjectId(req.clientId);
-    if(req.body.stockType){
-      if(req.body.stockType == globalConstants.StockType.LowInStock){
+    if (req.body.stockType) {
+      if (req.body.stockType == globalConstants.StockType.LowInStock) {
         req.body.availableUnit = { "$lt": 10 };
       }
-      else if(req.body.stockType == globalConstants.StockType.OutOfStock){
+      else if (req.body.stockType == globalConstants.StockType.OutOfStock) {
         req.body.availableUnit = 0;
       }
       delete req.body.stockType;
     }
     let results = await dbContext.Inventory.find(req.body)
-    .select('_id name description itemType quantityUnitType pricePerUnit availableUnit minUnitToShowAlert')
-    .skip((req.query.pageNo - 1) * req.query.pageSize)
-    .limit(req.query.pageSize);
+      .select('_id name description itemType quantityUnitType pricePerUnit availableUnit minUnitToShowAlert')
+      .skip((req.query.pageNo - 1) * req.query.pageSize)
+      .limit(req.query.pageSize);
     return res.status(200).send(results);
-  }catch(err){
+  } catch (err) {
     let errorRes = {
       message: "Error occurred while getting item.",
       error: err,
@@ -240,11 +241,28 @@ exports.deleteItems = async (req, res, next) => {
     return res.status(500).send(errRes);
   }
 
- 
+
 };
 
-exports.getAddDispatchHistory = async (req, res, next) =>{
-  try{
+exports.getInventoryName = async (req, res, next) => {
+  if (!req.clientId) {
+    return res.status(422).json({
+      success: false,
+      msg: 'Client Id is required'
+    });
+  }
+
+  const filterValue = req.body.query;
+  const inventories = await dbContext.Inventory.find({ name: { $regex: filterValue, $options: 'i' }, clientId: req.clientId }).select('name');
+  return res.status(200).json({
+    success: true,
+    msg: 'inventory name successfully retrieved',
+    data: inventories.map(inventory => inventory.name)
+  });
+}
+
+exports.getAddDispatchHistory = async (req, res, next) => {
+  try {
     if (!req.clientId) {
       return res.status(422).json({
         success: false,
@@ -253,11 +271,11 @@ exports.getAddDispatchHistory = async (req, res, next) =>{
     }
     req.body.clientId = conversion.ToObjectId(req.clientId);
     let results = await dbContext.InventoryReceiveAndDispatch.find(req.body)
-    .select('_id inventoryItemId itemName actionType count createdAt')
-    .skip((req.query.pageNo - 1) * req.query.pageSize)
-    .limit(req.query.pageSize);
+      .select('_id inventoryItemId itemName actionType count createdAt')
+      .skip((req.query.pageNo - 1) * req.query.pageSize)
+      .limit(req.query.pageSize);
     return res.status(200).send(results);
-  }catch(err){
+  } catch (err) {
     let errorRes = {
       message: "Error occurred while getting item.",
       error: err,

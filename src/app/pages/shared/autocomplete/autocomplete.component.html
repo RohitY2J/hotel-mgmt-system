@@ -1,5 +1,5 @@
 <div class="autocomplete-container">
-    <input type="text" [formControl]="searchControl" placeholder="Search menu item name.." class="autocomplete-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    <input type="text" [formControl]="searchControl" [placeholder]="placeHolder" class="autocomplete-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
     <div *ngIf="filteredOptions.length > 0 && searchControl.value" class="autocomplete-suggestions">
         <div *ngFor="let option of filteredOptions" (click)="selectOption(option)" class="autocomplete-suggestion">
             {{ option }}

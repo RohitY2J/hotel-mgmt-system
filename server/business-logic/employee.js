@@ -13,11 +13,11 @@ exports.getEmployee = async (filterParams) => {
     let afterLookUpFilter = {};
 
     if(filterParams.searchText){
-        beforeLookUpFilter.$or = [
-            { firstName: { $regex: new RegExp(filterParams.searchText, 'i') } },
-            { lastName: { $regex: new RegExp(filterParams.searchText, 'i') } },
-            { 'contactInfo.email': { $regex: new RegExp(filterParams.searchText, 'i') }}
-        ];
+      const names = filterParams.searchText.split(' ');
+      beforeLookUpFilter.firstName = names[0];
+      if(names[1]){
+        beforeLookUpFilter.lastName = names[1];
+      }
     }
 
     if (filterParams.role) {
