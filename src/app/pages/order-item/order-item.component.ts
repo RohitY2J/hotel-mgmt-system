@@ -5,9 +5,10 @@ import { HttpListResponse, HttpSingleResponse } from '../../models/HttpResponse'
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { AuthService } from '../../services/auth.service';
+import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 
 @Component({
   selector: 'app-order-item',
@@ -18,6 +19,7 @@ import { AuthService } from '../../services/auth.service';
     NotificationComponent,
     LoaderComponent,
     PaginationComponent,
+    AutocompleteComponent
   ],
   templateUrl: './order-item.component.html',
   styleUrl: './order-item.component.scss',
@@ -46,6 +48,9 @@ export class OrderItemComponent implements OnInit {
   orders: any[] = [];
   userDetails: any = {};
 
+  searchControl = new FormControl();
+  filteredOptions: string[] = [];
+
   constructor(private httpService: HttpService, private authService: AuthService) {}
 
   async ngOnInit() {
@@ -60,6 +65,20 @@ export class OrderItemComponent implements OnInit {
     this.fetchMenuItems();
   }
 
+  async updateFilterOptions(value: string) {
+    this.filteredOptions = await this.filterOptions(value);
+  }
+
+  async filterOptions(value: string): Promise<string[]> {
+    const filterValue = value.toLowerCase();
+    try {
+      const res: any = await this.httpService.httpPost(`menu/getMenuName`, { query: filterValue }).toPromise();
+      return res.data || [];
+    } catch (err) {
+      return [];
+    }
+  }
+
   clearFilter() {
     this.filter = {
       menuName: '',
@@ -69,6 +88,7 @@ export class OrderItemComponent implements OnInit {
         dataCount: 8,
       },
     };
+    this.searchControl.setValue("");
     this.fetchMenuItems();
   }
 
@@ -103,6 +123,7 @@ export class OrderItemComponent implements OnInit {
 
   async fetchMenuItems() {
     this.isLoading = true;
+    this.filter.menuName = this.searchControl.value;
     this.httpService
       .httpPost('menu/getMenuItems', this.filter)
       .pipe(

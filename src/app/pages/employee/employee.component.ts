@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 
@@ -44,14 +44,14 @@ export class EmployeeComponent {
   myRoleForm: FormGroup = new FormGroup({});
   selectedFile: File | undefined;
   selectedEmployee: any = {};
-  filter = { 
+  filter = {
     searchText: "",
     role: "",
     pagination: {
       page: 1,
       pageSize: 5,
       dataCount: 5
-    } 
+    }
   }
   notificationParams: NotificationParameter = {
     message: "",
@@ -67,7 +67,7 @@ export class EmployeeComponent {
 
   constructor(private fb: FormBuilder, private httpService: HttpService) { }
 
-  async ngOnInit(){
+  async ngOnInit() {
     this.myForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -199,8 +199,6 @@ export class EmployeeComponent {
             }
           )
       }
-
-      //this.isLoading = false;
     } else {
       // Optionally, mark all fields as touched to trigger validation messages
       this.markFormGroupTouched(this.myForm);
@@ -258,27 +256,27 @@ export class EmployeeComponent {
     } finally {
       this.isLoading = false;
     }
-  
+
   }
 
   loadEmployees() {
     this.isLoading = true;
     this.filter.searchText = this.searchControl.value;
     this.httpService.httpPost("admin/getEmployees", this.filter)
-    .pipe(finalize(() => {
-      this.isLoading = false;
-    }))
-    .subscribe(
-      (response) => {
-        let employeeResponse = response as HttpListResponse;
-        console.log('Fetched data:', response);
-        this.employees = employeeResponse.data;
-        this.filter.pagination.dataCount = this.employees.length;
-      },
-      (error) => {
-        console.error('Error fetching users:', error);
-      }
-    );
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe(
+        (response) => {
+          let employeeResponse = response as HttpListResponse;
+          console.log('Fetched data:', response);
+          this.employees = employeeResponse.data;
+          this.filter.pagination.dataCount = this.employees.length;
+        },
+        (error) => {
+          console.error('Error fetching users:', error);
+        }
+      );
   }
 
   searchInputChanged(event: any) {
@@ -289,15 +287,15 @@ export class EmployeeComponent {
     this.loadEmployees();
   }
 
-  clearFilter(){
-    this.filter = { 
+  clearFilter() {
+    this.filter = {
       searchText: "",
       role: "",
       pagination: {
         page: 1,
         pageSize: 5,
         dataCount: 5
-      } 
+      }
     }
     this.searchControl.setValue("");
     this.loadEmployees();
@@ -341,7 +339,7 @@ export class EmployeeComponent {
         });
   }
 
-  updatePaginationPage(page: number){
+  updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
     this.loadEmployees();
   }

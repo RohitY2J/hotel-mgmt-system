@@ -17,22 +17,9 @@
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <i class="fas fa-user text-white"></i>
                         </div>
-                        <input type="text" id="simple-search" [(ngModel)]="filter.menuName"
-                            class="
-                                bg-gray-50
-                                border 
-                                border-gray-300 
-                                text-gray-900 
-                                text-xs
-                                sm:text-sm 
-                                rounded-lg 
-                                focus:ring-blue-500 
-                                focus:border-blue-500 
-                                block
-                                w-60 
-                                sm:w-60
-                                md:w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Search menu item name.." required />
+                        <app-autocomplete [placeHolder]="'Search menu item name..'" [searchControl]="searchControl"
+                            [filteredOptions]="filteredOptions"
+                            (callback)="updateFilterOptions($event)"></app-autocomplete>
                     </div>
                     <button type="button" (click)="searchButtonClicked()" class="
                             p-2
@@ -59,30 +46,31 @@
                         <span>Clear</span>
                     </button>
                     <button *ngIf="this.isReservationView" type="button" (click)="onClose.emit()"
-                class="p-2
+                        class="p-2
                 sm:p-2.5
                 px-3 
                 sm:px-4 
                 ms-1
                 text-xs
                 sm:text-sm  font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-900 dark:bg-blue-600 dark:hover:bg-blue-700  ">
-                <span>Close</span>
-            </button>
+                        <span>Close</span>
+                    </button>
                 </div>
 
-                <div class="mt-4 mb-4 grid grid-cols-4 gap-1 rounded-lg 
+                <div class="h-96">
+                    <div class="mt-4 mb-4 grid grid-cols-4 gap-1 rounded-lg
                     sm:grid-cols-3 
                     md:grid-cols-4 
                     xl:grid-cols-4 
                     xs:grid-cols-1 
                     lg:gap-2 
                     justify-center">
-                    <div role="button" (click)="menuItemSelected(menu)" *ngFor="let menu of allMenus" class="
+                        <div role="button" (click)="menuItemSelected(menu)" *ngFor="let menu of allMenus" class="
                         sm:w-32
                         md:w-28
                         lg:w-36 
                         bg-white rounded-lg shadow-md overflow-hidden">
-                        <img *ngIf="menu.file" class="
+                            <img *ngIf="menu.file" class="
                             w-40 
                             h-40
                             sm:w-32
@@ -93,7 +81,7 @@
                             lg:h-36
                             object-cover" [src]="menu.file" alt="Product Image">
 
-                        <img *ngIf="!menu.file" class="
+                            <img *ngIf="!menu.file" class="
                             w-40 
                             h-40
                             sm:w-32
@@ -103,18 +91,17 @@
                             lg:w-36
                             lg:h-36
                             object-cover"
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHXX6GrLiyiN5oDkH8Badn80xAnC5oAumGmchxXoF-b4H9ZDDOJ_iexVov_mSiLU9UCI0&usqp=CAU"
-                            alt="Product Image">
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHXX6GrLiyiN5oDkH8Badn80xAnC5oAumGmchxXoF-b4H9ZDDOJ_iexVov_mSiLU9UCI0&usqp=CAU"
+                                alt="Product Image">
 
-                        <div class="w-full">
-                            <p class="text-gray-700 text-base text-center">Rs. {{ menu.price }}</p>
-                            <h2 class="text-xs md:text-md font-bold text-center">{{ menu.name }}</h2>
+                            <div class="w-full">
+                                <p class="text-gray-700 text-base text-center">Rs. {{ menu.price }}</p>
+                                <h2 class="text-xs md:text-md font-bold text-center">{{ menu.name }}</h2>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                
-                
                 <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
                     [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
             </div>
@@ -150,14 +137,14 @@
                         sm:text-xs 
                         lg:text-sm 
                         font-medium text-gray-900 dark:text-white">
-                        Table Number
-                    </label>
-                    <select id="availableStatus" [(ngModel)]="tableNumber"
-                        class="me-2 border border-gray-300 text-gray-900 text-xs
+                            Table Number
+                        </label>
+                        <select id="availableStatus" [(ngModel)]="tableNumber"
+                            class="me-2 border border-gray-300 text-gray-900 text-xs
                         lg:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option class="text-gray-600" value="" selected>Tables</option>
-                        <option *ngFor="let table of allTables" [value]="table._id">{{table.tableNumber}}</option>
-                    </select>
+                            <option class="text-gray-600" value="" selected>Tables</option>
+                            <option *ngFor="let table of allTables" [value]="table._id">{{table.tableNumber}}</option>
+                        </select>
                     </ng-container>
 
                     <button type="button" (click)="loadOrder()" class="p-2 sm:p-1
