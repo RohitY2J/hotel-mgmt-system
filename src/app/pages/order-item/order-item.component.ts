@@ -43,6 +43,7 @@ export class OrderItemComponent implements OnInit {
   tableNumber: Number | null = null;
   disableScreen: boolean = false;
   allTables: any[] = [];
+  allReservations: any = [];
   reservation: any = {};
 
   orders: any[] = [];
@@ -51,12 +52,19 @@ export class OrderItemComponent implements OnInit {
   searchControl = new FormControl();
   filteredOptions: string[] = [];
 
+  // radioValue = {
+  //   forTable: false,
+  //   forReservation: false
+  // }
+  selectedValue: string = 'forTable';
+
   constructor(private httpService: HttpService, private authService: AuthService) {}
 
   async ngOnInit() {
     this.userDetails = this.authService.getUser();
     await this.fetchMenuItems();
     this.fetchTables();
+    this.fetchReservations();
     console.log(this.reservationId);
     if(this.reservationId)this.loadOrder();
   }
@@ -111,6 +119,31 @@ export class OrderItemComponent implements OnInit {
           console.log(res);
           let response = res as HttpListResponse;
           this.allTables = response.data;
+          //this.filter.pagination.dataCount = response.data.length;
+        },
+        error: (err) =>
+          this.triggerNotification({
+            message: 'Failed to table data',
+            error: true,
+          }),
+      });
+  }
+
+  async fetchReservations(){
+    this.isLoading = true;
+    this.httpService
+      .httpPost('reservation/getReservations', {})
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.allReservations = res;
+          // let response = res as HttpListResponse;
+          // this.allReservations = response;
           //this.filter.pagination.dataCount = response.data.length;
         },
         error: (err) =>

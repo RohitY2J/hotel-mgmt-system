@@ -221,6 +221,7 @@ exports.mapUiResponse = (reservation) => {
     checkInDate: reservation.checkInDate,
     checkOutDate: reservation.checkOutDate,
     rooms: reservation.rooms,
+    roomsAsString: reservation.rooms.map( x => x.roomNumber).join(', '),
     status: reservation.status,
     paymentStatus: reservation.paymentStatus,
     createdAt: reservation.createdAt,
