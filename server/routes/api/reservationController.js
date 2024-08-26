@@ -18,6 +18,7 @@ router.get(
 router.post("/getReservations", services.reservationService.getReservations);
 
 router.post('/getCustomerName', services.reservationService.getCustomerName);
+router.post('/cancelReservationOrderMenu', services.reservationService.cancelReservationOrderMenu);
 
 
 module.exports = router;

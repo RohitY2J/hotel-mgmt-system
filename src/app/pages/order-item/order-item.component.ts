@@ -198,6 +198,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   triggerNotification(notificationContent: any) {
+    this.showNotification = false;
     this.notificationParams = notificationContent;
     this.showNotification = true;
   }
@@ -348,6 +349,44 @@ export class OrderItemComponent implements OnInit {
     this.isView = false;
     this.disableScreen = false;
     this.orders = [];
+  }
+
+  cancelOrder(menu: any){
+    this.isLoading = true;
+    if(this.selectedRadioValue == 'forTable' && this.tableNumber){
+      this.httpService
+      .httpPost(`order/cancelOrderMenu`, {tableNumber: this.tableNumber, menuId: menu.menuId})
+      .pipe(finalize(()=>{
+        this.isLoading = false;
+        this.loadOrder();
+      }))
+      .subscribe({
+        next: (res) => {
+          this.triggerNotification({
+            message: `Order for ${menu.name} cancelled.`,
+            error: false,
+          })
+        },
+        error: (err) => console.log
+      });
+    }
+    else if(this.selectedRadioValue == 'forReservation' && this.reservationId){
+      this.httpService.httpPost(`reservation/cancelReservationOrderMenu`, {reservationId: this.reservationId, menuId: menu.menuId})
+      .pipe(finalize(()=>{
+        this.isLoading = false;
+        this.loadOrder();
+      }))
+      .subscribe({
+        next: (res) => {
+          this.triggerNotification({
+            message: `Order for ${menu.name} cancelled.`,
+            error: false,
+          })
+        },
+        error: (err) => console.log
+      });
+    }
+    
   }
 
   updatePaginationPage(page: number) {

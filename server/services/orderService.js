@@ -129,7 +129,7 @@ exports.createOrder = async (req, res, next) => {
 exports.getSpecificOrder = async (req, res, next) => {
     tableNumber = conversion.ToObjectId(req.body.tableNumber);
     try {
-        data = await dbContext.Order.findOne({ tableNumber: tableNumber, status: 0 });
+        data = await dbContext.Order.findOne({ tableNumber: tableNumber, status: 0 }); // 0 = pending order status
         return res.status(200).json({
             success: true,
             msg: 'success',
@@ -362,7 +362,45 @@ exports.updateStatus = async (req, res, next) => {
             msg: "Error encountered:" + err.message
         });
     }
-}   
+}
+
+exports.cancelOrderMenu = async(req, res, next) => {
+    try {
+        if (!req.clientId) {
+            return res.status(422).json({
+                success: false,
+                msg: 'Client Id is required'
+            });
+        }
+
+        if (!req.body.tableNumber || !req.body.menuId) {
+            return res.status(422).json({
+                success: false,
+                msg: 'Menu Id and TableNumber is required'
+            });
+        }
+
+        const order = await dbContext.Order.findOne({ tableNumber: conversion.ToObjectId(req.body.tableNumber), status: 0 });
+        order.orders = order.orders.filter(menu => menu.menuId.toString() !== req.body.menuId);
+
+        await dbContext.Order.updateOne(
+            { _id: order._id },
+            { $set: { orders: order.orders } }
+        );
+
+        return res.status(200).json({
+            success: true,
+            msg: 'order menu cancelled  successfully',
+        });
+        
+    }
+    catch(err){
+        return res.status(500).json({
+            success: false,
+            msg: "Error encountered:" + err.message
+        });
+    }
+}
 
 exports.getCustomerName = async(req, res, next) => {
     try {

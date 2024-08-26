@@ -139,6 +139,44 @@ exports.getReservationById = async (req, res, next) => {
   }
 };
 
+exports.cancelReservationOrderMenu = async (req, res, next) => {
+  try {
+
+    if (!req.clientId) {
+      return res.status(422).json({
+        success: false,
+        msg: 'Client Id is required'
+      });
+    }
+
+    if (!req.body.reservationId || !req.body.menuId) {
+      return res.status(422).json({
+        success: false,
+        msg: 'Menu Id and ReservationId is required'
+      });
+    }
+
+    const reservation = await dbContext.Reservation.findById(req.body.reservationId);
+    reservation.billing.orders = reservation.billing.orders.filter(menu => menu.menuId.toString() !== req.body.menuId);
+
+    await dbContext.Reservation.updateOne(
+      { _id: reservation._id },
+      { $set: { billing: reservation.billing } }
+    );
+
+    return res.status(200).json({
+      success: true,
+      msg: 'order menu cancelled  successfully',
+    });
+  }
+  catch (err) {
+    return res.status(500).json({
+      success: false,
+      msg: "Error encountered:" + err.message
+    });
+  }
+}
+
 exports.getCustomerName = async (req, res, next) => {
   try {
     if (!req.clientId) {
@@ -221,7 +259,7 @@ exports.mapUiResponse = (reservation) => {
     checkInDate: reservation.checkInDate,
     checkOutDate: reservation.checkOutDate,
     rooms: reservation.rooms,
-    roomsAsString: reservation.rooms.map( x => x.roomNumber).join(', '),
+    roomsAsString: reservation.rooms.map(x => x.roomNumber).join(', '),
     status: reservation.status,
     paymentStatus: reservation.paymentStatus,
     createdAt: reservation.createdAt,

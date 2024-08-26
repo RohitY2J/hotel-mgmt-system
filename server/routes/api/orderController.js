@@ -10,6 +10,7 @@ router.post('/updateStatus', service.orderService.updateStatus);
 // router.post('/updateOrder', service.orderService.updateOrder);
 router.post('/billOrder', service.orderService.billOrder); 
 router.post('/getCustomerName', service.orderService.getCustomerName); 
+router.post('/cancelOrderMenu', service.orderService.cancelOrderMenu);
 
 
 module.exports = router;
