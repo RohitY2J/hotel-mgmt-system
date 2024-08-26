@@ -6,7 +6,7 @@ import { StatusMaps } from '../models/Status';
   providedIn: 'root'
 })
 export class ConstantsService {
-  private statusMap: StatusMaps = {
+  public statusMap: StatusMaps = {
     attendanceStatus: {
       0: "Scheduled",
       1: "Present",

@@ -25,7 +25,7 @@
                 </div>
                 <!-- Modal body -->
 
-                <app-order-item [isReservationView]="true" (onClose)="closeOrderComponent()"
+                <app-order-item [isReservationView]="true" [selectedRadioValue]="'forReservation'" (onClose)="closeOrderComponent()"
                     [reservationId]="selectedReservation.id"></app-order-item>
             </div>
         </div>

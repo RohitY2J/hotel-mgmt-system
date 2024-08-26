@@ -21,4 +21,11 @@
     background-color: gray;
     cursor: not-allowed; /* Optional: change cursor to indicate button is disabled */
   }
+
+  button:disabled {
+    background-color: gray;
+    //color: white; /* Optional: Change text color for better contrast */
+    cursor: not-allowed; /* Optional: Change cursor to indicate disabled state */
+  }
+  
   

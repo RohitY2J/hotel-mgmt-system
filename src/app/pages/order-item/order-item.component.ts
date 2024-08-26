@@ -9,6 +9,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { AuthService } from '../../services/auth.service';
 import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
+import { ConstantsService } from '../../services/constants.service';
 
 @Component({
   selector: 'app-order-item',
@@ -28,6 +29,7 @@ export class OrderItemComponent implements OnInit {
   @Input({ required: false }) isReservationView: boolean = false;
   @Output() onClose = new EventEmitter<void>();
   @Input({ required: false }) reservationId: any;
+  @Input({ required: false}) selectedRadioValue: string = 'forTable';
   isLoading: boolean = false;
   filter: any = {
     menuName: '',
@@ -56,9 +58,10 @@ export class OrderItemComponent implements OnInit {
   //   forTable: false,
   //   forReservation: false
   // }
-  selectedValue: string = 'forTable';
+  
+  isView: boolean = true;
 
-  constructor(private httpService: HttpService, private authService: AuthService) {}
+  constructor(private httpService: HttpService, private authService: AuthService, private constantService: ConstantsService) {}
 
   async ngOnInit() {
     this.userDetails = this.authService.getUser();
@@ -67,6 +70,21 @@ export class OrderItemComponent implements OnInit {
     this.fetchReservations();
     console.log(this.reservationId);
     if(this.reservationId)this.loadOrder();
+  }
+
+  isButtonDisabled(){
+    //return false;
+    if(this.tableNumber && this.selectedRadioValue == "forTable"){
+      return false;
+    }
+    else if(this.reservationId && this.selectedRadioValue == "forReservation"){
+      return false;
+    }
+    return true;
+  }
+
+  onRadioChange(event: Event): void {
+    this.orders = [];
   }
 
   searchButtonClicked() {
@@ -102,7 +120,7 @@ export class OrderItemComponent implements OnInit {
 
   isSubmitButtonDisabled() {
     if (this.disableScreen) return true;
-    return !(this.orders.length > 0 && (this.reservationId || this.tableNumber));
+    return !(this.orders.length > 0 && (this.reservationId || this.tableNumber) && !this.isView);
   }
 
   async fetchTables() {
@@ -132,7 +150,7 @@ export class OrderItemComponent implements OnInit {
   async fetchReservations(){
     this.isLoading = true;
     this.httpService
-      .httpPost('reservation/getReservations', {})
+      .httpPost('reservation/getReservations', {status: 1}) //checkin
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -261,7 +279,7 @@ export class OrderItemComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
-          this.clearOrder();
+          //this.clearOrder();
           this.triggerNotification({
             message: 'Order taken successfully',
             error: false,
@@ -276,8 +294,10 @@ export class OrderItemComponent implements OnInit {
   }
 
   loadOrder() {
-    if(this.reservationId){
-      this.isLoading = true;
+    this.isView = true;
+    this.disableScreen = true;
+    this.isLoading = true;
+    if(this.reservationId && this.selectedRadioValue == "forReservation"){
       this.httpService
       .httpGet(`reservation/getReservationById?id=${this.reservationId}`)
       .pipe(finalize(()=>{
@@ -294,7 +314,7 @@ export class OrderItemComponent implements OnInit {
         complete: () => (this.isLoading = false),
       });
     }
-    if (this.tableNumber) {
+    if (this.tableNumber && this.selectedRadioValue == "forTable") {
       
       this.httpService
         .httpPost('order/getSpecificOrder', {
@@ -311,10 +331,8 @@ export class OrderItemComponent implements OnInit {
             let response = res as HttpSingleResponse;
             if (response.data) {
               this.orders = response.data.orders;
-              this.disableScreen = true;
             } else {
               this.orders = [];
-              this.disableScreen = true;
             }
           },
           error: (err) =>
@@ -326,10 +344,10 @@ export class OrderItemComponent implements OnInit {
     }
   }
 
-  clearOrder() {
+  placeOrder() {
+    this.isView = false;
     this.disableScreen = false;
     this.orders = [];
-    this.tableNumber = null;
   }
 
   updatePaginationPage(page: number) {
