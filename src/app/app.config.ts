@@ -5,6 +5,9 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import StandardUrlSerializer from './custom-url-serializer';
 
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
+
 const customUrlSerializer = new StandardUrlSerializer();
 
 const CustomUrlSerializerProvider = {
@@ -15,7 +18,9 @@ const CustomUrlSerializerProvider = {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
+    provideRouter(routes),
+    provideAnimations(), // required animations providers
+    provideToastr(), 
     provideHttpClient(),
     { provide: UrlSerializer, useClass: StandardUrlSerializer }
   ]

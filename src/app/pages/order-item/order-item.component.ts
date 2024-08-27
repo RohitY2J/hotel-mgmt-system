@@ -10,6 +10,7 @@ import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { AuthService } from '../../services/auth.service';
 import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
 import { ConstantsService } from '../../services/constants.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-order-item',
@@ -61,7 +62,10 @@ export class OrderItemComponent implements OnInit {
   
   isView: boolean = true;
 
-  constructor(private httpService: HttpService, private authService: AuthService, private constantService: ConstantsService) {}
+  constructor(private httpService: HttpService, 
+    private authService: AuthService, 
+    private constantService: ConstantsService,
+    private toastrService: ToastrService) {}
 
   async ngOnInit() {
     this.userDetails = this.authService.getUser();
@@ -140,10 +144,7 @@ export class OrderItemComponent implements OnInit {
           //this.filter.pagination.dataCount = response.data.length;
         },
         error: (err) =>
-          this.triggerNotification({
-            message: 'Failed to table data',
-            error: true,
-          }),
+          this.toastrService.error('Failed to table data')
       });
   }
 
@@ -160,15 +161,9 @@ export class OrderItemComponent implements OnInit {
         next: (res) => {
           console.log(res);
           this.allReservations = res;
-          // let response = res as HttpListResponse;
-          // this.allReservations = response;
-          //this.filter.pagination.dataCount = response.data.length;
         },
         error: (err) =>
-          this.triggerNotification({
-            message: 'Failed to table data',
-            error: true,
-          }),
+          this.toastrService.error('Failed to table data')
       });
   }
 
@@ -190,17 +185,8 @@ export class OrderItemComponent implements OnInit {
           this.filter.pagination.dataCount = response.data.length;
         },
         error: (err) =>
-          this.triggerNotification({
-            message: 'Failed to retrieve data',
-            error: true,
-          }),
+          this.toastrService.error('Failed to retrieve data')
       });
-  }
-
-  triggerNotification(notificationContent: any) {
-    this.showNotification = false;
-    this.notificationParams = notificationContent;
-    this.showNotification = true;
   }
 
   menuItemSelected(menu: any) {
@@ -281,16 +267,10 @@ export class OrderItemComponent implements OnInit {
         next: (res) => {
           console.log(res);
           //this.clearOrder();
-          this.triggerNotification({
-            message: 'Order taken successfully',
-            error: false,
-          });
+          this.toastrService.success("Order taken successfully.");
         },
         error: (err) =>
-          this.triggerNotification({
-            message: 'Failed to add order',
-            error: true,
-          }),
+          this.toastrService.error("Failed to take order")
       });
   }
 
@@ -337,10 +317,7 @@ export class OrderItemComponent implements OnInit {
             }
           },
           error: (err) =>
-            this.triggerNotification({
-              message: 'Failed to add order',
-              error: true,
-            }),
+            this.toastrService.error('Failed to add order')
         });
     }
   }
@@ -362,10 +339,7 @@ export class OrderItemComponent implements OnInit {
       }))
       .subscribe({
         next: (res) => {
-          this.triggerNotification({
-            message: `Order for ${menu.name} cancelled.`,
-            error: false,
-          })
+          this.toastrService.success(`Order for ${menu.name} cancelled.`)
         },
         error: (err) => console.log
       });
@@ -378,12 +352,9 @@ export class OrderItemComponent implements OnInit {
       }))
       .subscribe({
         next: (res) => {
-          this.triggerNotification({
-            message: `Order for ${menu.name} cancelled.`,
-            error: false,
-          })
+          this.toastrService.success(`Order for ${menu.name} cancelled.`)
         },
-        error: (err) => console.log
+        error: (err) => this.toastrService.error("Failed to cancel order menu")
       });
     }
     
