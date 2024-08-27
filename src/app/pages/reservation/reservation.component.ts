@@ -25,6 +25,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ReservationFormComponent } from './reservation-form.component';
 import { ModalComponent } from '../shared/modal/modal.component';
 import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.component';
+import { ReservationGridComponent } from './reservation-grid.component';
 
 @Component({
   selector: 'app-reservation',
@@ -44,7 +45,8 @@ import { AutocompleteComponent } from '../shared/autocomplete/autocomplete.compo
     RouterModule,
     ReservationFormComponent,
     ModalComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    ReservationGridComponent
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss',
