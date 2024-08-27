@@ -22,10 +22,16 @@
     cursor: not-allowed; /* Optional: change cursor to indicate button is disabled */
   }
 
-  button:disabled {
-    background-color: gray;
-    //color: white; /* Optional: Change text color for better contrast */
+  .tab-button:disabled {
+    //background-color: gray;
+    color: gray; /* Optional: Change text color for better contrast */
     cursor: not-allowed; /* Optional: Change cursor to indicate disabled state */
+  }
+ 
+  .disabled-link {
+    pointer-events: none;
+    color: red;
+    cursor: not-allowed;
   }
   
   
