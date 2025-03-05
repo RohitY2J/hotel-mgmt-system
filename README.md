@@ -25,11 +25,11 @@ To deploy this project run
 ```
 ## To run locally
 
-a. npm install
-b. set mongodb url in .env file
-c. npm build
-d. npm run start-server -> runs nodejs and express to serve web page from npm build
-e. npm run start -> front-end server to serve angular page.
+1. **npm install**
+2. set mongodb url in **.env file**
+3. **npm build**
+4. **npm run start-server** -> runs nodejs and express to serve web page from npm build
+5. **npm run start** -> front-end server to serve angular page.
 
 
 ## Features
