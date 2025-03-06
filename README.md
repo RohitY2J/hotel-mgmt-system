@@ -46,3 +46,23 @@ To deploy this project run
 - kitchen tracking
 - Bill tracking and generation
 
+## Technologies Used
+
+- Angular
+- TypeScript
+- Node.js
+- Express
+- Mongodb
+
+## Users
+
+- Waiter
+- Admin 
+
+## API
+
+|API | Description |
+|------|---------|
+| /api/login/create | To create login user |
+| /api/login | To login into user | 
+
