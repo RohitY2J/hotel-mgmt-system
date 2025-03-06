@@ -3,10 +3,25 @@
 
 This is a management system designed specifically for hotels and resorts. It streamlines operations by providing comprehensive modules for employees, reservations, and orders.
 
-1. **Employee Module**: Allows management of employee information and schedules.
-2. **Reservation Module**: Handles room bookings and reservation tracking.
-3. **Order Module**: Manages orders for food, services, and amenities.
-4. **Inventory Module**: Managees inventory and tracking.
+1. **Employee Module**: We can create roles and employees. The created employees are listed and can be edited.
+2. **Reservation Module**
+   - User can create rooms for booking.
+   - We can edit the price and condition status of the room.
+   - The room status is initially set to available.
+   - When a customer books available rooms, customer information is added.
+   - On checking out the rooms, invoice is generated to bill the customer.
+   - A customer can pay partially, in advance and after service.
+   - A customer can order foods and beverages which is tapped on the account of customer.
+4. **Order Module**
+   - Admin creates menus available in the restaurant and tables for spot.
+   - Waiter have separate page for reserving tables from the available ones.
+   - Waiter are then able to place order for the reserved tables.
+6. **Inventory Module**
+   - The items that needs to ordered externally and stocked can be placed in category.
+   - Admin is able to add inventory item, edit the number of quantity based on stock added or reduced.
+   - The inventory items are also available as menu item.
+   - When the inventory menu item is order, the inventory stock dwindles.
+   - When the inventory item reaches below a particular number, a warning email is sent to appropriate authority. 
 
 ## Authors
 
