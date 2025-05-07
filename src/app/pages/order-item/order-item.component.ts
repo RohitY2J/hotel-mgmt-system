@@ -127,6 +127,13 @@ export class OrderItemComponent implements OnInit {
     return !(this.orders.length > 0 && (this.reservationId || this.tableNumber) && !this.isView);
   }
 
+  isPrintButtonDisabled(){
+    if(this.orders.length == 0) return true;
+    else if (this.disableScreen) return false;
+    //else if(this.orders.length == 0) return false;
+    else return true;
+  }
+
   async fetchTables() {
     this.isLoading = true;
     this.httpService
@@ -364,4 +371,69 @@ export class OrderItemComponent implements OnInit {
     this.filter.pagination.page = page;
     this.fetchMenuItems();
   }
+
+  items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+  printOrder() {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (printWindow) {
+      // Generate the print content dynamically
+      const printContent = `
+        <html>
+          <head>
+            <title>Order Details</title> <!-- Adding a title -->
+            <style>
+              @page {
+                margin: 0; /* Attempt to hide headers and footers */
+              }
+              body {
+                margin: 1cm; /* Adjust margins as needed */
+                font-family: Arial, sans-serif;
+              }
+              ul {
+                list-style-type: none;
+                padding: 0;
+              }
+              li {
+                background: #f0f0f0;
+                margin: 5px 0;
+                padding: 10px;
+                border-radius: 4px;
+              }
+              h2 {
+                font-size: 18px;
+                margin-bottom: 10px;
+              }
+            </style>
+          </head>
+          <body>
+            <h2>Order for 
+              ${
+                this.reservationId && this.selectedRadioValue == "forReservation" 
+                ? `Rooms [${this.reservation.rooms.map((room: { roomNumber: any; }) => room.roomNumber).toString()}]` 
+                : `Table ${this.allTables.find(x => x._id == this.tableNumber).tableNumber}`
+              }
+            </h2>
+            <ul>
+              ${this.orders.map(order => `<li>${order.name} - ${order.qty}</li>`).join('')}
+            </ul>
+          </body>
+        </html>
+      `;
+  
+      // Write the content to the new window
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+  
+      // Wait for the content to be fully loaded before printing
+      printWindow.onload = () => {
+        printWindow.print();
+      };
+  
+      // Close the print window after printing
+      printWindow.onafterprint = () => {
+        printWindow.close();
+      };
+    }
+  }
+  
 }
