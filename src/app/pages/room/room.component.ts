@@ -40,7 +40,7 @@ export class RoomComponent implements OnInit {
   });
   filter: any = {
     roomNumber: "",
-    occupancyStatus: "",
+    occupancyStatus: '',
     maintainanceStatus: "",
     pagination: {
       page: 1,
@@ -48,11 +48,17 @@ export class RoomComponent implements OnInit {
       dataCount: 12,
     },
   }
+
+  roomOccupancyStatusList: {key: number, value:string }[]|undefined; 
+  
+  maintainanceStatusList: {key: number, value:string }[]|undefined; 
   
   constructor(private httpService: HttpService, public constantService: ConstantsService) {}
   
   ngOnInit(): void {
     this.fetchRooms();
+    this.roomOccupancyStatusList = this.constantService.getStatusValuesAsDictionary('roomOccupancyStatus');
+    this.maintainanceStatusList = this.constantService.getStatusValuesAsDictionary('roomMaintainanceStatus');
   }
 
   openCreateRoomForm() {
