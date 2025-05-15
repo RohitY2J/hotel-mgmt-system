@@ -224,7 +224,7 @@
                 <select id="role" [(ngModel)]="filter.status"
                     class="me-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="" class="bg-gray-700" selected>All Status</option>
-                    <option *ngFor="let status of getOrderStatusList()" [value]="status.key">{{ status.value }}
+                    <option *ngFor="let status of orderStatus" [value]="status.key">{{ status.value }}
                     </option>
                 </select>
                 <select id="role" [(ngModel)]="filter.tableNumber"

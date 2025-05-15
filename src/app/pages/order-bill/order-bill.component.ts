@@ -70,35 +70,16 @@ export class OrderBillComponent implements OnInit {
   filteredOptions: string[] = [];
   searchControl = new FormControl();
 
+  orderStatus: {key: Number, value: string}[];
 
-  nextStep() {
-    this.selectedOrder.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
-    if (this.selectedOrder.discountType == 0) {
-      this.selectedOrder.discountAmt = this.selectedOrder.discountPercent ?? 0 * this.selectedOrder.subTotal / 100;
-    }
-    else {
-      this.selectedOrder.discountAmt = this.selectedOrder.discountAmt ?? 0;
-    }
-    if (this.selectedOrder.discountType == 0) {
-      let amtAfterDiscount = this.selectedOrder.subTotal - this.selectedOrder.discountAmt;
-      this.selectedOrder.taxAmt = this.selectedOrder.taxPercent ?? 0 * amtAfterDiscount / 100
-    }
-    else {
-      this.selectedOrder.taxAmt = this.selectedOrder.taxAmt ?? 0;
-    }
-    this.selectedOrder.totalPayable = this.selectedOrder.subTotal - this.selectedOrder.discountAmt + this.selectedOrder.taxAmt;
-
-    if (this.currentStep < this.steps.length - 1) {
-      this.currentStep++;
-    }
+  constructor(private httpService: HttpService,
+    private constantService: ConstantsService,
+    private router: Router
+  ) 
+  { 
+    this.orderStatus = constantService.getStatusValuesAsDictionary("orderStatus");
   }
-
-  previousStep() {
-    if (this.currentStep > 0) {
-      this.currentStep--;
-    }
-  }
-
+  
 
   ngOnInit(): void {
     this.fetchOrders();
@@ -150,11 +131,6 @@ export class OrderBillComponent implements OnInit {
 
     this.fetchTables();
   }
-
-  constructor(private httpService: HttpService,
-    private constantService: ConstantsService,
-    private router: Router
-  ) { }
 
   clearFilter() {
     this.filter = {
@@ -249,10 +225,6 @@ export class OrderBillComponent implements OnInit {
     return this.constantService.getStatusString("orderStatus", status);
   }
 
-  getOrderStatusList() {
-    return this.constantService.getStatusValuesAsDictionary("orderStatus");
-  }
-
   generateInvoiceClicked(order: any) {
     this.selectedOrder = order;
   }
@@ -304,6 +276,34 @@ export class OrderBillComponent implements OnInit {
 
   async updateFilterOptions(value: string) {
     this.filteredOptions = await this.filterOptions(value);
+  }
+
+   nextStep() {
+    this.selectedOrder.subTotal = this.selectedOrder.orders.reduce((accumulator: any, order: any) => accumulator + (order.price * order.qty), 0);
+    if (this.selectedOrder.discountType == 0) {
+      this.selectedOrder.discountAmt = this.selectedOrder.discountPercent ?? 0 * this.selectedOrder.subTotal / 100;
+    }
+    else {
+      this.selectedOrder.discountAmt = this.selectedOrder.discountAmt ?? 0;
+    }
+    if (this.selectedOrder.discountType == 0) {
+      let amtAfterDiscount = this.selectedOrder.subTotal - this.selectedOrder.discountAmt;
+      this.selectedOrder.taxAmt = this.selectedOrder.taxPercent ?? 0 * amtAfterDiscount / 100
+    }
+    else {
+      this.selectedOrder.taxAmt = this.selectedOrder.taxAmt ?? 0;
+    }
+    this.selectedOrder.totalPayable = this.selectedOrder.subTotal - this.selectedOrder.discountAmt + this.selectedOrder.taxAmt;
+
+    if (this.currentStep < this.steps.length - 1) {
+      this.currentStep++;
+    }
+  }
+
+  previousStep() {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+    }
   }
 
 }

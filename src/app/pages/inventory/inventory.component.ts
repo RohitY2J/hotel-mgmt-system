@@ -73,18 +73,23 @@ export class InventoryComponent implements OnInit {
     },
   };
 
-  constService: ConstantsService;
   searchControl = new FormControl();
   filteredOptions: string[] = [];
 
 
+  quantityUnitTypeStatus: {key: Number, value: string}[];
+  inventoryItemTypeStatus: {key: Number, value: string}[];
+  stockAvailableStatus: {key: Number, value: string}[];
 
   constructor(
     constService: ConstantsService,
     private httpService: HttpService
   ) {
-    this.constService = constService;
+    this.quantityUnitTypeStatus = constService.getStatusValuesAsDictionary('quantityUnitType');
+    this.inventoryItemTypeStatus = constService.getStatusValuesAsDictionary('inventoryItemType');
+    this.stockAvailableStatus = constService.getStatusValuesAsDictionary('stockAvailable');
   }
+
   ngOnInit(): void {
     this.fetchInventoryItems();
   }

@@ -47,9 +47,14 @@ export class OrderTableComponent implements OnInit {
     }
   }
 
+  tableStatus: {key: Number, value: string}[] | undefined;
+
   constructor(private fb: FormBuilder, private httpService: HttpService, public constantService: ConstantsService) { }
 
   ngOnInit(): void {
+
+    this.tableStatus = this.constantService.getStatusValuesAsDictionary('tableAvailableStatus');
+
     this.fetchTabels();
 
     this.tableForm = this.fb.group({
