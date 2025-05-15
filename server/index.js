@@ -14,7 +14,7 @@ const environment = require('../env/nodeEnv');
 const app = express();
 const socketIo = require('socket.io');
 const server = http.createServer(app);
-const io = socketIo(server, {
+const io = socketIo(server,{
   cors: {
     origin: "http://localhost:4200",
     methods: ["GET", "POST"]
@@ -27,7 +27,6 @@ const MONGO_DB = environment.databaseURL;
 
 try {
 
-  //#region Mongoose Connect
   mongoose.connect(MONGO_DB)
     .then(async () => {
       console.log('Mongoose connected successfully');
@@ -43,10 +42,9 @@ try {
     .catch((error) => {
       console.log('Could not connect to mongodb');
     })
-  //#endregion
 
-  //#region SOCKET.IO
-// Socket.IO connection
+
+  // Socket.IO connection
   io.on('connection', (socket) => {
     console.log('New client connected');
 
@@ -58,17 +56,14 @@ try {
   app.set('socketio', io);
 
   /** ==========serve static page build from the location =======*/
-  //endregion
 
-  //#region FILE_UPLOAD
   app.use(express.static(path.join(__dirname, '../dist/browser')));
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   console.log(__dirname);
 
-  //#endregion
+  /** ============ */
 
-  //#region CORS
   /** === defining cors for running angular and node server separately. */
 
   const corsOptions = {
@@ -78,9 +73,8 @@ try {
   app.use(cors(corsOptions));
 
   /** ============= */
-  //#endregion
 
-  //#region SESSION_AND_AUTH
+
   /** ============== Defining passport for authentication and session management **/
   app.use(cookieSession({
     name: 'hotel-mgmt-session',
@@ -105,11 +99,9 @@ try {
   passport.deserializeUser(function (user, done) {
     done(null, user);
   });
+
   require('./config/passport-config');
 
-  //#endregion
-
-  //#region ENDPOINTS
   app.post('/login', passport.authenticate('local', {
     successRedirect: '/admin/dashboard',
     failureRedirect: '/login',
@@ -118,11 +110,11 @@ try {
 
   app.get("/api/logout", (req, res) => {
     req.logOut();
-    res.send({message: "Log out success!"});
+    res.send({ message: "Log out success!" });
   });
 
   app.get("/api/isAuthenticated", (req, res) => {
-    res.send({isAuthenticated: req.isAuthenticated()});
+    res.send({ isAuthenticated: req.isAuthenticated() });
   });
 
   app.get("/api/getUserDetails", (req, res) => {
@@ -130,7 +122,7 @@ try {
   })
 
   app.get('/dashboard', isAuthenticated, (req, res) => {
-    res.render('dashboard', {user: req.user});
+    res.render('dashboard', { user: req.user });
   });
 
 
@@ -141,34 +133,39 @@ try {
     res.status(401).send('Un-authorized user.');
   }
 
-  //#endregion
+  /** ======================================================== */
 
-  //#region SERVER and MIDDLEWARE
-  app.post('/login', passport.authenticate('local', {
-    successRedirect: '/admin/dashboard',
-    failureRedirect: '/login',
-    failureFlash: true
-  }));
+  /**========= body parser middleware */
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  /**===================== **/
 
-  app.get("/api/logout", (req, res) => {
-    req.logOut();
-    res.send({message: "Log out success!"});
-  });
-
-  app.get("/api/isAuthenticated", (req, res) => {
-    res.send({isAuthenticated: req.isAuthenticated()});
-  });
-
-  app.get("/api/getUserDetails", (req, res) => {
-    res.send(req.user);
+  // • This is a special method called `middleware`. Every request will be
+  // executed on each request. If you want to exclude a specific route to make it
+  // not enter on this middleware, simply declare that route before this function
+  app.use('/', function (req, res, next) {
+    // • Implement your logic here.
+    //console.log('Time:', Date.now())
+    next()
   })
 
-  app.get('/dashboard', isAuthenticated, (req, res) => {
-    res.render('dashboard', {user: req.user});
+  app.use('/api', isAuthenticated, require('./routes/api'))
+
+  app.get('/api/*', (req, res) => {
+    res.send({
+      message: 'Endpoint not found',
+      type: 'error'
+    })
+  })
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/browser/index.html'));
   });
 
-  //#endregion
+  module.exports = { app, server, io };
+  server.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
 
-} catch (error) {
+}
+catch (error) {
   console.log(error)
 }
