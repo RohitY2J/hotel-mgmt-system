@@ -28,6 +28,9 @@ This is a management system designed specifically for hotels and resorts. It str
 - [Rohit Kawari](https://github.com/RohitY2J)
 - [Samyog Adhikari]()
 
+## Architecture Diagram
+
+![Authentication Flow](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/architecture_diagram.gif)
 
 ## Deployment
 
