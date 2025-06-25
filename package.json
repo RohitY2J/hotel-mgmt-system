@@ -6,10 +6,9 @@
   "scripts": {
     "start-server": "start http://localhost:8000 && npx nodemon server/index.js",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server/index.js",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "watch": "ng build --watch --configuration development"
   },
   "keywords": [],
   "author": "",
