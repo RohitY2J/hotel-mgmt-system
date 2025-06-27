@@ -27,33 +27,38 @@ const MONGO_DB = environment.databaseURL;
 
 try {
 
-  mongoose.connect(MONGO_DB)
-    .then(async () => {
-      console.log('Mongoose connected successfully');
-      // Run the attendance creation function immediately
-      // await businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+  if (process.env.NODE_ENV !== 'test') {
+    //mongoose.connect('mongodb://localhost:27017/hotel-mgmt');
+  
 
-      // // runs every 6 hour
-      // cron.schedule('0 */6 * * *', () => {
-      //   console.log('Running daily attendance creation script at 12 AM');
-      //   businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
-      // });
-    })
-    .catch((error) => {
-      console.log('Could not connect to mongodb');
-    })
+    mongoose.connect(MONGO_DB)
+      .then(async () => {
+        console.log('Mongoose connected successfully');
+        // Run the attendance creation function immediately
+        // await businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+
+        // // runs every 6 hour
+        // cron.schedule('0 */6 * * *', () => {
+        //   console.log('Running daily attendance creation script at 12 AM');
+        //   businessLogic.EmployeeDailyActivityLogic.createDailyActivityRecord();
+        // });
+      })
+      .catch((error) => {
+        console.log('Could not connect to mongodb');
+      })
 
 
-  // Socket.IO connection
-  io.on('connection', (socket) => {
-    console.log('New client connected');
+    // Socket.IO connection
+    io.on('connection', (socket) => {
+      console.log('New client connected');
 
-    socket.on('disconnect', () => {
-      console.log('Client disconnected');
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
     });
-  });
 
-  app.set('socketio', io);
+    app.set('socketio', io);
+  }
 
   /** ==========serve static page build from the location =======*/
 
@@ -162,7 +167,7 @@ try {
     res.sendFile(path.join(__dirname, '../dist/browser/index.html'));
   });
 
-  module.exports = { app, server, io };
+  module.exports = { app, server, io, mongoose };
   server.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
 
 }
