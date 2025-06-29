@@ -113,9 +113,9 @@ describe('Admin API Tests', () => {
       });
 
       // Mock businessLogic
-      sinon.stub(require('../business-logic').EmployeeLogic, 'getEmployee').resolves([
-        { firstName: 'John', lastName: 'Doe', contactInfo: { email: 'john.doe@example.com' } },
-      ]);
+      // sinon.stub(require('../business-logic').EmployeeLogic, 'getEmployee').resolves([
+      //   { firstName: 'John', lastName: 'Doe', contactInfo: { email: 'john.doe@example.com' } },
+      // ]);
       sinon.stub(require('../business-logic').EmployeeDailyActivityLogic, 'getEmployeeSchedules').resolves([
         { scheduleId: '123', employeeId: '456' },
       ]);
@@ -392,31 +392,34 @@ describe('Admin API Tests', () => {
       });
     });
 
-    // describe('POST /api/admin/getEmployees', () => {
-    //   it('should retrieve employees successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/getEmployees')
-    //       .send({})
-    //       .expect(200);
+    describe('POST /api/admin/getEmployees', () => {
+      it('should retrieve employees successfully', async () => {
+        sinon.stub(require('../business-logic').EmployeeLogic, 'getEmployee').resolves([
+          { firstName: 'John', lastName: 'Doe', contactInfo: { email: 'john.doe@example.com' } },
+        ]);
+        const res = await agent
+          .post('/api/admin/getEmployees')
+          .send({pagination:{}})
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('message', 'Successfully retrieved all the employees');
-    //     expect(res.body.data).to.be.an('array');
-    //     expect(res.body.data[0]).to.have.property('firstName', 'John');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('message', 'Successfully retrieved all the employees');
+        expect(res.body.data).to.be.an('array');
+        expect(res.body.data[0]).to.have.property('firstName', 'John');
+      });
 
-    //   it('should handle errors', async () => {
-    //     sinon.stub(require('../../business-logic').EmployeeLogic, 'getEmployee').rejects(new Error('Database error'));
+      it('should handle errors', async () => {
+        sinon.stub(require('../business-logic').EmployeeLogic, 'getEmployee').rejects(new Error('Database error'));
 
-    //     const res = await agent
-    //       .post('/api/admin/getEmployees')
-    //       .send({})
-    //       .expect(500);
+        const res = await agent
+          .post('/api/admin/getEmployees')
+          .send({})
+          .expect(500);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('message', 'Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('message', 'Database error');
+      });
+    });
 
     // describe('GET /api/admin/getRoles', () => {
     //   it('should return 422 if clientId is missing', async () => {
