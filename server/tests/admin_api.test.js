@@ -116,10 +116,10 @@ describe('Admin API Tests', () => {
       // sinon.stub(require('../business-logic').EmployeeLogic, 'getEmployee').resolves([
       //   { firstName: 'John', lastName: 'Doe', contactInfo: { email: 'john.doe@example.com' } },
       // ]);
-      sinon.stub(require('../business-logic').EmployeeDailyActivityLogic, 'getEmployeeSchedules').resolves([
-        { scheduleId: '123', employeeId: '456' },
-      ]);
-      sinon.stub(require('../business-logic').EmployeeDailyActivityLogic, 'updateEmployeeSchedule').resolves();
+       sinon.stub(require('../business-logic').EmployeeDailyActivityLogic, 'getEmployeeSchedules').resolves([
+         { scheduleId: '123', employeeId: '456' },
+       ]);
+       sinon.stub(require('../business-logic').EmployeeDailyActivityLogic, 'updateEmployeeSchedule').resolves();
     });
 
     afterEach(async () => {
@@ -421,146 +421,86 @@ describe('Admin API Tests', () => {
       });
     });
 
-    // describe('GET /api/admin/getRoles', () => {
-    //   it('should return 422 if clientId is missing', async () => {
-    //     sinon.stub(require('../index'), 'middleware').callsFake((req, res, next) => {
-    //       res.status(400).send('Client ID is required');
-    //     });
+    describe('GET /api/admin/getRoles', () => {
 
-    //     const res = await agent
-    //       .get('/api/admin/getRoles')
-    //       .expect(400);
+      it('should retrieve roles successfully', async () => {
+        const res = await agent
+          .get('/api/admin/getRoles')
+          .expect(200);
 
-    //     console.log('Response body:', res.text);
-    //     expect(res.text).to.equal('Client ID is required');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('message', 'Successfully retrieved all the roles');
+        expect(res.body.data).to.be.an('array');
+        expect(res.body.data[0]).to.have.property('roleName', 'Manager');
+      });
 
-    //   it('should retrieve roles successfully', async () => {
-    //     const res = await agent
-    //       .get('/api/admin/getRoles')
-    //       .expect(200);
+      it('should handle database errors', async () => {
+        sinon.stub(dbContext.Role, 'find').rejects(new Error('Database error'));
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('message', 'Successfully retrieved all the roles');
-    //     expect(res.body.data).to.be.an('array');
-    //     expect(res.body.data[0]).to.have.property('roleName', 'Manager');
-    //   });
+        const res = await agent
+          .get('/api/admin/getRoles')
+          .expect(500);
 
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Role, 'find').rejects(new Error('Database error'));
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('message', 'Database error');
+      });
+    });
 
-    //     const res = await agent
-    //       .get('/api/admin/getRoles')
-    //       .expect(500);
+    describe('POST /api/admin/getEmployeeSchedule', () => {
+      it('should retrieve schedules successfully', async () => {
+        const res = await agent
+          .post('/api/admin/getEmployeeSchedule')
+          .send({})
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('message', 'Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('message', 'Successfully retrieved schedules');
+        expect(res.body.data).to.be.an('array');
+        expect(res.body.data[0]).to.have.property('scheduleId', '123');
+      });
 
-    // describe('POST /api/admin/getEmployeeSchedule', () => {
-    //   it('should retrieve schedules successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/getEmployeeSchedule')
-    //       .send({})
-    //       .expect(200);
+      
+    });
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('message', 'Successfully retrieved schedules');
-    //     expect(res.body.data).to.be.an('array');
-    //     expect(res.body.data[0]).to.have.property('scheduleId', '123');
-    //   });
+    describe('POST /api/admin/updateEmployeeSchedule', () => {
+      it('should update schedule successfully', async () => {
+        const res = await agent
+          .post('/api/admin/updateEmployeeSchedule')
+          .send({})
+          .expect(200);
 
-    //   it('should handle errors', async () => {
-    //     sinon.stub(require('../../business-logic').EmployeeDailyActivityLogic, 'getEmployeeSchedules').rejects(new Error('Database error'));
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('message', 'Updated employee schedule successfully');
+      });
 
-    //     const res = await agent
-    //       .post('/api/admin/getEmployeeSchedule')
-    //       .send({})
-    //       .expect(500);
+      
+    });
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('message', 'Database error');
-    //   });
-    // });
+    describe('POST /api/admin/getEmployeeName', () => {
+      beforeEach(async () => {
+        await dbContext.Employee.create({
+          firstName: 'John',
+          lastName: 'Doe',
+          contactInfo: { email: 'john.doe@example.com' },
+          role: roleId,
+          clientId,
+          meta: { isDeleted: false },
+        });
+      });
 
-    // describe('POST /api/admin/updateEmployeeSchedule', () => {
-    //   it('should update schedule successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/updateEmployeeSchedule')
-    //       .send({})
-    //       .expect(200);
+      it('should retrieve employee names successfully', async () => {
+        const res = await agent
+          .post('/api/admin/getEmployeeName')
+          .send({ filterValue: 'John' })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('message', 'Updated employee schedule successfully');
-    //   });
-
-    //   it('should handle errors', async () => {
-    //     sinon.stub(require('../../business-logic').EmployeeDailyActivityLogic, 'updateEmployeeSchedule').rejects(new Error('Database error'));
-
-    //     const res = await agent
-    //       .post('/api/admin/updateEmployeeSchedule')
-    //       .send({})
-    //       .expect(200); // Note: Route doesn't handle errors properly
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true); // Bug in route: no error response
-    //   });
-    // });
-
-    // describe('POST /api/admin/getEmployeeName', () => {
-    //   beforeEach(async () => {
-    //     await dbContext.Employee.create({
-    //       firstName: 'John',
-    //       lastName: 'Doe',
-    //       contactInfo: { email: 'john.doe@example.com' },
-    //       role: roleId,
-    //       clientId,
-    //       meta: { isDeleted: false },
-    //     });
-    //   });
-
-    //   it('should return 422 if clientId is missing', async () => {
-    //     sinon.stub(require('../routes/api'), 'middleware').callsFake((req, res, next) => {
-    //       res.status(400).send('Client ID is required');
-    //     });
-
-    //     const res = await agent
-    //       .post('/api/admin/getEmployeeName')
-    //       .send({})
-    //       .expect(400);
-
-    //     console.log('Response body:', res.text);
-    //     expect(res.text).to.equal('Client ID is required');
-    //   });
-
-    //   it('should retrieve employee names successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/getEmployeeName')
-    //       .send({ filterValue: 'John' })
-    //       .expect(200);
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'employee names retrived successfully');
-    //     expect(res.body.data).to.include('John Doe');
-    //   });
-
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Employee.find, 'exec').rejects(new Error('Database error'));
-
-    //     const res = await agent
-    //       .post('/api/admin/getEmployeeName')
-    //       .send({})
-    //       .expect(500);
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Error encountered: Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('msg', 'employee names retrived successfully');
+        expect(res.body.data).to.include('John Doe');
+      });
+    });
   });
 });
