@@ -295,49 +295,49 @@ describe('Admin API Tests', () => {
       });
     });
 
-    // describe('POST /api/admin/deleteEmployee', () => {
-    //   let employeeId;
+    describe('POST /api/admin/deleteEmployee', () => {
+      let employeeId;
 
-    //   beforeEach(async () => {
-    //     const employee = new dbContext.Employee({
-    //       firstName: 'Jane',
-    //       lastName: 'Smith',
-    //       contactInfo: { email: 'jane.smith@example.com' },
-    //       role: roleId,
-    //       clientId,
-    //       meta: { isDeleted: false },
-    //     });
-    //     await employee.save();
-    //     employeeId = employee._id;
-    //   });
+      beforeEach(async () => {
+        const employee = new dbContext.Employee({
+          firstName: 'Jane',
+          lastName: 'Smith',
+          contactInfo: { email: 'jane.smith@example.com' },
+          role: roleId,
+          clientId,
+          meta: { isDeleted: false },
+        });
+        await employee.save();
+        employeeId = employee._id;
+      });
 
-    //   it('should delete an employee successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/deleteEmployee')
-    //       .send({ _id: employeeId.toString() })
-    //       .expect(200);
+      it('should delete an employee successfully', async () => {
+        const res = await agent
+          .post('/api/admin/deleteEmployee')
+          .send({ _id: employeeId.toString() })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('message', 'Delete successfully');
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('message', 'Delete successfully');
 
-    //     const deletedEmployee = await dbContext.Employee.findById(employeeId);
-    //     expect(deletedEmployee.meta).to.have.property('isDeleted', true);
-    //   });
+        const deletedEmployee = await dbContext.Employee.findById(employeeId);
+        expect(deletedEmployee.meta).to.have.property('isDeleted', true);
+      });
 
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Employee.prototype, 'save').rejects(new Error('Database error'));
+      it('should handle database errors', async () => {
+        sinon.stub(dbContext.Employee.prototype, 'save').rejects(new Error('Database error'));
 
-    //     const res = await agent
-    //       .post('/api/admin/deleteEmployee')
-    //       .send({ _id: employeeId.toString() })
-    //       .expect(500);
+        const res = await agent
+          .post('/api/admin/deleteEmployee')
+          .send({ _id: employeeId.toString() })
+          .expect(500);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('message', 'Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('message', 'Database error');
+      });
+    });
 
     // describe('POST /api/admin/createEmployeeRole', () => {
     //   it('should return 422 if required fields are missing', async () => {
