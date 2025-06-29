@@ -24,6 +24,8 @@ const io = socketIo(server,{
 const port = environment.serverPort;
 const MONGO_DB = environment.databaseURL;
 
+const isAuthenticated = require('./helper/auth_middleware');
+
 
 try {
 
@@ -131,12 +133,7 @@ try {
   });
 
 
-  function isAuthenticated(req, res, next) {
-    if (req.originalUrl === '/api/login' || req.isAuthenticated()) {
-      return next();
-    }
-    res.status(401).send('Un-authorized user.');
-  }
+  
 
   /** ======================================================== */
 
@@ -167,7 +164,7 @@ try {
     res.sendFile(path.join(__dirname, '../dist/browser/index.html'));
   });
 
-  module.exports = { app, server, io, mongoose };
+  module.exports = { app, server, io, mongoose};
   server.listen(port, () => console.log(`Application started successfully on port: ${port}!`))
 
 }
