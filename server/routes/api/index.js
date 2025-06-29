@@ -165,4 +165,3 @@ async function checkIfUserExists(email) {
 module.exports = router;
 
 
-

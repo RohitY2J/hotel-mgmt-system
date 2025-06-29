@@ -86,7 +86,7 @@ router.post('/createEmployee', FileUpload.single('file'), async (req, res, next)
     catch (err) {
         return res.status(500).json({
             success: false,
-            msg: "Error encountered:" + err.message
+            msg: "Error encountered: " + err.message
         });
     }
 })
