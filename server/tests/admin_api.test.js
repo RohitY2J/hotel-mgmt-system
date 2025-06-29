@@ -339,58 +339,58 @@ describe('Admin API Tests', () => {
       });
     });
 
-    // describe('POST /api/admin/createEmployeeRole', () => {
-    //   it('should return 422 if required fields are missing', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/createEmployeeRole')
-    //       .send({})
-    //       .expect(422);
+    describe('POST /api/admin/createEmployeeRole', () => {
+      it('should return 422 if required fields are missing', async () => {
+        const res = await agent
+          .post('/api/admin/createEmployeeRole')
+          .send({})
+          .expect(422);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'validation failed');
-    //     expect(res.body.error).to.include.members(['RoleName is needed', 'Client id is needed']);
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'validation failed');
+        expect(res.body.error).to.include.members(['RoleName is needed']);
+      });
 
-    //   it('should return 422 if role already exists', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/createEmployeeRole')
-    //       .send({ roleName: 'Manager' })
-    //       .expect(422);
+      it('should return 422 if role already exists', async () => {
+        const res = await agent
+          .post('/api/admin/createEmployeeRole')
+          .send({ roleName: 'Manager' })
+          .expect(422);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Role already exists.');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Role already exists.');
+      });
 
-    //   it('should create a role successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/createEmployeeRole')
-    //       .send({ roleName: 'Admin' })
-    //       .expect(200);
+      it('should create a role successfully', async () => {
+        const res = await agent
+          .post('/api/admin/createEmployeeRole')
+          .send({ roleName: 'Admin' })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'success');
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('msg', 'success');
 
-    //     const savedRole = await dbContext.Role.findOne({ roleName: 'Admin', clientId });
-    //     expect(savedRole).to.exist;
-    //     expect(savedRole).to.have.property('roleName', 'Admin');
-    //   });
+        const savedRole = await dbContext.Role.findOne({ roleName: 'Admin', clientId });
+        expect(savedRole).to.exist;
+        expect(savedRole).to.have.property('roleName', 'Admin');
+      });
 
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Role.prototype, 'save').rejects(new Error('Database error'));
+      it('should handle database errors', async () => {
+        sinon.stub(dbContext.Role.prototype, 'save').rejects(new Error('Database error'));
 
-    //     const res = await agent
-    //       .post('/api/admin/createEmployeeRole')
-    //       .send({ roleName: 'Admin' })
-    //       .expect(500);
+        const res = await agent
+          .post('/api/admin/createEmployeeRole')
+          .send({ roleName: 'Admin' })
+          .expect(500);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Error encountered: Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Error encountered: Database error');
+      });
+    });
 
     // describe('POST /api/admin/getEmployees', () => {
     //   it('should retrieve employees successfully', async () => {
