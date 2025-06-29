@@ -212,89 +212,88 @@ describe('Admin API Tests', () => {
       });
     });
 
-    // describe('POST /api/admin/updateEmployee', () => {
-    //   let employeeId;
-    //   beforeEach(async () => {
-    //     const employee = new dbContext.Employee({
-    //       firstName: 'Jane',
-    //       lastName: 'Smith',
-    //       contactInfo: {
-    //         phone: '0987654321',
-    //         email: 'jane.smith@example.com',
-    //       },
-    //       role: roleId,
-    //       clientId,
-    //       meta: { isDeleted: false },
-    //     });
-    //     await employee.save();
-    //     employeeId = employee._id;
-    //   });
+    describe('POST /api/admin/updateEmployee', () => {
+      let employeeId;
+      beforeEach(async () => {
+        const employee = new dbContext.Employee({
+          firstName: 'Jane',
+          lastName: 'Smith',
+          contactInfo: {
+            phone: '0987654321',
+            email: 'jane.smith@example.com',
+          },
+          role: roleId,
+          clientId,
+          meta: { isDeleted: false },
+        });
+        await employee.save();
+        employeeId = employee._id;
+      });
 
-    //   it('should return 422 if required fields are missing', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/updateEmployee')
-    //       .send({})
-    //       .expect(422);
+      it('should return 422 if required fields are missing', async () => {
+        const res = await agent
+          .post('/api/admin/updateEmployee')
+          .send({})
+          .expect(422);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'validation failed');
-    //     expect(res.body.error).to.include.members([
-    //       'Employee id is missing',
-    //       'FirstName is needed',
-    //       'LastName is needed',
-    //       'Email is needed',
-    //       'Phone Number is needed',
-    //       'Role is needed',
-    //       'Client id is needed',
-    //     ]);
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'validation failed');
+        expect(res.body.error).to.include.members([
+          'Employee id is missing',
+          'FirstName is needed',
+          'LastName is needed',
+          'Email is needed',
+          'Phone Number is needed',
+          'Role is needed'
+        ]);
+      });
 
-    //   it('should update an employee successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/admin/updateEmployee')
-    //       .send({
-    //         employeeId: employeeId.toString(),
-    //         firstName: 'John',
-    //         lastName: 'Doe',
-    //         email: 'john.doe@example.com',
-    //         phoneNumber: '1234567890',
-    //         address: '456 Main St',
-    //         role: roleId.toString(),
-    //       })
-    //       .expect(200);
+      it('should update an employee successfully', async () => {
+        const res = await agent
+          .post('/api/admin/updateEmployee')
+          .send({
+            employeeId: employeeId.toString(),
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phoneNumber: '1234567890',
+            address: '456 Main St',
+            role: roleId.toString(),
+          })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'success');
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('msg', 'success');
 
-    //     const updatedEmployee = await dbContext.Employee.findById(employeeId);
-    //     expect(updatedEmployee).to.have.property('firstName', 'John');
-    //     expect(updatedEmployee).to.have.property('lastName', 'Doe');
-    //     expect(updatedEmployee.contactInfo).to.have.property('email', 'john.doe@example.com');
-    //     expect(updatedEmployee.documents[0]).to.have.property('fileObject', 'profile.jpg');
-    //   });
+        const updatedEmployee = await dbContext.Employee.findById(employeeId);
+        expect(updatedEmployee).to.have.property('firstName', 'John');
+        expect(updatedEmployee).to.have.property('lastName', 'Doe');
+        expect(updatedEmployee.contactInfo).to.have.property('email', 'john.doe@example.com');
+        //expect(updatedEmployee.documents[0]).to.have.property('fileObject', 'profile.jpg');
+      });
 
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Employee.prototype, 'save').rejects(new Error('Database error'));
+      it('should handle database errors', async () => {
+        sinon.stub(dbContext.Employee.prototype, 'save').rejects(new Error('Database error'));
 
-    //     const res = await agent
-    //       .post('/api/admin/updateEmployee')
-    //       .send({
-    //         employeeId: employeeId.toString(),
-    //         firstName: 'John',
-    //         lastName: 'Doe',
-    //         email: 'john.doe@example.com',
-    //         phoneNumber: '1234567890',
-    //         role: roleId.toString(),
-    //       })
-    //       .expect(500);
+        const res = await agent
+          .post('/api/admin/updateEmployee')
+          .send({
+            employeeId: employeeId.toString(),
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phoneNumber: '1234567890',
+            role: roleId.toString(),
+          })
+          .expect(500);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Error encountered: Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Error encountered: Database error');
+      });
+    });
 
     // describe('POST /api/admin/deleteEmployee', () => {
     //   let employeeId;
