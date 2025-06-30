@@ -2,16 +2,17 @@ const express = require('express')
 const passport = require('passport');
 const router = express.Router()
 const dbContext = require('../../model');
+const middleware = require('../../helper/client_check_middleware');
 
-function middleware(req, res, next){
-    const clientId = req.user.clientId; // Assuming client ID is sent in the header
-    if (clientId) {
-        req.clientId = clientId;
-        next();
-    } else {
-        res.status(400).send('Client ID is required');
-    }
-}
+// function middleware(req, res, next){
+//     const clientId = req.user.clientId; // Assuming client ID is sent in the header
+//     if (clientId) {
+//         req.clientId = clientId;
+//         next();
+//     } else {
+//         res.status(400).send('Client ID is required');
+//     }
+// }
 
 router.post('/login', function (req, res, next) {
     const user = req.body;
@@ -159,8 +160,6 @@ async function checkIfUserExists(email) {
     const user = await dbContext.User.findOne({ email: email });
     return user; // Returns null if user not found, otherwise returns the user object
 }
-
-
 
 module.exports = router;
 
