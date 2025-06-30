@@ -10,8 +10,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test:backend": "mocha server/tests/**/*.test.js",
-    "test:frontend": "ng test --browsers=ChromeHeadless --watch=false",
-    "test:autocomplete": "ng test --include=src/app/pages/shared/autocomplete/autocomplete.component.spec.ts --browsers=ChromeHeadless --watch=false"
+    "test:frontend": "ng test --include=src/app/pages/shared/**/*.spec.ts --browsers=ChromeHeadless --watch=false",
+    "test:autocomplete": "ng test --include=src/app/pages/shared/autocomplete/autocomplete.component.spec.ts --browsers=ChromeHeadless --watch=false",
+    "test:invoice": "ng test --include=src/app/pages/shared/invoice-component/invoice-component.component.spec.ts --browsers=ChromeHeadless --watch=false"
+    
   },
   "keywords": [],
   "author": "",

@@ -29,7 +29,7 @@ jobs:
           npm run build --if-present
           npm run test --if-present
           npm run test:backend
-          npm run test:autocomplete
+          npm run test:frontend
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
