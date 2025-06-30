@@ -54,8 +54,9 @@ exports.createOrder = async (req, res, next) => {
             });
 
             await existingOrder.save();
-
-            io.emit('orderUpdated', existingOrder);
+            
+            if(process.env.NODE_ENV != 'test')
+                io.emit('orderUpdated', existingOrder);
 
         } else {
             // Create a new order if no pending order exists
@@ -82,7 +83,8 @@ exports.createOrder = async (req, res, next) => {
 
             await existingTable.save();
 
-            io.emit('orderUpdated', newOrder);
+            if(process.env.NODE_ENV != 'test')
+                io.emit('orderUpdated', newOrder);
         }
 
         request.orders.forEach(async (order) =>{
