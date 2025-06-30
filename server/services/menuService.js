@@ -111,20 +111,27 @@ exports.updateMenuItem = async (req, res, next) => {
 }
 
 exports.getMenuNames = async (req, res, next) => {
-    if (!req.clientId) {
-        return res.status(422).json({
+    try {
+        if (!req.clientId) {
+            return res.status(422).json({
+                success: false,
+                msg: 'Client Id is required'
+            });
+        }
+
+        const filterValue = req.body.query;
+        const menus = await dbContext.MenuItem.find({ name: { $regex: filterValue, $options: 'i' }, clientId: req.clientId }).select('name');
+        return res.status(200).json({
+            success: true,
+            msg: 'menu name successfully retrieved',
+            data: menus.map(menu => menu.name)
+        });
+    } catch (err) {
+        return res.status(500).json({
             success: false,
-            msg: 'Client Id is required'
+            msg: 'Error encountered: ' + err.message
         });
     }
-
-    const filterValue = req.body.query;
-    const menus = await dbContext.MenuItem.find({ name: { $regex: filterValue, $options: 'i' }, clientId: req.clientId }).select('name');
-    return res.status(200).json({
-        success: true,
-        msg: 'menu name successfully retrieved',
-        data: menus.map(menu => menu.name)
-    });
 }
 
 exports.getMenuItems = async (req, res, next) => {
