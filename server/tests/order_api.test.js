@@ -398,185 +398,136 @@ describe('Order API Tests', function () {
       });
     });
 
-    // describe('POST /api/order/updateStatus', () => {
-    //   it('should return 422 if orderId or status is missing', async () => {
-    //     const res = await agent
-    //       .post('/api/order/updateStatus')
-    //       .send({})
-    //       .expect(422);
+    describe('POST /api/order/updateStatus', () => {
+      it('should return 422 if orderId or status is missing', async () => {
+        const res = await agent
+          .post('/api/order/updateStatus')
+          .send({})
+          .expect(422);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Order Id and status is required');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Order Id and status is required');
+      });
 
-    //   it('should update order status successfully', async () => {
-    //     const order = new Order({
-    //       tableNumber: tableId,
-    //       status: 0,
-    //       clientId,
-    //       orders: [{ menuId: new mongoose.Types.ObjectId(), qty: 2, price: 10, name: 'Burger' }],
-    //     });
-    //     await order.save();
+      it('should update order status successfully', async () => {
+        const order = new dbContext.Order({
+          tableNumber: tableId,
+          status: 0,
+          clientId,
+          orders: [{ menuId: new mongoose.Types.ObjectId(), qty: 2, price: 10, name: 'Burger' }],
+        });
+        await order.save();
 
-    //     const res = await agent
-    //       .post('/api/order/updateStatus')
-    //       .send({ orderId: order._id.toString(), status: 1 })
-    //       .expect(200);
+        const res = await agent
+          .post('/api/order/updateStatus')
+          .send({ orderId: order._id.toString(), status: 1 })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'Status updated');
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('msg', 'Status updated');
 
-    //     const updatedOrder = await Order.findOne({ _id: order._id });
-    //     expect(updatedOrder).to.have.property('status', 1);
-    //   });
+        const updatedOrder = await dbContext.Order.findOne({ _id: order._id });
+        expect(updatedOrder).to.have.property('status', 1);
+      });
 
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Order, 'findOne').callsFake(() => ({
-    //       select: sinon.stub().returns({
-    //         then: (resolve, reject) => reject(new Error('Database error')),
-    //         catch: sinon.stub().callsFake((cb) => cb(new Error('Database error')))
-    //       })
-    //     }));
+      it('should handle database errors', async () => {
+        sinon.stub(dbContext.Order, 'findOne').callsFake(() => ({
+          save: sinon.stub().returns({
+            then: (resolve, reject) => reject(new Error('Database error')),
+            catch: sinon.stub().callsFake((cb) => cb(new Error('Database error')))
+          })
+        }));
 
-    //     const res = await agent
-    //       .post('/api/order/updateStatus')
-    //       .send({ orderId: new mongoose.Types.ObjectId().toString(), status: 1 })
-    //       .expect(500);
+        const res = await agent
+          .post('/api/order/updateStatus')
+          .send({ orderId: new mongoose.Types.ObjectId().toString(), status: 1 })
+          .expect(500);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Error encountered: Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Error encountered:Database error');
+      });
+    });
 
-    // describe('POST /api/order/getCustomerName', () => {
-    //   it('should return 422 if clientId is missing', async () => {
-    //     sinon.stub(require('../helper/client_check_middleware'), 'call').restore();
-    //     sinon.stub(require('../helper/client_check_middleware'), 'call').callsFake((req, res, next) => {
-    //       res.status(422).json({ success: false, msg: 'Client Id is required' });
-    //     });
+    describe('POST /api/order/getCustomerName', () => {
+      it('should retrieve customer names successfully', async () => {
+        const order = new dbContext.Order({
+          tableNumber: tableId,
+          status: 0,
+          clientId,
+          customerName: 'John Doe',
+          orders: [{ menuId: new mongoose.Types.ObjectId(), qty: 2, price: 10, name: 'Burger' }],
+        });
+        await order.save();
 
-    //     const res = await agent
-    //       .post('/api/order/getCustomerName')
-    //       .send({})
-    //       .expect(422);
+        const res = await agent
+          .post('/api/order/getCustomerName')
+          .send({ filterValue: 'John' })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Client Id is required');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('msg', 'customers retrived successfully');
+        expect(res.body.data).to.include('John Doe');
+      });
 
-    //   it('should retrieve customer names successfully', async () => {
-    //     const order = new Order({
-    //       tableNumber: tableId,
-    //       status: 0,
-    //       clientId,
-    //       customerName: 'John Doe',
-    //       orders: [{ menuId: new mongoose.Types.ObjectId(), qty: 2, price: 10, name: 'Burger' }],
-    //     });
-    //     await order.save();
+      it('should handle database errors', async () => {
+        sinon.stub(dbContext.Order, 'distinct').callsFake(() => ({
+          then: (resolve, reject) => {
+            console.log('dbContext.Order.distinct stub called');
+            reject(new Error('Database error'));
+          },
+          catch: sinon.stub().callsFake((cb) => cb(new Error('Database error')))
+        }));
 
-    //     const res = await agent
-    //       .post('/api/order/getCustomerName')
-    //       .send({ filterValue: 'John' })
-    //       .expect(200);
+        const res = await agent
+          .post('/api/order/getCustomerName')
+          .send({ filterValue: 'John' })
+          .expect(500);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'customers retrived successfully');
-    //     expect(res.body.data).to.include('John Doe');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Error encountered:Database error');
+      });
+    });
 
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Order, 'distinct').callsFake(() => ({
-    //       then: (resolve, reject) => {
-    //         console.log('dbContext.Order.distinct stub called');
-    //         reject(new Error('Database error'));
-    //       },
-    //       catch: sinon.stub().callsFake((cb) => cb(new Error('Database error')))
-    //     }));
+    describe('POST /api/order/cancelOrderMenu', () => {
 
-    //     const res = await agent
-    //       .post('/api/order/getCustomerName')
-    //       .send({ filterValue: 'John' })
-    //       .expect(500);
+      it('should return 422 if tableNumber or menuId is missing', async () => {
+        const res = await agent
+          .post('/api/order/cancelOrderMenu')
+          .send({})
+          .expect(422);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Error encountered: Database error');
-    //   });
-    // });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', false);
+        expect(res.body).to.have.property('msg', 'Menu Id and TableNumber is required');
+      });
 
-    // describe('POST /api/order/cancelOrderMenu', () => {
-    //   it('should return 422 if clientId is missing', async () => {
-    //     sinon.stub(require('../helper/client_check_middleware'), 'call').restore();
-    //     sinon.stub(require('../helper/client_check_middleware'), 'call').callsFake((req, res, next) => {
-    //       res.status(422).json({ success: false, msg: 'Client Id is required' });
-    //     });
+      it('should cancel order menu successfully', async () => {
+        const menuId = new mongoose.Types.ObjectId();
+        const order = new dbContext.Order({
+          tableNumber: tableId,
+          status: 0,
+          clientId,
+          orders: [{ menuId, qty: 2, price: 10, name: 'Burger' }],
+        });
+        await order.save();
 
-    //     const res = await agent
-    //       .post('/api/order/cancelOrderMenu')
-    //       .send({ tableNumber: tableId.toString(), menuId: new mongoose.Types.ObjectId().toString() })
-    //       .expect(422);
+        const res = await agent
+          .post('/api/order/cancelOrderMenu')
+          .send({ tableNumber: tableId.toString(), menuId: menuId.toString() })
+          .expect(200);
 
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Client Id is required');
-    //   });
+        console.log('Response body:', res.body);
+        expect(res.body).to.have.property('success', true);
+        expect(res.body).to.have.property('msg', 'order menu cancelled successfully');
 
-    //   it('should return 422 if tableNumber or menuId is missing', async () => {
-    //     const res = await agent
-    //       .post('/api/order/cancelOrderMenu')
-    //       .send({})
-    //       .expect(422);
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Menu Id and TableNumber is required');
-    //   });
-
-    //   it('should cancel order menu successfully', async () => {
-    //     const menuId = new mongoose.Types.ObjectId();
-    //     const order = new Order({
-    //       tableNumber: tableId,
-    //       status: 0,
-    //       clientId,
-    //       orders: [{ menuId, qty: 2, price: 10, name: 'Burger' }],
-    //     });
-    //     await order.save();
-
-    //     const res = await agent
-    //       .post('/api/order/cancelOrderMenu')
-    //       .send({ tableNumber: tableId.toString(), menuId: menuId.toString() })
-    //       .expect(200);
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'order menu cancelled successfully');
-
-    //     const updatedOrder = await Order.findOne({ tableNumber: tableId });
-    //     expect(updatedOrder.orders).to.have.length(0);
-    //   });
-
-    //   it('should handle database errors', async () => {
-    //     sinon.stub(dbContext.Order, 'findOne').callsFake(() => ({
-    //       select: sinon.stub().returns({
-    //         then: (resolve, reject) => reject(new Error('Database error')),
-    //         catch: sinon.stub().callsFake((cb) => cb(new Error('Database error')))
-    //       })
-    //     }));
-
-    //     const res = await agent
-    //       .post('/api/order/cancelOrderMenu')
-    //       .send({ tableNumber: tableId.toString(), menuId: new mongoose.Types.ObjectId().toString() })
-    //       .expect(500);
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', false);
-    //     expect(res.body).to.have.property('msg', 'Error encountered: Database error');
-    //   });
-    // });
+        const updatedOrder = await dbContext.Order.findOne({ tableNumber: tableId });
+        expect(updatedOrder.orders).to.have.length(0);
+      });
+    });
   });
 });
