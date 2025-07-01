@@ -26,14 +26,15 @@ export class OrderFormComponent implements OnChanges, OnInit {
     private router: Router,
     private constantService: ConstantsService
   ) {}
+
   ngOnInit(): void {
     this.orders = [];
-    this.ordersForm.reset();
+    this.ordersForm.reset({ summary: '', amount: '' }); // Explicitly reset with empty string values
   }
+
   ngOnChanges() {
-    this.orders = this.reservation?.billing?.orders;
-    if (this.orders == null || this.orders == undefined) this.orders = [];
-    this.ordersForm.reset();
+    this.orders = this.reservation?.billing?.orders ?? []; // Use nullish coalescing to handle undefined
+    this.ordersForm.reset({ summary: '', amount: '' }); // Reset with empty string values
   }
 
   isCheckOutModalVisible: boolean = false;
@@ -54,9 +55,8 @@ export class OrderFormComponent implements OnChanges, OnInit {
   });
 
   submitOrder() {
-    console.log(this.reservation.billing.orders);
+    // Avoid accessing reservation.billing.orders if undefined
     if (this.ordersForm.invalid) {
-      console.log('invalid');
       this.showNotification.emit({
         message: 'Invalid form. Please fill all the required fields.',
         error: true,
@@ -66,7 +66,7 @@ export class OrderFormComponent implements OnChanges, OnInit {
 
     this.httpService
       .httpPost('reservation/addCustomerOrders', {
-        id: this.reservation.id,
+        id: this.reservation?.id,
         orders: this.ordersForm.value,
       })
       .pipe(
@@ -84,32 +84,46 @@ export class OrderFormComponent implements OnChanges, OnInit {
         },
       });
   }
+
   updateSelection() {
     this.httpService
-      .httpGet(`reservation/getReservationById?id=${this.reservation.id}`)
+      .httpGet(`reservation/getReservationById?id=${this.reservation?.id}`)
       .subscribe({
         next: (res) => (this.reservation = res),
       });
   }
+
   close() {
     this.closeForm.emit();
   }
+
   getOrderAmount() {
-    return this.reservation.billing.orders.reduce(
+    return this.reservation?.billing?.orders?.reduce(
       (a: any, o: any) => a + o.amount,
       0
-    );
+    ) ?? 0; // Return 0 if orders is undefined
   }
+
   openCheckOutModal() {
     this.isCheckOutModalVisible = true;
   }
+
   closeCheckOutModal() {
     this.isCheckOutModalVisible = false;
   }
+
   checkOutAndPrintInvoice() {
+    if (!this.reservation || !this.reservation.billing) {
+      this.showNotification.emit({
+        message: 'Reservation data is missing.',
+        error: true,
+      });
+      return;
+    }
+
     this.reservation.billing.discountPercentage = this.discount;
     this.reservation.billing.taxPercentage = this.tax;
-    this.reservation.status = 2; //closed
+    this.reservation.status = 2; // closed
     this.httpService
       .httpPost(`reservation/updateReservation`, this.reservation)
       .pipe(
@@ -121,7 +135,7 @@ export class OrderFormComponent implements OnChanges, OnInit {
       )
       .subscribe({
         error: (err) => {
-          console.log;
+          console.log('Checkout error:', err); // Explicitly log the error
         },
       });
   }

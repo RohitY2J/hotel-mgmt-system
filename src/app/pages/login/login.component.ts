@@ -34,7 +34,11 @@ export class LoginComponent implements OnInit {
 
 
   login() {
-    if (this.loginRequest.invalid) this.isFormValid = false;
+    //if (this.loginRequest.invalid) this.isFormValid = false;
+    if (this.loginRequest.invalid) {
+      this.isFormValid = false;
+      return;
+    }
     this.isLoading = true;
     this.httpService.httpPost('login', this.loginRequest.value)
     .pipe(finalize(()=>{
