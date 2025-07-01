@@ -10,8 +10,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test:backend": "mocha server/tests/**/*.test.js",
-    "test:frontend": "ng test --include=src/app/pages/shared/**/*.spec.ts --include=src/app/services/*.spec.ts --browsers=ChromeHeadless --watch=false"
-    
+    "test:frontend": "ng test --include=src/app/pages/shared/**/*.spec.ts --include=src/app/services/*.spec.ts --browsers=ChromeHeadless --watch=false",
+    "test:login": "ng test --include=src/app/pages/login/login.component.spec.ts --browsers=chromeheadless --watch=false",
+    "test:kitchen": "ng test --include=src/app/pages/kitchen/kitchen.component.spec.ts --browsers=ChromeHeadless --watch=false",
+    "test:food-invoice": "ng test --include=src/app/pages/food-invoice-layout/food-invoice-layout.component.spec.ts --browsers=ChromeHeadless --watch=false"
   },
   "keywords": [],
   "author": "",

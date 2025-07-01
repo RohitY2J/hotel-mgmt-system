@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '../../services/http-service.service';
 import { CommonModule } from '@angular/common';
 import { HttpListResponse } from '../../models/HttpResponse';
-import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-food-invoice-layout',
