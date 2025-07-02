@@ -68,7 +68,7 @@ To deploy this project run
 
 ## Technologies Used
 
-- **Angular (TypeScript)**:
+- **Angular**:
   - Component-based architecture with standalone components for modular UI development.
   - Reactive forms for dynamic form handling and validation.
   - Testing with Karma and Jasmine for unit and integration tests.
