@@ -228,6 +228,8 @@ export class EmployeeComponent {
   closeModal() {
     this.isOpen = false;
     this.myForm.reset();
+    this.myRoleForm.reset();
+    this.selectedFile = undefined;
   }
 
   openRoleModal() {
