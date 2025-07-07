@@ -70,10 +70,11 @@ To deploy this project run
 
 - **Angular**:
   - Component-based architecture with standalone components for modular UI development.
-  - Reactive forms for dynamic form handling and validation.
-  - Testing with Karma and Jasmine for unit and integration tests.
   - HTTP client for RESTful API communication with RxJS Observables.
+  - Reactive forms for dynamic form handling and validation.
   - Angular Router for client-side navigation and routing.
+  - Tailwind css for styling
+  - Testing with Karma and Jasmine for unit and integration tests.
 
 - **Node.js**:
   - Cookies-based authentication with Passport.js for secure session management.
