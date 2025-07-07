@@ -1,0 +1,10 @@
+node_modules
+dist
+*.md
+.git
+.gitignore
+src
+e2e
+angular.json
+tsconfig.json
+*.spec.ts
