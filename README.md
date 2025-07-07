@@ -66,12 +66,33 @@ To deploy this project run
 
 ## Technologies Used
 
-- Angular
-- TypeScript
-- Node.js
-- Express
-- Mongodb
+## Technologies Used
 
+- **Angular**:
+  - Component-based architecture with standalone components for modular UI development.
+  - Reactive forms for dynamic form handling and validation.
+  - Testing with Karma and Jasmine for unit and integration tests.
+  - HTTP client for RESTful API communication with RxJS Observables.
+  - Angular Router for client-side navigation and routing.
+
+- **Node.js**:
+  - Cookies-based authentication with Passport.js for secure session management.
+  - Integration with MongoDB for backend data persistence.
+  - Testing with Mocha, Chai, Sinon, Supertest, Mongo-Memory-Server
+
+- **Express**:
+  - RESTful API development with route handling and middleware.
+  - CORS support for cross-origin requests from Angular frontend.
+  
+- **MongoDB**:
+  - NoSQL database for flexible, schema-less data storage.
+  - Mongoose ODM for schema definition, validation, and querying.
+  - Aggregation pipelines for advanced data processing and reporting.
+
+- **GitHub Workflow (CI/CD)**:
+  - Automated testing with GitHub Actions for running Karma/Jasmine tests and api testing using Mocha/Chai on push/pull requests.
+  - Continuous integration for linting and building Angular and Node.js applications.
+  
 ## Users
 
 - Waiter
