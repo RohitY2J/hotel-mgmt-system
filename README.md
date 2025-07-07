@@ -43,11 +43,19 @@ To deploy this project run
 ```
 ## To run locally
 
-1. **npm install**
+1. **npm install** (node version -> 20.12.2)
 2. set mongodb url in **.env file**
 3. **npm build**
 4. **npm run start-server** -> runs nodejs and express to serve web page from npm build
 5. **npm run start** -> front-end server to serve angular page.
+
+## To run on Docker
+
+1. npm install
+2. npm build
+3. docker setup
+4. docker-compose build --no-cache
+5. docker-compose up -d
 
 
 ## Features
@@ -89,9 +97,10 @@ To deploy this project run
   - Mongoose ODM for schema definition, validation, and querying.
   - Aggregation pipelines for advanced data processing and reporting.
 
-- **GitHub Workflow (CI/CD)**:
+- **GitHub Workflow (CI/CD) And Docker**:
   - Automated testing with GitHub Actions for running Karma/Jasmine tests and api testing using Mocha/Chai on push/pull requests.
   - Continuous integration for linting and building Angular and Node.js applications.
+  - Dockerization for containerized deployment and testing of Angular and Node.js applications along with Mongodb Integration.
   
 ## Users
 
