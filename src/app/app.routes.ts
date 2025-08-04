@@ -16,9 +16,11 @@ import { InventoryComponent } from './pages/inventory/inventory.component';
 import { OrderBillComponent } from './pages/order-bill/order-bill.component';
 import { FoodInvoiceLayoutComponent } from './pages/food-invoice-layout/food-invoice-layout.component';
 import { OrderTableComponent } from './pages/order-table/order-table.component';
+import { CallbackComponent } from './pages/callback/callback.component';
 
 export const routes: Routes = [
-    {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
+    {title: 'Login', component: LoginComponent, path:'login'},
+    {path:'callback', component:CallbackComponent},
     {
         path: 'admin',
         component: LayoutComponent,
