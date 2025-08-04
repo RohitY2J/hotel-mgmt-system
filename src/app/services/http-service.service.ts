@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../env/environment';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,5 +22,23 @@ export class HttpService {
       withCredentials: true,
     });
   }
+
+  // httpPostCAS(path: string, request: any) {
+  //   return this.httpClient.post(`${environment.casServerUrl}/api/${path}`, request, {
+  //     withCredentials: true,
+  //   });
+  // }
+
+  // httpPostCAS(path: string, request: any): Observable<any> {
+  //   return from(
+  //     axios.post(`${environment.casServerUrl}/api/${path}`, request, {
+  //       withCredentials: true,
+  //       headers: {
+  //         'Origin': this.clientOrigin,
+  //         'Content-Type': 'application/json'
+  //       }
+  //     }).then(response => response.data)
+  //   );
+  // }
 }
 export const ApiURL = environment.serverUrl+"/api";
