@@ -25,7 +25,7 @@ const port = environment.serverPort;
 const MONGO_DB = environment.databaseURL;
 
 const isAuthenticated = require('./helper/auth_middleware');
-
+const jwtMiddleware = require('./helper/jwt_middleware');
 
 try {
 
@@ -128,7 +128,7 @@ try {
     res.send(req.user);
   })
 
-  app.get('/dashboard', isAuthenticated, (req, res) => {
+  app.get('/dashboard', jwtMiddleware, (req, res) => {
     res.render('dashboard', { user: req.user });
   });
 
@@ -151,7 +151,7 @@ try {
     next()
   })
 
-  app.use('/api', isAuthenticated, require('./routes/api'))
+  app.use('/api', jwtMiddleware, require('./routes/api'))
 
   app.get('/api/*', (req, res) => {
     res.send({
