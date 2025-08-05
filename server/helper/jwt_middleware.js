@@ -26,6 +26,9 @@ function jwtMiddleware(req, res, next){
       roles: Array.isArray(decoded.role) ? decoded.role : [decoded.role],
       clientApplicationId: decoded.aud
     };
+    if(!req.user.clientId){
+      req.user.clientId = '66a51857f9bc44ed01853eb5';
+    }
     if (idToken) req.idToken = idToken;
 
     next();
