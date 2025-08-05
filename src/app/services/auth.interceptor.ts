@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../env/environment';
 import { jwtDecode } from 'jwt-decode';
 import { UserService } from './user_context.service';
+import axios from 'axios';
 
 export function authInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> {
   const router = inject(Router);
@@ -34,41 +35,33 @@ export function authInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Obs
     }
   };
 
-  const handleTokenRefresh = (req: HttpRequest<any>): Observable<HttpEvent<any>> => {
+  const handleTokenRefresh = async (req: HttpRequest<any>): Promise<void> => {
     const accessToken = localStorage.getItem('accessToken');
-    return httpClient.get(`${apiUrl}/User/GetRefreshToken`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      withCredentials: true
-    }).pipe(
-      switchMap((refreshData: any) => {
-        const refreshToken = refreshData.refreshToken;
-        return httpClient.post(`${apiUrl}/User/Refresh`, {}, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true
-        }).pipe(
-          switchMap((data: any) => {
-            localStorage.setItem('accessToken', data.accessToken);
-            if (data.idToken) localStorage.setItem('idToken', data.idToken);
-            updateUserFromToken(data.accessToken);
-            const authReq = req.clone({
-              setHeaders: {
-                Authorization: `Bearer ${data.accessToken}`,
-                ...(data.idToken && { 'X-Id-Token': data.idToken })
-              }
-            });
-            return next(authReq);
-          })
-        );
-      }),
-      catchError(error => {
+    try{
+      const response = await axios.get(`${environment.casServerUrl}/api/auth/refreshToken`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+  
+      const { data } = await axios.post(`${environment.casServerUrl}/api/auth/token`, {
+        code: response.data
+      }, 
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+  
+      localStorage.setItem('accessToken', data.accessToken);
+      if (data.idToken) localStorage.setItem('idToken', data.idToken);
+      updateUserFromToken(data.accessToken);
+      //config.headers = config.headers || {};
+    }
+    catch(error:any){
         console.error('Token refresh failed:', error);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('idToken');
-        userService.setUser(null);
+        //localStorage.removeItem('accessToken');
+        //localStorage.removeItem('idToken');
+        //userService.setUser(null);
         router.navigate(['/login']);
-        return throwError(() => error);
-      })
-    );
+        //return throwError(() => error);
+    };
   };
 
   const accessToken = localStorage.getItem('accessToken');
@@ -80,7 +73,7 @@ export function authInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Obs
     const currentTime = Math.floor(Date.now() / 1000);
 
     if (decoded.exp < currentTime && !req.url.includes('/api/User/GetRefreshToken')) {
-      return handleTokenRefresh(req);
+      handleTokenRefresh(req);
     }
 
     authReq = req.clone({
@@ -95,10 +88,10 @@ export function authInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Obs
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         console.error('Unauthorized, redirecting to login');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('idToken');
-        userService.setUser(null);
-        router.navigate(['/login']);
+        //localStorage.removeItem('accessToken');
+        //localStorage.removeItem('idToken');
+        //userService.setUser(null);
+        //router.navigate(['/login']);
       } else if (error.status === 403) {
         console.error('Forbidden: Insufficient permissions');
         router.navigate(['/unauthorized']);
