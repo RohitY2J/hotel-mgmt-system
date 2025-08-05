@@ -63,6 +63,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { UserInfo, UserService } from './user_context.service';
+import axios from 'axios';
+import { environment } from '../../../env/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -97,11 +99,11 @@ export class AuthService {
   //   });
   // }
 
-  handleCallback(code: string): Observable<any> {
-    return this.httpService.httpPost('User/Token', { code }).pipe(
-      tap((response: any) => {
-        const accessToken = response.accessToken;
-        const idToken = response.idToken;
+  handleCallback(code: string){
+    return axios.post(`${environment.casServerUrl}/api/auth/Token`, { code }).then(
+      (response: any) => {
+        const accessToken = response.data.accessToken;
+        const idToken = response.data.idToken;
         localStorage.setItem('accessToken', accessToken);
         if (idToken) localStorage.setItem('idToken', idToken);
 
@@ -130,7 +132,10 @@ export class AuthService {
           throw error;
         }
       })
-    );
+      .catch((err:any) => {
+        console.log(err);
+        this.router.navigateByUrl('/login');
+      });
   }
 
 
@@ -154,8 +159,11 @@ export class AuthService {
     if (!accessToken) {
       return Promise.resolve(false);
     }
+    else{
+      return Promise.resolve(true);
+    }
     try {
-      const decoded: { exp: number } = jwtDecode(accessToken);
+      const decoded: { exp: number } = jwtDecode(accessToken!!);
       const currentTime = Math.floor(Date.now() / 1000);
       if (decoded.exp < currentTime) {
         localStorage.removeItem('accessToken');
