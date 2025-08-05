@@ -24,19 +24,10 @@ import { AuthService } from '../../services/auth.service';
 export class CallbackComponent implements OnInit {
   constructor(private authService: AuthService,private router: Router, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     const code = this.route.snapshot.queryParamMap.get('code');
     if (code) {
-      this.authService.handleCallback(code).subscribe({
-        next: () => console.log('Callback processed'),
-        error: (err) => {
-          console.error('Callback failed:', err);
-          this.router.navigateByUrl('/login');
-        }
-      });
-    } else {
-      console.error('No authorization code in callback');
-      this.router.navigateByUrl('/login');
+      await this.authService.handleCallback(code);
     }
   }
 }
