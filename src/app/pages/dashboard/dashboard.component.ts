@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.httpService.httpGet('/dashboard/getDashboardData')
+    this.httpService.httpGet('dashboard/getDashboardData')
     .pipe(finalize(() => {
       this.isLoading = false;
     }))
