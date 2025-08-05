@@ -1,4 +1,4 @@
-const jwtDecode = require('jwt-decode');
+const { jwtDecode } = require('jwt-decode');
 
 function jwtMiddleware(req, res, next){
   const accessToken = req.headers['authorization']?.split(' ')[1];
