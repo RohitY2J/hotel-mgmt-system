@@ -33,8 +33,8 @@ export class ReservationFormComponent implements OnInit {
   ) {
     this._constService = constService;
   }
-  ngOnInit(): void {
-    this.getRooms();
+  async ngOnInit(){
+    await this.getRooms();
   }
 
   _constService: any = null;
@@ -80,17 +80,13 @@ export class ReservationFormComponent implements OnInit {
     price: new FormControl(this.selectedRoom.pricePerDay, Validators.required),
   });
 
-  getRooms() {
-    this.httpService
-      .httpPost(`room/getRooms?pageSize=100&pageNo=1`, {
-        occupancyStatus: 0,
-      })
-      .subscribe({
-        next: (res) => {
-          this.allRooms = res;
-        },
-        error: (err) => console.log,
-      });
+  async getRooms() {
+    let response = await this.httpService
+                              .httpPostAsync(`room/getRooms?pageSize=100&pageNo=1`, {
+                                occupancyStatus: 0,
+                              });
+
+    this.allRooms = response;
   }
 
   closeModal = () => this.onModalClose.emit();
