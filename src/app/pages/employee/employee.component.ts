@@ -72,7 +72,7 @@ export class EmployeeComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{10,15}$')]],
       address: [''],
       role: ['', Validators.required],
       employeeId: [''],

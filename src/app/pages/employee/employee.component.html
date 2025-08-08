@@ -11,8 +11,8 @@
                 <input type="text" formControlName="firstName" id="firstName"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Enter first name" required>
-                <div *ngIf="myForm.get('firstName')?.invalid 
-                        && (myForm.get('firstName')?.dirty 
+                <div *ngIf="myForm.get('firstName')?.invalid
+                        && (myForm.get('firstName')?.dirty
                         || myForm.get('firstName')?.touched)">
                     <div *ngIf="myForm.get('firstName')?.errors?.['required']" class="text-red-500 text-xs italic">First
                         Name is required.</div>
@@ -46,18 +46,24 @@
                 </div>
             </div>
 
-            <div class="col-span-2 sm:col-span-1">
-                <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
-                    Number</label>
-                <input type="tel" formControlName="phoneNumber" id="phoneNumber"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Enter phone number" required>
-                <div
-                    *ngIf="myForm.get('phoneNumber')?.invalid && (myForm.get('phoneNumber')?.dirty || myForm.get('phoneNumber')?.touched)">
-                    <div *ngIf="myForm.get('phoneNumber')?.errors?.['required']" class="text-red-500 text-xs italic">
-                        Phone number is required.</div>
-                </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
+              Number</label>
+            <input type="number" formControlName="phoneNumber" id="phoneNumber"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                   placeholder="Enter phone number" required>
+            <div
+              *ngIf="myForm.get('phoneNumber')?.invalid && (myForm.get('phoneNumber')?.dirty || myForm.get('phoneNumber')?.touched)">
+              <div *ngIf="myForm.get('phoneNumber')?.errors?.['required']" class="text-red-500 text-xs italic">
+                Phone number is required.
+              </div>
             </div>
+            <div
+              *ngIf="myForm.get('phoneNumber')?.errors?.['pattern']"
+              class="text-red-500 text-xs italic">
+              Invalid Phone Number.
+            </div>
+          </div>
 
             <div class="col-span-2 sm:col-span-1">
                 <label for="address"

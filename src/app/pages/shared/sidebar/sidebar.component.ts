@@ -16,7 +16,7 @@ export class SidebarComponent {
   collapseShow = "hidden";
   clientName = "Default";
   ngOnInit(): void {
-    this.clientName = this.authService.getUser().client.clientName;
+    this.clientName = this.authService.getUser().client?.clientName ?? "Default";
     initFlowbite();
   }
   logout() {
