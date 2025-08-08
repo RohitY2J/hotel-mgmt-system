@@ -99,12 +99,17 @@ export class ReservationComponent implements OnInit {
   searchControl = new FormControl();
   filteredOptions: string[] = [];
 
+  reservationStatusDropDown: {key: Number, value: string}[];
+  paymentStatusDropDown: {key: Number, value: string}[];
 
   constructor(
     private httpService: HttpService,
     public constService: ConstantsService,
     private router: Router
-  ) {}
+  ) {
+    this.reservationStatusDropDown = this.constService.getStatusValuesAsDictionary('reservationStatus');
+    this.paymentStatusDropDown = this.constService.getStatusValuesAsDictionary('paymentStatus');
+  }
 
   async ngOnInit() {
     await this.getReservationsAsync();
