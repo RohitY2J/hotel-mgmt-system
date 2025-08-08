@@ -6,6 +6,8 @@ export interface UserInfo {
   email: string | null;
   roles: string[] | null;
   clientApplicationId: string | null;
+  tenantId: string | null;
+  tenantName: string;
 }
 
 @Injectable({

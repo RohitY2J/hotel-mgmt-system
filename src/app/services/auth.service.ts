@@ -70,7 +70,7 @@ import { environment } from '../../../env/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private userDetails: UserInfo | null = null;
+  //private userDetails: UserInfo | null = null;
 
   constructor(
     private httpService: HttpService,
@@ -79,9 +79,9 @@ export class AuthService {
   ) {
     // Sync userDetails with UserService on initialization
     this.userService.user$.subscribe(user => {
-      this.userDetails = user;
+      //this.userDetails = user;
       if (user?.clientApplicationId) {
-        localStorage.setItem('clientName', user.clientApplicationId); // Adjust based on actual clientName source
+        localStorage.setItem('clientName', user.tenantName); // Adjust based on actual clientName source
       } else {
         localStorage.removeItem('clientName');
       }
@@ -108,17 +108,19 @@ export class AuthService {
         if (idToken) localStorage.setItem('idToken', idToken);
 
         try {
-          const decoded: { user: string; email: string; role: string | string[]; aud: string } = jwtDecode(accessToken);
+          const decoded: { user: string; email: string; role: string | string[]; aud: string; tenantId: string; tenantName: string } = jwtDecode(accessToken);
           const roles = Array.isArray(decoded.role) ? decoded.role : [decoded.role];
           const user: UserInfo = {
             userId: decoded.user,
             email: decoded.email,
             roles,
-            clientApplicationId: decoded.aud
+            clientApplicationId: decoded.aud,
+            tenantId: decoded.tenantId,
+            tenantName: decoded.tenantName
           };
           this.userService.setUser(user);
-          this.userDetails = user;
-          localStorage.setItem('clientName', decoded.aud);
+          //this.userDetails = user;
+          localStorage.setItem('clientName', decoded.tenantName);
           localStorage.removeItem('loginRequest');
           this.router.navigateByUrl('/admin/dashboard');
         } catch (error) {
@@ -127,7 +129,7 @@ export class AuthService {
           localStorage.removeItem('idToken');
           localStorage.removeItem('clientName');
           this.userService.setUser(null);
-          this.userDetails = null;
+          //this.userDetails = null;
           this.router.navigateByUrl('/login');
           throw error;
         }
@@ -145,7 +147,7 @@ export class AuthService {
         localStorage.removeItem('idToken');
         localStorage.removeItem('clientName');
         this.userService.setUser(null);
-        this.userDetails = null;
+        //this.userDetails = null;
         this.router.navigateByUrl('/login');
     // return this.httpService.httpGet('User/Logout').pipe(
     //   tap(() => {
@@ -170,7 +172,7 @@ export class AuthService {
         localStorage.removeItem('idToken');
         localStorage.removeItem('clientName');
         this.userService.setUser(null);
-        this.userDetails = null;
+        //this.userDetails = null;
         return Promise.resolve(false);
       }
       return Promise.resolve(!!this.userService.getUser());
@@ -208,6 +210,20 @@ export class AuthService {
   // }
 
   getUser(): UserInfo | null {
-    return this.userDetails;
+    let accessToken = localStorage.getItem("accessToken");
+    if(!accessToken){
+      return null;
+    }
+    const decoded: { user: string; email: string; role: string | string[]; aud: string; tenantId: string; tenantName: string } = jwtDecode(accessToken);
+    const roles = Array.isArray(decoded.role) ? decoded.role : [decoded.role];
+    const user: UserInfo = {
+      userId: decoded.user,
+      email: decoded.email,
+      roles,
+      clientApplicationId: decoded.aud,
+      tenantId: decoded.tenantId,
+      tenantName: decoded.tenantName
+    };
+    return user;
   }
 }
