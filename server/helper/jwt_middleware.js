@@ -1,6 +1,7 @@
 const { jwtDecode } = require('jwt-decode');
+const dbContext = require('../model');
 
-function jwtMiddleware(req, res, next){
+async function jwtMiddleware(req, res, next){
   const accessToken = req.headers['authorization']?.split(' ')[1];
   const idToken = req.headers['x-id-token'];
 
@@ -24,10 +25,13 @@ function jwtMiddleware(req, res, next){
       userId: decoded.user,
       email: decoded.email,
       roles: Array.isArray(decoded.role) ? decoded.role : [decoded.role],
-      clientApplicationId: decoded.aud
+      clientApplicationId: decoded.aud,
+      tenantId: decoded.tenantId,
+      tenantName: decoded.tenantName
     };
     if(!req.user.clientId){
-      req.user.clientId = '66a51857f9bc44ed01853eb5';
+      let client = await dbContext.Client.findOne({ clientId: req.user.tenantId }).exec();
+      req.user.clientId = client._id;
     }
     if (idToken) req.idToken = idToken;
 
