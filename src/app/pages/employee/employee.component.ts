@@ -83,7 +83,7 @@ export class EmployeeComponent {
     });
 
     await this.loadRoles();
-    this.loadEmployees();
+    await this.loadEmployees();
   }
 
   async updateFilterOptions(value: string) {
@@ -249,10 +249,10 @@ export class EmployeeComponent {
     this.isLoading = true;
 
     try {
-      const response = await firstValueFrom(this.httpService.httpGet("admin/getRoles"));
-      let roleResponse = response as HttpListResponse;
+      const response = await this.httpService.httpGetAsync("admin/getRoles");
+      let roleResponse = response as unknown as HttpListResponse;
       console.log('Fetched data:', roleResponse);
-      this.roles = roleResponse.data;
+      this.roles = roleResponse.data; 
     } catch (error) {
       console.error('Error fetching roles:', error);
     } finally {
@@ -261,24 +261,16 @@ export class EmployeeComponent {
 
   }
 
-  loadEmployees() {
+  async loadEmployees() {
     this.isLoading = true;
     this.filter.searchText = this.searchControl.value;
-    this.httpService.httpPost("admin/getEmployees", this.filter)
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
-      .subscribe(
-        (response) => {
-          let employeeResponse = response as HttpListResponse;
-          console.log('Fetched data:', response);
-          this.employees = employeeResponse.data;
-          this.filter.pagination.dataCount = this.employees.length;
-        },
-        (error) => {
-          console.error('Error fetching users:', error);
-        }
-      );
+    
+    let employeeResponse = await this.httpService.httpPostAsync("admin/getEmployees", this.filter) as HttpListResponse;
+    console.log('Fetched data:', employeeResponse);
+    this.employees = employeeResponse.data;
+    this.filter.pagination.dataCount = this.employees.length;
+    
+    this.isLoading = false;
   }
 
   searchInputChanged(event: any) {
