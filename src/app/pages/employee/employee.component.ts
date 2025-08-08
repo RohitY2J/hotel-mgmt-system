@@ -239,6 +239,7 @@ export class EmployeeComponent {
 
   closeRoleModal() {
     this.isRoleModalOpen = false;
+    this.myRoleForm.reset();
   }
 
   closeConfirmDialog() {
