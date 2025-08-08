@@ -18,13 +18,15 @@ export function authInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Obs
   const updateUserFromToken = (accessToken: string | null): void => {
     if (accessToken) {
       try {
-        const decoded: { user: string; email: string; role: string | string[]; aud: string } = jwtDecode(accessToken);
+        const decoded: { user: string; email: string; role: string | string[]; aud: string, tenantId: string, tenantName: string } = jwtDecode(accessToken);
         const roles = Array.isArray(decoded.role) ? decoded.role : [decoded.role];
         userService.setUser({
           userId: decoded.user,
           email: decoded.email,
           roles,
           clientApplicationId: decoded.aud,
+          tenantId: decoded.tenantId,
+          tenantName: decoded.tenantName
         });
       } catch (error) {
         console.error('Failed to decode JWT:', error);

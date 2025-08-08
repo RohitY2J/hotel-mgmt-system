@@ -7,7 +7,8 @@ const ClientSchema = new Schema({
   meta: {
     isDeleted: {type: Boolean, default: false}
   },
-  clientName: {type: String}
+  clientName: {type: String},
+  clientId: {type: String},
 }, {timestamps: true});
 
 module.exports = mongoose.model('Client', ClientSchema);
