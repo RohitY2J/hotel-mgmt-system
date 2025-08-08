@@ -6,6 +6,8 @@ import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http-service.service';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { finalize } from 'rxjs';
+import { environment } from '../../../../env/environment';
+import axios  from 'axios';
 
 @Component({
   selector: 'app-login',
@@ -40,20 +42,41 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    this.httpService.httpPost('login', this.loginRequest.value)
-    .pipe(finalize(()=>{
+
+    axios.post(`${environment.casServerUrl}/api/auth/authorize`, {
+      email: this.loginRequest.value.email,
+      password: this.loginRequest.value.password,
+      redirectUri: 'http://localhost:4200/callback',
+      appId: '257bb609-a2fa-4093-beb7-655077bc1745'
+    }).then(response => {
       this.isLoading = false;
-      this.showNotification = true;
-    }))
-    .subscribe({
-      next: (res) => {
-        this.router.navigateByUrl('/admin/dashboard')
-        this.notificationParams = {message: `Logged in successfully.`, error: false}
-      },
-      error: (err) =>{
-        console.log('err', err);
-        this.notificationParams = {message: `Error logging in: ${err?.error?.msg}`, error: true}
-      }
-    });
+      console.log(response.data)
+      this.router.navigate(['/callback'], {queryParams: { code:  response.data.code}})
+    }
+    ).catch(err => {
+      console.log(err);
+    })
+
+    // this.httpService.httpPostCAS('authorize/auth', {
+    //   email: this.loginRequest.value.email,
+    //   password: this.loginRequest.value.password,
+    //   redirectUri: 'http://localhost:8000/callback',
+    //   appId: '257bb609-a2fa-4093-beb7-655077bc1745'
+    // })
+    // .pipe(finalize(()=>{
+    //   this.isLoading = false;
+    //   this.showNotification = true;
+    // }))
+    // .subscribe({
+    //   next: (res: any) => {
+    //     //this.router.navigateByUrl('/admin/dashboard')
+    //     //this.notificationParams = {message: `Logged in successfully.`, error: false}
+    //     this.router.navigate(['/callback'], {queryParams: { code:  res.code}})
+    //   },
+    //   error: (err) =>{
+    //     console.log('err', err);
+    //     this.notificationParams = {message: `Error logging in: ${err?.error?.msg}`, error: true}
+    //   }
+    // });
   }
 }

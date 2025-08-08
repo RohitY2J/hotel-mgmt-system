@@ -103,7 +103,7 @@
 <ng-container *ngIf="selectedReservation!=null && selectedReservation!=undefined">
     <app-order-form [reservation]="selectedReservation" [isVisible]="isOrdersFormVisible"
         (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()"
-        (updateReservation)="getReservations()"></app-order-form>
+        (updateReservation)="getReservationsAsync()"></app-order-form>
 </ng-container>
 
 <app-modal *ngIf="selectedReservation!=null" [title]="'Order Summary'" [isVisible]="isInvoiceComponentVisible"

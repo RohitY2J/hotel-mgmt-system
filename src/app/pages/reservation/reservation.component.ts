@@ -66,20 +66,6 @@ export class ReservationComponent implements OnInit {
   showPrintInvoiceMessage: boolean = false;
   initialTotalAmountForSelected: number = 0;
 
-  // customOptionTemplate = true;
-  // selectedOptions: string[] = [];
-  // options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-  // isSelected(option: string): boolean {
-  //   return this.selectedOptions.includes(option);
-  // }
-  // toggleOption(option: string) {
-  //   if (this.selectedOptions.includes(option)) {
-  //     this.selectedOptions = this.selectedOptions.filter(o => o !== option);
-  //   } else {
-  //     this.selectedOptions.push(option);
-  //   }
-  // } 
-
   filter: any = {
     searchText: '',
     filterObj: {
@@ -119,8 +105,9 @@ export class ReservationComponent implements OnInit {
     public constService: ConstantsService,
     private router: Router
   ) {}
-  ngOnInit(): void {
-    this.getReservations();
+
+  async ngOnInit() {
+    await this.getReservationsAsync();
     this.initialStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
@@ -163,41 +150,35 @@ export class ReservationComponent implements OnInit {
   deleteButtonClicked(reservation: any) {}
   editButtonClicked(reservation: any) {}
   search() {
-    this.getReservations();
+    this.getReservationsAsync();
   }
 
   searchInputChanged(e: any) {}
 
-  getReservations() {
+  async getReservationsAsync() {
     this.isLoading = true;
     this.filter.filterObj.customerFullName = this.searchControl.value
-    this.httpService
-      .httpPost(
+    
+    let response = await this.httpService
+      .httpPostAsync(
         `reservation/getReservations?pageNo=${this.filter.pagination.page}&pageSize=${this.filter.pagination.pageSize}`,
         this.filter.filterObj
-      )
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          this.reservations = res;
-          if (this.selectedReservation != null)
-            this.selectedReservation = this.reservations.find(
+      );
+
+    this.reservations = response;
+    if(this.selectedReservation != null){
+      this.selectedReservation = this.reservations.find(
               (r: any) => r.id === this.selectedReservation.id
             );
           console.log(this.selectedReservation);
-        },
-        error: (err) => console.log,
-        complete: () => (this.isLoading = false),
-      });
+    }
+
+    this.isLoading = false;
   }
 
   closeReservationModal() {
     this.isReservationFormOpen = false;
-    this.getReservations();
+    this.getReservationsAsync();
   }
   openCreateReservationForm(formMode: String = 'create') {
     this.formMode = formMode;
@@ -224,11 +205,11 @@ export class ReservationComponent implements OnInit {
   }
   closeOrdersForm() {
     this.isOrdersFormVisible = false;
-    this.getReservations();
+    this.getReservationsAsync();
   }
   closeOrderComponent() {
     this.isOrderComponentVisible = false;
-    this.getReservations();
+    this.getReservationsAsync();
   }
   getOrderAmount(reservationItem: any) {
     return reservationItem.billing.orders.reduce(
@@ -254,7 +235,7 @@ export class ReservationComponent implements OnInit {
             message: 'Checked In successfully.',
             error: false,
           };
-          this.getReservations();
+          this.getReservationsAsync();
         },
         error: (err) => {
           this.notificationParams = {
@@ -279,11 +260,11 @@ export class ReservationComponent implements OnInit {
       },
     };
     this.searchControl.setValue("");
-    this.getReservations();
+    this.getReservationsAsync();
   }
   updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
-    this.getReservations();
+    this.getReservationsAsync();
   }
 
   openCheckOutForm(reservation: any) {
@@ -297,7 +278,7 @@ export class ReservationComponent implements OnInit {
     this.isCheckOutFormVisible = false;
     this.initialTotalAmountForSelected = 0;
     this.resetCheckOutModal();
-    this.getReservations();
+    this.getReservationsAsync();
   }
 
   resetCheckOutModal(){
