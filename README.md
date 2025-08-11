@@ -52,10 +52,22 @@ To deploy this project run
 ## To run on Docker
 
 1. npm install
-2. npm build
-3. docker setup
-4. docker-compose build --no-cache
-5. docker-compose up -d
+2. set the environment variables for angular and node in folder env/ 
+3. npm build
+4. docker setup
+5. docker-compose build --no-cache
+6. docker-compose up -d
+
+# After integrating with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
+
+1. Create a user in the CAS system
+2. Create an application in CAS system, with proper 
+  - Application URL: For solving cors,
+  - Redirect URL: For callback
+3. Create a tenant in the CAS system
+4. Assign tenant to application
+5. Assign the user to the application and tenant
+6. Create an application with clientid set to the tenant id.
 
 
 ## Features
@@ -71,6 +83,7 @@ To deploy this project run
 - Responsive pages
 - kitchen tracking
 - Bill tracking and generation
+- Centralized Authentication Integration
 
 ## Technologies Used
 
