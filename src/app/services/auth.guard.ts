@@ -19,18 +19,24 @@ export const authGuard: CanActivateFn = async (route, state) => {
     }
     return true;
   }
-  if(state.url.includes('/admin') && isAuthenticated && authService.getUser()?.roles?.find(x => x == Roles.Admin)){
-    return true;
-  }
-  else if(state.url.includes('/admin') && authService.getUser()?.roles?.find(x => x == Roles.Waiter))
-  {
-    router.navigate(['/waiter'])
-    return false;
-  }
-        
-  if (!isAuthenticated && !(router.url === '/login')) {
+  else if (!isAuthenticated && !(router.url === '/login')) {
     router.navigate(['/login']);
     return false;
   }
+
+  if(state.url.includes('/admin'))
+  {
+    if(authService.getUser()?.roles?.find(x => x == Roles.Admin)){
+      return true;
+    }
+    else if(authService.getUser()?.roles?.find(x => x == Roles.Waiter)){
+      router.navigate(['/waiter']);
+      return false;
+    }
+    else if(!authService.getUser()?.roles?.find(x => x == Roles.Admin)){
+      router.navigate(['/login']);
+    }
+  }     
+  
   return true;
 };
