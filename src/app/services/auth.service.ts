@@ -164,22 +164,6 @@ export class AuthService {
     else{
       return Promise.resolve(true);
     }
-    try {
-      const decoded: { exp: number } = jwtDecode(accessToken!!);
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decoded.exp < currentTime) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('idToken');
-        localStorage.removeItem('clientName');
-        this.userService.setUser(null);
-        //this.userDetails = null;
-        return Promise.resolve(false);
-      }
-      return Promise.resolve(!!this.userService.getUser());
-    } catch (error) {
-      console.error('Invalid token:', error);
-      return Promise.resolve(false);
-    }
   }
 
   setUserRole(): Promise<UserInfo | null> {
