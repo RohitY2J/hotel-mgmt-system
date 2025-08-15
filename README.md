@@ -67,7 +67,7 @@ To deploy this project run
 3. Create a tenant in the CAS system
 4. Assign tenant to application
 5. Assign the user to the application and tenant
-6. Create an application with clientid set to the tenant id.
+6. Create a client with clientid set to the tenant id in this application.
 
 
 ## Features
