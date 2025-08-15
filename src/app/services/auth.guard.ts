@@ -22,9 +22,15 @@ export const authGuard: CanActivateFn = async (route, state) => {
   if(state.url.includes('/admin') && isAuthenticated && authService.getUser()?.roles?.find(x => x == Roles.Admin)){
     return true;
   }
-  else
+  else if(state.url.includes('/admin') && authService.getUser()?.roles?.find(x => x == Roles.Waiter))
   {
-    router.navigate(['/login'])
+    router.navigate(['/waiter'])
     return false;
   }
+        
+  if (!isAuthenticated && !(router.url === '/login')) {
+    router.navigate(['/login']);
+    return false;
+  }
+  return true;
 };
