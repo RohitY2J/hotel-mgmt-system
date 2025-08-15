@@ -1,2 +1,0 @@
-a. need to revamp the UI of the application ( expecially kitchen and order)
-b. need to redirect the loggged in user based on user role
