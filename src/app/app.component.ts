@@ -15,8 +15,8 @@ export class AppComponent {
   title = 'angular-app';
 
   constructor(){
-    console.log('API URL:', environment.serverUrl);
-    console.log('Base Href:', environment.baseHref);
+    console.log('API URL:', environment.SERVER_URL);
+    console.log('Base Href:', environment.BASE_HREF);
   }
 
 }

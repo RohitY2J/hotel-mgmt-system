@@ -39,7 +39,7 @@ export class HttpService {
   }
 
   httpPostCAS(path: string, request: any) {
-    return axios.post(`${environment.casServerUrl}/api/${path}`, request, {
+    return axios.post(`${environment.CAS_SERVER_URL}/api/${path}`, request, {
       withCredentials: true,
     });
   }
@@ -56,4 +56,4 @@ export class HttpService {
   //   );
   // }
 }
-export const ApiURL = environment.serverUrl+"/api";
+export const ApiURL = environment.SERVER_URL+"/api";

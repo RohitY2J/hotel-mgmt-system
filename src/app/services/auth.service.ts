@@ -100,7 +100,7 @@ export class AuthService {
   // }
 
   handleCallback(code: string){
-    return axios.post(`${environment.casServerUrl}/api/auth/Token`, { code }).then(
+    return axios.post(`${environment.CAS_SERVER_URL}/api/auth/Token`, { code }).then(
       (response: any) => {
         const accessToken = response.data.accessToken;
         const idToken = response.data.idToken;

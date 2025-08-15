@@ -8,7 +8,7 @@ import { environment } from '../../env/environment';
 })
 export class SocketService {
   private socket: Socket;
-  private readonly uri: string = environment.serverUrl; // Your server URL
+  private readonly uri: string = environment.SERVER_URL; // Your server URL
 
   constructor() {
     this.socket = io(this.uri);

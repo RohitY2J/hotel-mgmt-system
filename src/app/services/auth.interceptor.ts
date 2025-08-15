@@ -120,7 +120,7 @@ export function authInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Obs
   const router = inject(Router);
   const httpClient = inject(HttpClient);
   const userService = inject(UserService);
-  const apiUrl = environment.casServerUrl + '/api';
+  const apiUrl = environment.CAS_SERVER_URL + '/api';
   let isRefreshing = false;
   const refreshTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>("");
 

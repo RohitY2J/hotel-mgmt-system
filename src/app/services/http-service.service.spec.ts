@@ -27,7 +27,7 @@ describe('HttpService', () => {
 
   it('should make a GET request with the correct URL and options', () => {
     const testPath = 'test-path';
-    const expectedUrl = `${environment.serverUrl}/api/${testPath}`;
+    const expectedUrl = `${environment.SERVER_URL}/api/${testPath}`;
 
     service.httpGet(testPath).subscribe();
 
@@ -41,7 +41,7 @@ describe('HttpService', () => {
   it('should return the response from the GET request', () => {
     const testPath = 'test-path';
     const expectedResponse = { data: 'test data' };
-    const expectedUrl = `${environment.serverUrl}/api/${testPath}`;
+    const expectedUrl = `${environment.SERVER_URL}/api/${testPath}`;
 
     service.httpGet(testPath).subscribe(response => {
       expect(response).toEqual(expectedResponse);
@@ -53,7 +53,7 @@ describe('HttpService', () => {
 
   it('should handle errors from the GET request', () => {
     const testPath = 'test-path';
-    const expectedUrl = `${environment.serverUrl}/api/${testPath}`;
+    const expectedUrl = `${environment.SERVER_URL}/api/${testPath}`;
     const errorMessage = 'Test error';
 
     service.httpGet(testPath).subscribe(
@@ -71,7 +71,7 @@ describe('HttpService', () => {
   it('should make a POST request with the correct URL, body, and options', () => {
     const testPath = 'test-path';
     const testRequest = { key: 'value' };
-    const expectedUrl = `${environment.serverUrl}/api/${testPath}`;
+    const expectedUrl = `${environment.SERVER_URL}/api/${testPath}`;
 
     service.httpPost(testPath, testRequest).subscribe();
 
@@ -87,7 +87,7 @@ describe('HttpService', () => {
     const testPath = 'test-path';
     const testRequest = { key: 'value' };
     const expectedResponse = { result: 'success' };
-    const expectedUrl = `${environment.serverUrl}/api/${testPath}`;
+    const expectedUrl = `${environment.SERVER_URL}/api/${testPath}`;
 
     service.httpPost(testPath, testRequest).subscribe(response => {
       expect(response).toEqual(expectedResponse);
@@ -100,7 +100,7 @@ describe('HttpService', () => {
   it('should handle errors from the POST request', () => {
     const testPath = 'test-path';
     const testRequest = { key: 'value' };
-    const expectedUrl = `${environment.serverUrl}/api/${testPath}`;
+    const expectedUrl = `${environment.SERVER_URL}/api/${testPath}`;
     const errorMessage = 'Test error';
 
     service.httpPost(testPath, testRequest).subscribe(
