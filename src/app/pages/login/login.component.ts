@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http-service.service';
 import { NotificationComponent } from '../shared/notification/notification.component';
-import { finalize } from 'rxjs';
 import { environment } from '../../../../env/environment';
 import axios  from 'axios';
 
@@ -57,27 +56,5 @@ export class LoginComponent implements OnInit {
     ).catch(err => {
       console.log(err);
     })
-
-    // this.httpService.httpPostCAS('authorize/auth', {
-    //   email: this.loginRequest.value.email,
-    //   password: this.loginRequest.value.password,
-    //   redirectUri: 'http://localhost:8000/callback',
-    //   appId: '257bb609-a2fa-4093-beb7-655077bc1745'
-    // })
-    // .pipe(finalize(()=>{
-    //   this.isLoading = false;
-    //   this.showNotification = true;
-    // }))
-    // .subscribe({
-    //   next: (res: any) => {
-    //     //this.router.navigateByUrl('/admin/dashboard')
-    //     //this.notificationParams = {message: `Logged in successfully.`, error: false}
-    //     this.router.navigate(['/callback'], {queryParams: { code:  res.code}})
-    //   },
-    //   error: (err) =>{
-    //     console.log('err', err);
-    //     this.notificationParams = {message: `Error logging in: ${err?.error?.msg}`, error: true}
-    //   }
-    // });
   }
 }
