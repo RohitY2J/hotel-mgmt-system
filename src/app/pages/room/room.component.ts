@@ -49,16 +49,19 @@ export class RoomComponent implements OnInit {
     },
   }
 
-  roomOccupancyStatusList: {key: number, value:string }[]|undefined; 
+  roomOccupancyStatusList: {key: number, value:string }[] = []; 
   
-  maintainanceStatusList: {key: number, value:string }[]|undefined; 
+  maintainanceStatusList: {key: number, value:string }[] = []; 
   
-  constructor(private httpService: HttpService, public constantService: ConstantsService) {}
+  constructor(private httpService: HttpService, public constantService: ConstantsService) {
+    
+  }
   
   ngOnInit(): void {
-    this.fetchRooms();
-    this.roomOccupancyStatusList = this.constantService.getStatusValuesAsDictionary('roomOccupancyStatus');
     this.maintainanceStatusList = this.constantService.getStatusValuesAsDictionary('roomMaintainanceStatus');
+    this.roomOccupancyStatusList = this.constantService.getStatusValuesAsDictionary('roomOccupancyStatus');
+
+    this.fetchRooms();
   }
 
   openCreateRoomForm() {
