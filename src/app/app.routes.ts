@@ -19,7 +19,7 @@ import { OrderTableComponent } from './pages/order-table/order-table.component';
 import { CallbackComponent } from './pages/callback/callback.component';
 
 export const routes: Routes = [
-    {title: 'Login', component: LoginComponent, path:'login'},
+    {title: 'Login', component: LoginComponent, path:'login', canActivate: [authGuard]},
     {path:'callback', component:CallbackComponent},
     {
         path: 'admin',
