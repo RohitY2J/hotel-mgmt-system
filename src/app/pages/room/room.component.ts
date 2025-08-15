@@ -194,7 +194,12 @@ export class RoomComponent implements OnInit {
     this.filter = {
       roomNumber: "",
       occupancyStatus: "",
-      maintainanceStatus: ""
+      maintainanceStatus: "",
+      pagination: {
+        page: 1,
+        pageSize: 12,
+        dataCount: 12,
+      },
     };
     this.fetchRooms();
   }
