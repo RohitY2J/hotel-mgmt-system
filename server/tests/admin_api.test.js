@@ -1,5 +1,7 @@
 process.env.NODE_ENV = 'test';
 const { app, server, mongoose } = require('../index');
+const jwt = require('jsonwebtoken');
+
 
 describe('Admin API Tests', () => {
   let mongoServer;
@@ -74,9 +76,19 @@ describe('Admin API Tests', () => {
       user.setPassword('TestPassword');
       await user.save();
 
-      await agent
-        .post('/api/login')
-        .send({ email: 'test.user@example.com', password: 'TestPassword' });
+      accessToken = jwt.sign(
+        { id: user._id, 
+          email: 'test.user@example.com',
+          user: 'Test User',
+          aud: 'Hotel Mgmt',
+          role: user.roleID 
+        },
+        'temp-secret-key', // Temporary secret key
+        { expiresIn: '1h' }
+      );
+
+      await agent.set('Authorization', `Bearer ${accessToken}`);
+
 
       // Insert a mock Role
       let role = new dbContext.Role({ roleName: 'Manager', clientId });
@@ -93,14 +105,6 @@ describe('Admin API Tests', () => {
       });
       await employee.save();
 
-      // Mock middleware to set req.clientId
-      // sinon.stub(require('../routes/api'), 'middleware').callsFake((req, res, next) => {
-      //   req.user = { clientId: clientId.toString() };
-      //   req.clientId = clientId;
-      //   console.log('Middleware stub: req.clientId =', req.clientId);
-      //   next();
-      // });
-
       // Mock FileUpload.single
       sinon.stub(require('../helper/file_upload').FileUpload, 'single').returns((req, res, next) => {
         req.file = { filename: 'profile.jpg' };
@@ -112,10 +116,6 @@ describe('Admin API Tests', () => {
         return new mongoose.Types.ObjectId(id);
       });
 
-      // Mock businessLogic
-      // sinon.stub(require('../business-logic').EmployeeLogic, 'getEmployee').resolves([
-      //   { firstName: 'John', lastName: 'Doe', contactInfo: { email: 'john.doe@example.com' } },
-      // ]);
        sinon.stub(require('../business-logic').EmployeeDailyActivityLogic, 'getEmployeeSchedules').resolves([
          { scheduleId: '123', employeeId: '456' },
        ]);

@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 const { app, server, mongoose } = require('../index');
 const sinon = require('sinon');
+const jwt = require('jsonwebtoken');
 
 describe('Order API Tests', function () {
   let mongoServer;
@@ -93,12 +94,18 @@ describe('Order API Tests', function () {
             
         user.setPassword('TestPassword');
         await user.save();
-
-      // Login to set session
-      const loginResponse = await agent.post('/api/login').send({
-        email: 'test.user@example.com',
-        password: 'TestPassword',
-      });
+        
+      // Generate JWT token manually with a temporary secret key
+      accessToken = jwt.sign(
+        { id: user._id, 
+          email: 'test.user@example.com',
+          user: 'Test User',
+          aud: 'Hotel Mgmt',
+          role: user.roleID 
+        },
+        'temp-secret-key', // Temporary secret key
+        { expiresIn: '1h' }
+      );
 
       // Stub conversion.ToObjectId
       sinon.stub(require('../helper/conversion'), 'ToObjectId').callsFake((id) => {
@@ -129,10 +136,12 @@ describe('Order API Tests', function () {
 
     describe('POST /api/order/addOrder', () => {
       it('should return 422 if tableNumber is missing', async () => {
+
         const res = await agent
-          .post('/api/order/addOrder')
-          .send({ orders: [{ menuId: new mongoose.Types.ObjectId(), qty: 2, price: 10, name: 'Burger' }] })
-          .expect(422);
+        .post('/api/order/addOrder')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ orders: [{ menuId: new mongoose.Types.ObjectId(), qty: 2, price: 10, name: 'Burger' }] })
+        .expect(422);
 
         console.log('Response body:', res.body);
         expect(res.body).to.have.property('success', false);
@@ -142,6 +151,7 @@ describe('Order API Tests', function () {
       it('should create a new order successfully', async () => {
         const res = await agent
           .post('/api/order/addOrder')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
               orders: [
                   { menuId: new mongoose.Types.ObjectId().toString(), 
@@ -191,6 +201,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/addOrder')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             tableNumber: tableId,
             orders: [
@@ -224,6 +235,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getSpecificOrder')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ tableNumber: tableId.toString() })
           .expect(200);
 
@@ -248,6 +260,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getOrders')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             pagination: { page: 1, pageSize: 8 },
             status: '0',
@@ -270,6 +283,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getOrders')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ pagination: { page: 1, pageSize: 8 } })
           .expect(500);
 
@@ -302,6 +316,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getOrderBills')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ id: order._id.toString() })
           .expect(200);
 
@@ -320,6 +335,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getOrderBills')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({})
           .expect(500);
 
@@ -333,6 +349,7 @@ describe('Order API Tests', function () {
       it('should return 422 if orderId is missing', async () => {
         const res = await agent
           .post('/api/order/billOrder')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ tableNumber: tableId.toString(), customerName: 'John Doe' })
           .expect(422);
 
@@ -352,6 +369,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/billOrder')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             _id: order._id.toString(),
             status: 2,
@@ -389,6 +407,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/billOrder')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ _id: new mongoose.Types.ObjectId().toString(), tableNumber: tableId.toString() })
           .expect(500);
 
@@ -402,6 +421,7 @@ describe('Order API Tests', function () {
       it('should return 422 if orderId or status is missing', async () => {
         const res = await agent
           .post('/api/order/updateStatus')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({})
           .expect(422);
 
@@ -421,6 +441,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/updateStatus')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ orderId: order._id.toString(), status: 1 })
           .expect(200);
 
@@ -442,6 +463,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/updateStatus')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ orderId: new mongoose.Types.ObjectId().toString(), status: 1 })
           .expect(500);
 
@@ -464,6 +486,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getCustomerName')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ filterValue: 'John' })
           .expect(200);
 
@@ -484,6 +507,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/getCustomerName')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ filterValue: 'John' })
           .expect(500);
 
@@ -498,6 +522,7 @@ describe('Order API Tests', function () {
       it('should return 422 if tableNumber or menuId is missing', async () => {
         const res = await agent
           .post('/api/order/cancelOrderMenu')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({})
           .expect(422);
 
@@ -518,6 +543,7 @@ describe('Order API Tests', function () {
 
         const res = await agent
           .post('/api/order/cancelOrderMenu')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ tableNumber: tableId.toString(), menuId: menuId.toString() })
           .expect(200);
 

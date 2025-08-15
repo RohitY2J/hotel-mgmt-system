@@ -86,7 +86,7 @@ describe('OrderItemComponent', () => {
     spyOn(window, 'open').and.returnValue(mockPrintWindow as any);
 
     // Mock AuthService
-    spyOn(authService, 'getUser').and.returnValue({ id: 'user1', name: 'Test User' });
+    //spyOn(authService, 'getUser').and.returnValue({ name: 'Test User' });
 
     // Debug logs
     spyOn(console, 'log').and.callThrough();

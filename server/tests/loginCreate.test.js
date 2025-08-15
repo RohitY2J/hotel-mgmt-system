@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 const {app,server,mongoose} = require('../index');
-
+const jwt = require('jsonwebtoken');
 
 describe('User APIs', () => {
   let mongoServer;
@@ -83,9 +83,18 @@ describe('User APIs', () => {
       // Mock checkIfUserExists
       //sinon.stub(global, 'checkIfUserExists').resolves(null);
 
-      await agent
-        .post('/api/login')
-        .send({ email: 'test.user@example.com', password: 'TestPassword' });
+      accessToken = jwt.sign(
+        { id: user._id, 
+          email: 'test.user@example.com',
+          user: 'Test User',
+          aud: 'Hotel Mgmt',
+          role: user.roleID 
+        },
+        'temp-secret-key', // Temporary secret key
+        { expiresIn: '1h' }
+      );
+
+      agent.set('Authorization', `Bearer ${accessToken}`);
     });
 
     afterEach(async () => {

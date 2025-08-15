@@ -1,5 +1,7 @@
 process.env.NODE_ENV = 'test';
 const { app, server, mongoose } = require('../index');
+const jwt = require('jsonwebtoken');
+
 
 describe('Menu API Tests', () => {
   let mongoServer;
@@ -80,22 +82,22 @@ describe('Menu API Tests', () => {
         await user.save();
 
       // Login to set session
-      const loginResponse = await agent.post('/api/login').send({
-        email: 'test.user@example.com',
-        password: 'TestPassword',
-      });
+      // const loginResponse = await agent.post('/api/login').send({
+      //   email: 'test.user@example.com',
+      //   password: 'TestPassword',
+      // });
 
-      // Log cookies from response headers
-      //console.log('Set-Cookie Header:', loginResponse.headers['set-cookie']);
+      accessToken = jwt.sign(
+                    { id: user._id, 
+                      email: 'test.user@example.com',
+                      user: 'Test User',
+                      aud: 'Hotel Mgmt',
+                      role: user.roleID 
+                    },
+                    'temp-secret-key', // Temporary secret key
+                    { expiresIn: '1h' }
+                  );
 
-      // Mock middleware
-    //   sinon.stub(require('../index'), 'middleware').callsFake((req, res, next) => {
-    //     console.log('Middleware stub called');
-    //     req.user = { clientId: clientId.toString() };
-    //     req.clientId = clientId;
-    //     console.log('Middleware stub: req.clientId =', req.clientId);
-    //     next();
-    //   });
 
       // Mock FileUpload.single
       sinon.stub(require('../helper/file_upload').FileUpload, 'single').returns((req, res, next) => {
@@ -107,9 +109,6 @@ describe('Menu API Tests', () => {
       sinon.stub(require('../helper/conversion'), 'ToObjectId').callsFake((id) => {
         return new mongoose.Types.ObjectId(id);
       });
-
-      // Mock CheckIfMenuExist
-      //sinon.stub(require('../services/menuService'), 'CheckIfMenuExist').resolves([]);
     });
 
     afterEach(async () => {
@@ -123,6 +122,7 @@ describe('Menu API Tests', () => {
       it('should return 422 if required fields are missing', async () => {
         const res = await agent
           .post('/api/menu/createMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({})
           .expect(422);
 
@@ -134,6 +134,7 @@ describe('Menu API Tests', () => {
       it('should return 422 if menu name already exists', async () => {
         await agent
           .post('/api/menu/createMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             name: 'Burger',
             description: 'Classic beef burger',
@@ -145,6 +146,7 @@ describe('Menu API Tests', () => {
 
         const res = await agent
           .post('/api/menu/createMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             name: 'Burger',
             description: 'Classic beef burger',
@@ -162,6 +164,7 @@ describe('Menu API Tests', () => {
       it('should create a menu item successfully', async () => {
         const res = await agent
           .post('/api/menu/createMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             name: 'Burger',
             description: 'Classic beef burger',
@@ -192,6 +195,7 @@ describe('Menu API Tests', () => {
 
         const res = await agent
           .post('/api/menu/createMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             name: 'Burger',
             description: 'Classic beef burger',
@@ -228,6 +232,7 @@ describe('Menu API Tests', () => {
       it('should return 422 if menu item does not exist', async () => {
         const res = await agent
           .post('/api/menu/updateMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             id: new mongoose.Types.ObjectId().toString(),
             description: 'Updated pizza',
@@ -245,6 +250,7 @@ describe('Menu API Tests', () => {
       it('should update a menu item successfully', async () => {
         const res = await agent
           .post('/api/menu/updateMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             id: menuItemId.toString(),
             description: 'Updated Margherita pizza',
@@ -273,6 +279,7 @@ describe('Menu API Tests', () => {
 
         const res = await agent
           .post('/api/menu/updateMenuItem')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({
             id: menuItemId.toString(),
             description: 'Updated pizza',
@@ -299,18 +306,6 @@ describe('Menu API Tests', () => {
         });
       });
 
-    //   it('should retrieve menu names successfully', async () => {
-    //     const res = await agent
-    //       .post('/api/menu/getMenuName')
-    //       .send({ query: 'Burger' })
-    //       .expect(200);
-
-    //     console.log('Response body:', res.body);
-    //     expect(res.body).to.have.property('success', true);
-    //     expect(res.body).to.have.property('msg', 'menu name successfully retrieved');
-    //     expect(res.body.data).to.include('Burger');
-    //   });
-
       it('should handle database errors', async () => {
         sinon.stub(dbContext.MenuItem, 'find').callsFake(() => {
             console.log('dbContext.MenuItem.find stub called');
@@ -327,6 +322,7 @@ describe('Menu API Tests', () => {
 
         const res = await agent
           .post('/api/menu/getMenuName')
+          .set('Authorization', `Bearer ${accessToken}`)
           .send({ query: 'Burger' })
           .expect(500);
 
