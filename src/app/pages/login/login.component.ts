@@ -46,8 +46,9 @@ export class LoginComponent implements OnInit {
     axios.post(`${environment.CAS_SERVER_URL}/api/auth/authorize`, {
       email: this.loginRequest.value.email,
       password: this.loginRequest.value.password,
-      redirectUri: `${environment.SERVER_URL}/callback`,
-      appId: environment.APPLICATION_ID
+      redirectUri: `${environment.REDIRECT_URI}`,
+      appId: environment.APPLICATION_ID,
+      tenantId: environment.TENANT_ID
     }).then(response => {
       this.isLoading = false;
       console.log(response.data)
