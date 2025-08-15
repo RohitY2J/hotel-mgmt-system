@@ -120,13 +120,13 @@ try {
     res.send({ message: "Log out success!" });
   });
 
-  app.get("/api/isAuthenticated", (req, res) => {
-    res.send({ isAuthenticated: req.isAuthenticated() });
-  });
+  // app.get("/api/isAuthenticated", (req, res) => {
+  //   res.send({ isAuthenticated: req.isAuthenticated() });
+  // });
 
-  app.get("/api/getUserDetails", (req, res) => {
-    res.send(req.user);
-  })
+  // app.get("/api/getUserDetails", (req, res) => {
+  //   res.send(req.user);
+  // })
 
   app.get('/dashboard', jwtMiddleware, (req, res) => {
     res.render('dashboard', { user: req.user });
