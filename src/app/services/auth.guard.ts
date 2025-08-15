@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { UserService } from './user_context.service';
+import { Roles } from './constants.service';
 
 export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService) as AuthService;
@@ -16,23 +17,28 @@ export const authGuard: CanActivateFn = async (route, state) => {
   }
   var isAuthenticated = (await authService.isAuthenticated());
   if (state.url === '/login' || state.url === '/') {
-    if (isAuthenticated /*&& userDetail.getUser()?.email == ""*/) {
+    if (isAuthenticated && userDetail.getUser()?.roles?.find(x => x == Roles.Admin)) {
       router.navigate(['/admin', { outlets: { main: ['dashboard'] } }]);
       return false;
     }
-    else if(isAuthenticated /*&& userDetail && userDetail,g == 0*/){
+    else if(isAuthenticated && userDetail.getUser()?.roles?.find(x => x == Roles.Waiter)){
         router.navigate(['/waiter'])
         return false;
     }
     return true;
   }
-  // if(state.url.includes('/admin') && isAuthenticated /*&& userDetail &&userDetail.roleID == 0*/){
-  //   router.navigate(['/waiter'])
-  //   return false;
-  // }
-  if (!isAuthenticated && !(router.url === '/login')) {
-    router.navigate(['/login']);
+  if(state.url.includes('/admin') && isAuthenticated && userDetail.getUser()?.roles?.find(x => x == Roles.Admin)){
+    return true;
+  }
+  else
+  {
+    router.navigate(['/login'])
     return false;
   }
-  return true;
+    
+  // if (!isAuthenticated && !(router.url === '/login')) {
+  //   router.navigate(['/login']);
+  //   return false;
+  // }
+  // return true;
 };

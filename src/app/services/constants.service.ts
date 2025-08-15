@@ -131,3 +131,8 @@ export class ConstantsService {
   }
 
 }
+
+export const Roles  = {
+    Admin: "Role_Admin",
+    Waiter: "Role_Waiter"
+};
