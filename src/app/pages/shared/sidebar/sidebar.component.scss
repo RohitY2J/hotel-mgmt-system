@@ -1,3 +1,108 @@
 .fill-height{
     height: -webkit-fill-available;
 }
+
+.router-link-active {
+  background-color: rgb(55, 65, 81) !important;
+  color: white !important;
+  border-color: rgb(59, 130, 246) !important;
+}
+
+.router-link-active .text-blue-400,
+.router-link-active i {
+  color: rgb(96, 165, 250) !important;
+}
+
+.router-link-active .bg-blue-600 {
+  background-color: rgb(37, 99, 235) !important;
+  background-opacity: 0.4 !important;
+}
+
+/* Dropdown active states */
+.router-link-active .w-2 {
+  background-color: rgb(96, 165, 250) !important;
+}
+
+/* Smooth transitions for all elements */
+* {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Custom scrollbar for sidebar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgb(31, 41, 55);
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgb(75, 85, 99);
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgb(96, 165, 250);
+}
+
+/* Enhanced focus states */
+button:focus,
+a:focus {
+  outline: 2px solid rgb(59, 130, 246);
+  outline-offset: 2px;
+}
+
+/* Dropdown animation */
+.hidden {
+  display: none;
+}
+
+/* Icon container hover effects */
+.group:hover .w-8,
+.group:hover .w-6 {
+  transform: scale(1.05);
+}
+
+/* Text hover effects */
+.group:hover span {
+  transform: translateX(2px);
+}
+
+/* Enhanced dropdown styling */
+#employee-dropdown,
+#order-dropdown {
+  border-left-color: rgb(59, 130, 246);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  aside {
+    width: 100% !important;
+  }
+  
+  .md\:w-64 {
+    width: 100%;
+  }
+}
+
+/* Special styling for logout button */
+.hover\:bg-red-600:hover .bg-red-600 {
+  background-color: rgb(220, 38, 38) !important;
+  background-opacity: 0.4 !important;
+}
+
+/* Improved contrast for better accessibility */
+.text-gray-300 {
+  color: rgb(209, 213, 219);
+}
+
+.text-gray-400 {
+  color: rgb(156, 163, 175);
+}
+
+.bg-gray-750 {
+  background-color: rgb(55, 65, 81);
+}
