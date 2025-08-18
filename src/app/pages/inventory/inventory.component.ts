@@ -82,7 +82,7 @@ export class InventoryComponent implements OnInit {
   stockAvailableStatus: {key: Number, value: string}[];
 
   constructor(
-    constService: ConstantsService,
+    public constService: ConstantsService,
     private httpService: HttpService
   ) {
     this.quantityUnitTypeStatus = constService.getStatusValuesAsDictionary('quantityUnitType');
