@@ -1,21 +1,21 @@
 <app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
 <app-loader *ngIf="isLoading"></app-loader>
 
+<!-- Table Form Modal -->
 <div *ngIf="istableFormOpen" tabindex="-1" aria-hidden="true"
-    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
-    <div class="relative p-4 w-full max-w-md max-h-full">
+    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-40">
+    <div class="relative p-6 w-full max-w-lg max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="width: 500px">
+        <div class="relative bg-gray-800 rounded-2xl shadow-2xl border border-gray-700" style="width: 600px">
             <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    <span *ngIf="!isUpdate">Create</span>
-                    <span *ngIf="isUpdate">Update</span>
-                    Table
+            <div class="flex items-center justify-between p-6 border-b border-gray-700 rounded-t-2xl bg-gray-750">
+                <h3 class="text-xl font-bold text-white">
+                    <span *ngIf="!isUpdate">Create New Table</span>
+                    <span *ngIf="isUpdate">Update Table</span>
                 </h3>
-                <button (click)="closeModal()" type="button"
-                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                <button (click)="closeModal()" type="button" id="closeModalBtn" name="closeModalBtn"
+                    class="text-gray-400 hover:text-white bg-gray-700 hover:bg-red-600 rounded-lg w-10 h-10 inline-flex justify-center items-center transition-all duration-200">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
@@ -24,48 +24,58 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <form [formGroup]="tableForm" class="p-4 md:p-5">
-                <div class="grid gap-4 mb-4 grid-cols-2">
+            <form [formGroup]="tableForm" class="p-6">
+                <div class="grid gap-6 grid-cols-2">
+                    <!-- Table Number -->
                     <div class="col-span-1">
-                        <label for="tableNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label for="tableNumber" class="block mb-3 text-sm font-semibold text-gray-200">
                             Table Number</label>
-                        <input type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Enter table Number" style="transition: all 0.15s ease 0s;"
-                            formControlName="tableNumber" />
+                        <input type="text" id="tableNumber" name="tableNumber"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-all duration-200"
+                            placeholder="Enter table number" formControlName="tableNumber" />
                         <div *ngIf="tableForm.get('tableNumber')?.invalid 
                                 && (tableForm.get('tableNumber')?.dirty 
                                 || tableForm.get('tableNumber')?.touched)">
                             <div *ngIf="tableForm.get('tableNumber')?.errors?.['required']"
-                                class="text-red-500 text-xs italic">
-                                Table Number is Required</div>
+                                class="text-red-400 text-xs font-medium mt-2 flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Table Number is required
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Location -->
                     <div class="col-span-1">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label for="location" class="block mb-3 text-sm font-semibold text-gray-200">
                             Location
                         </label>
-                        <input type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Add location.." style="transition: all 0.15s ease 0s;"
-                            formControlName="location" />
+                        <input type="text" id="location" name="location"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-all duration-200"
+                            placeholder="Enter location" formControlName="location" />
                         <div *ngIf="tableForm.get('location')?.invalid 
                                 && (tableForm.get('location')?.dirty 
                                 || tableForm.get('location')?.touched)">
                             <div *ngIf="tableForm.get('location')?.errors?.['required']"
-                                class="text-red-500 text-xs italic">
-                                Location is Required</div>
+                                class="text-red-400 text-xs font-medium mt-2 flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Location is required
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Availability Status -->
                     <div class="col-span-1">
-                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label for="status" class="block mb-3 text-sm font-semibold text-gray-200">
                             Availability
                         </label>
-                        <select id="role" formControlName="status"
-                            class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option class="text-gray-400" value="" selected>Select available status</option>
-                            <option
+                        <select id="status" name="status" formControlName="status"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 cursor-pointer transition-all duration-200">
+                            <option class="bg-gray-800" value="" selected>Select availability status</option>
+                            <option class="bg-gray-800"
                                 *ngFor="let status of tableStatus"
                                 [value]="status.key">{{ status.value }}
                             </option>
@@ -74,117 +84,469 @@
                                 && (tableForm.get('available')?.dirty 
                                 || tableForm.get('available')?.touched)">
                             <div *ngIf="tableForm.get('available')?.errors?.['required']"
-                                class="text-red-500 text-xs italic">
-                                Please select availability status.</div>
+                                class="text-red-400 text-xs font-medium mt-2 flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Please select availability status
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Capacity -->
                     <div class="col-span-1">
-                        <label for="maintainanceStatus"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label for="capacity" class="block mb-3 text-sm font-semibold text-gray-200">
                             Capacity
                         </label>
-                        <input type="number"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Add capacity.." style="transition: all 0.15s ease 0s;"
-                            formControlName="capacity" />
+                        <input type="number" id="capacity" name="capacity"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-all duration-200"
+                            placeholder="Enter capacity" formControlName="capacity" />
                         <div *ngIf="tableForm.get('capacity')?.invalid 
                                 && (tableForm.get('capacity')?.dirty 
                                 || tableForm.get('capacity')?.touched)">
                             <div *ngIf="tableForm.get('capacity')?.errors?.['required']"
-                                class="text-red-500 text-xs italic">
-                                Capacity is Required</div>
+                                class="text-red-400 text-xs font-medium mt-2 flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Capacity is required
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
-                    style="margin: -1.25rem; margin-top: 0.5rem">
-                    <button type="submit" (click)="formSubmitted()"
-                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
-                    <button (click)="closeModal()" type="button"
-                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-700">
+                    <button (click)="closeModal()" type="button" id="closeFormBtn" name="closeFormBtn"
+                        class="px-6 py-3 text-sm font-semibold text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 transition-all duration-200">
+                        Close
+                    </button>
+                    <button type="submit" (click)="formSubmitted()" id="saveTableBtn" name="saveTableBtn"
+                        class="px-6 py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition-all duration-200">
+                        Save Table
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="flex-1 p-4 bg-gray-800 h-full">
+<!-- Main Content Area -->
+<div class="flex-1 p-6 bg-gray-900 min-h-screen">
     <div class="mx-auto max-w-screen-2xl">
-        <div class="flex items-center justify-between mb-2">
-            <div class="text-lg font-semibold text-white">Tables</div>
-        </div>
-
-        <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
-
-        <div class="flex items-center py-6 justify-between">
-
-            <div>
-                <button (click)="openTableForm()"
-                    class="w-28 block text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
-                    type="button">
-                    Add Table
-                </button>
-            </div>
-
-
-            <div class="flex items-center">
-                <select id="availableStatus" [(ngModel)]="filter.status"
-                    class="me-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    <option class="text-gray-600" value="" selected>Available Status</option>
-                    <option value="0">Not Available </option>
-                    <option value="1">Available </option>
-                </select>
-                <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <i class="fas fa-user text-white"></i>
-                    </div>
-                    <input type="text" id="simple-search" [(ngModel)]="filter.tableNumber"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search menu item name.." required />
+        <!-- Header Section -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0V8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                    </svg>
                 </div>
-                <button type="button" (click)="searchButtonClicked()"
-                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <!-- <i class="fas fa-search text-white"></i> -->
-                    <span>Apply</span>
-                </button>
-                <button type="button" (click)="clearFilter()"
-                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <!-- <i class="fas fa-search text-white"></i> -->
-                    <span>Clear</span>
-                </button>
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Table Management</h1>
+                    <p class="text-gray-400 text-sm font-medium">Manage restaurant tables and seating arrangements</p>
+                </div>
             </div>
-
-
-        </div>
-
-
-
-        <div
-            class="grid grid-cols-2 gap-4 rounded-lg md:grid-cols-3 xl:grid-cols-5 xs:grid-cols-1 lg:gap-2 justify-center h-96">
-            <!-- logo - start -->
-            <div *ngFor="let menu of allTables"
-                class="w-40 flex h-16 items-center justify-center rounded-lg bg-gray-100 p-4 text-gray-400 sm:h-40"
-                [ngClass]="{
-                    'bg-red-100': menu.status === 0,
-                    'bg-green-100': menu.status === 1}">
-                <div class="card-content">
-                    <div class="flex flex-col items-center justify-center">
-                        <dt class="mb-4 text-4xl font-extrabold dark:text-gray-700">{{menu.tableNumber}}</dt>
-                        <dd class="text-gray-900 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            Capacity: {{menu.capacity}}
-                        </dd>
-                        <dd class="text-gray-500 text-xs font-semibold dark:text-gray-700 mb-1 uppercase">
-                            {{constantService.getStatusString('tableAvailableStatus', menu.status)}}
-                        </dd>
-                        <dd class="text-gray-600 text-sm font-semibold dark:text-blue-600 uppercase cursor-pointer">
-                            <span role="button" (click)="openUpdateForm(menu)">Update <i
-                                    class="fa-solid fa-pen text-xs"></i></span>
-                        </dd>
+            
+            <!-- Stats Summary -->
+            <div class="hidden md:flex items-center space-x-6">
+                <!-- <div class="text-center">
+                    <div class="text-2xl font-bold text-green-400" id="availableTablesCount">
+                         {{(allTables | filter: { status: 1 }).length}} 
                     </div>
+                    <div class="text-xs text-gray-400 font-medium">Available</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-red-400" id="occupiedTablesCount">
+                        {{(allTables | filter: { status: 0 }).length}}
+                    </div>
+                    <div class="text-xs text-gray-400 font-medium">Occupied</div>
+                </div> -->
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-400" id="totalTablesCount">{{allTables.length}}</div>
+                    <div class="text-xs text-gray-400 font-medium">Total</div>
                 </div>
             </div>
         </div>
-        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
-            [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
+
+        <!-- Divider -->
+        <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent mb-8"></div>
+
+        <!-- Controls Section -->
+        <div class="bg-gray-800 rounded-xl border border-gray-700 p-6 mb-8 shadow-lg backdrop-blur-sm">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <!-- Add Table Button -->
+                <div class="flex items-center">
+                    <button (click)="openTableForm()" id="addTableBtn" name="addTableBtn"
+                        class="inline-flex items-center px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                        type="button">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add New Table
+                    </button>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="flex flex-wrap items-center gap-4">
+                    <!-- Availability Status Filter -->
+                    <div class="flex flex-col">
+                        <label class="text-xs font-medium text-gray-400 mb-2">Filter by Status</label>
+                        <select id="availableStatus" name="availableStatus" [(ngModel)]="filter.status"
+                            class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-3 min-w-40 cursor-pointer transition-all duration-200 hover:bg-gray-650">
+                            <option class="bg-gray-800" value="" selected>All Status</option>
+                            <option class="bg-gray-800" value="0">Not Available</option>
+                            <option class="bg-gray-800" value="1">Available</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Search Input -->
+                    <div class="flex flex-col">
+                        <label class="text-xs font-medium text-gray-400 mb-2">Search Tables</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <input type="text" id="simple-search" name="tableSearch" [(ngModel)]="filter.tableNumber"
+                                class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-3 placeholder-gray-400 transition-all duration-200 hover:bg-gray-650"
+                                placeholder="Search table number..." required />
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col">
+                        <label class="text-xs font-medium text-gray-400 mb-2 opacity-0">Actions</label>
+                        <div class="flex gap-3">
+                            <button type="button" (click)="searchButtonClicked()" id="applyFilterBtn" name="applyFilterBtn"
+                                class="inline-flex items-center px-5 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                Apply
+                            </button>
+                            <button type="button" (click)="clearFilter()" id="clearFilterBtn" name="clearFilterBtn"
+                                class="inline-flex items-center px-5 py-3 text-sm font-semibold text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 transition-all duration-200">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Display Options -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-xl font-semibold text-white">Restaurant Tables</h2>
+                <span class="text-sm text-gray-400" id="tableCountDisplay">
+                    Showing {{allTables.length}} table{{allTables.length !== 1 ? 's' : ''}}
+                </span>
+            </div>
+            
+            <!-- View Toggle Buttons -->
+            <div class="flex items-center bg-gray-800 rounded-lg p-1 border border-gray-700">
+                <button (click)="setViewMode('grid')" id="gridViewBtn" name="gridViewBtn"
+                    [class]="'px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ' + (viewMode === 'grid' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-gray-700')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                </button>
+                <button (click)="setViewMode('table')" id="tableViewBtn" name="tableViewBtn"
+                    [class]="'px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ' + (viewMode === 'table' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-gray-700')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div *ngIf="!viewMode || viewMode === 'grid'" class="bg-gray-800 rounded-xl border border-gray-700 shadow-lg overflow-hidden mb-8">            
+            <!-- Tables Grid -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 min-h-80">
+                    <!-- Enhanced Table Cards -->
+                    <div *ngFor="let menu of allTables; let i = index" id="table-card-{{i}}"
+                        class="relative group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:z-10">
+                        
+                        <!-- Card Container -->
+                        <div class="relative h-64 rounded-xl shadow-lg border transition-all duration-300 backdrop-blur-sm bg-gradient-to-br"
+                            [ngClass]="{
+                                'from-red-600/20 to-red-800/30 border-red-500/50 hover:from-red-600/30 hover:to-red-800/40 hover:border-red-500/70 hover:shadow-red-500/25': menu.status === 0,
+                                'from-green-600/20 to-green-800/30 border-green-500/50 hover:from-green-600/30 hover:to-green-800/40 hover:border-green-500/70 hover:shadow-green-500/25': menu.status === 1
+                            }">
+                            
+                            <!-- Status Indicator Glow -->
+                            <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-2xl"
+                                [ngClass]="{
+                                    'shadow-red-500/20': menu.status === 0,
+                                    'shadow-green-500/20': menu.status === 1
+                                }"></div>
+                            
+                            <!-- Card Content -->
+                            <div class="relative h-full flex flex-col items-center justify-center p-6">
+                                
+                                <!-- Table Icon with Animation -->
+                                <div class="relative mb-6">
+                                    <div class="w-20 h-20 rounded-full flex items-center justify-center shadow-2xl transform group-hover:rotate-3 transition-all duration-300 bg-gradient-to-br"
+                                        [ngClass]="{
+                                            'from-red-500 to-red-600': menu.status === 0,
+                                            'from-green-500 to-green-600': menu.status === 1
+                                        }">
+                                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0V8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                        </svg>
+                                    </div>
+                                    
+                                    <!-- Pulse Animation for Available Tables -->
+                                    <div *ngIf="menu.status === 1" class="absolute inset-0 rounded-full bg-green-500 animate-pulse opacity-20"></div>
+                                </div>
+                                
+                                <!-- Table Number -->
+                                <div class="text-4xl font-black text-white mb-2 group-hover:scale-110 transition-transform duration-300">
+                                    #{{menu.tableNumber}}
+                                </div>
+                                
+                                <!-- Table Details -->
+                                <div class="text-center space-y-2 mb-4">
+                                    <!-- Capacity -->
+                                    <div class="text-sm font-semibold text-gray-300 flex items-center justify-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                        {{menu.capacity}} Seats
+                                    </div>
+                                    
+                                    <!-- Location -->
+                                    <div class="text-xs font-medium text-gray-400 flex items-center justify-center" *ngIf="menu.location">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        {{menu.location}}
+                                    </div>
+                                </div>
+                                
+                                <!-- Status Badge -->
+                                <div class="mb-4">
+                                    <span *ngIf="menu.status === 1" 
+                                        class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-green-600/30 text-green-300 border border-green-500/50 backdrop-blur-sm">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                                        {{constantService.getStatusString('tableAvailableStatus', menu.status)}}
+                                    </span>
+                                    <span *ngIf="menu.status === 0" 
+                                        class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-600/30 text-red-300 border border-red-500/50 backdrop-blur-sm">
+                                        <div class="w-2 h-2 bg-red-400 rounded-full mr-2"></div>
+                                        {{constantService.getStatusString('tableAvailableStatus', menu.status)}}
+                                    </span>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                    <button (click)="openUpdateForm(menu)" id="updateTable-{{i}}" name="updateTable-{{i}}"
+                                        class="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-110">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Update
+                                    </button>
+                                    
+                                    <button (click)="toggleTableStatus(menu)" id="toggleStatus-{{i}}" name="toggleStatus-{{i}}"
+                                        [class]="'inline-flex items-center px-4 py-2 text-xs font-bold text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-110 ' + (menu.status === 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700')">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path *ngIf="menu.status === 1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            <path *ngIf="menu.status === 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        {{menu.status === 1 ? 'Occupy' : 'Free'}}
+                                    </button>
+                                </div>
+                                
+                                <!-- Hover Overlay -->
+                                <div class="absolute inset-0 rounded-xl bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div *ngIf="allTables.length === 0" class="col-span-full px-6 py-16 text-center">
+                        <div class="w-24 h-24 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0V8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-3">No tables found</h3>
+                        <p class="text-gray-400 text-sm mb-6 max-w-md mx-auto">Get started by adding your first restaurant table to begin managing seating arrangements.</p>
+                        <button (click)="openTableForm()" id="addFirstTableBtn" name="addFirstTableBtn"
+                            class="inline-flex items-center px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Add Your First Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table List View -->
+        <div *ngIf="viewMode === 'table'" class="bg-gray-800 rounded-xl border border-gray-700 shadow-lg overflow-hidden mb-8">
+            <!-- Table Header -->
+            <div class="bg-gray-750 border-b border-gray-700 px-6 py-4">
+                <div class="grid grid-cols-12 gap-4 items-center text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                    <div class="col-span-3">Table</div>
+                    <div class="col-span-3">Location</div>
+                    <div class="col-span-2">Capacity</div>
+                    <div class="col-span-2">Status</div>
+                    <div class="col-span-2 text-center">Actions</div>
+                </div>
+            </div>
+            
+            <!-- Table Body -->
+            <div class="divide-y divide-gray-700">
+                <div *ngFor="let menu of allTables; let i = index" id="table-row-{{i}}"
+                    class="px-6 py-4 hover:bg-gray-750 transition-colors duration-200 group">
+                    <div class="grid grid-cols-12 gap-4 items-center">
+                        <!-- Table Number -->
+                        <div class="col-span-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-md"
+                                    [ngClass]="{
+                                        'bg-gradient-to-br from-red-500 to-red-600': menu.status === 0,
+                                        'bg-gradient-to-br from-green-500 to-green-600': menu.status === 1
+                                    }">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0V8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-lg font-bold text-white" 
+                                        [title]="'Table ' + menu.tableNumber">Table {{menu.tableNumber}}</div>
+                                    <div class="text-xs text-gray-400">ID: {{menu.id || 'N/A'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Location -->
+                        <div class="col-span-3">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span class="text-gray-200 truncate" [title]="menu.location || 'No location specified'">
+                                    {{menu.location || 'No location'}}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Capacity -->
+                        <div class="col-span-2">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <span class="text-lg font-semibold text-blue-400">{{menu.capacity}}</span>
+                                <span class="text-sm text-gray-400">seats</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="col-span-2">
+                            <span *ngIf="menu.status === 1" 
+                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-green-600/20 text-green-300 border border-green-500/30">
+                                <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                                {{constantService.getStatusString('tableAvailableStatus', menu.status)}}
+                            </span>
+                            <span *ngIf="menu.status === 0" 
+                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-red-600/20 text-red-300 border border-red-500/30">
+                                <div class="w-2 h-2 bg-red-400 rounded-full mr-2"></div>
+                                {{constantService.getStatusString('tableAvailableStatus', menu.status)}}
+                            </span>
+                        </div>
+                        
+                        <!-- Last Updated -->
+                        <!-- <div class="col-span-1">
+                            <div class="text-sm text-gray-300">{{menu.updatedAt | date: 'short' || 'Recently'}}</div>
+                            <div class="text-xs text-gray-500">{{menu.updatedBy || 'System'}}</div>
+                        </div> -->
+                        
+                        <!-- Actions -->
+                        <div class="col-span-2">
+                            <div class="flex items-center justify-center gap-2">
+                                <!-- Edit Button -->
+                                <button (click)="openUpdateForm(menu)" id="editTable-{{i}}" name="editTable-{{i}}"
+                                    class="relative inline-flex items-center justify-center w-8 h-8 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg group/btn">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded-md shadow-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                        Edit Table
+                                        <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                                    </div>
+                                </button>
+                                
+                                <!-- Status Toggle Button -->
+                                <button (click)="toggleTableStatus(menu)" id="toggleTableStatus-{{i}}" name="toggleTableStatus-{{i}}"
+                                    [class]="'relative inline-flex items-center justify-center w-8 h-8 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg group/btn ' + (menu.status === 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700')">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path *ngIf="menu.status === 1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        <path *ngIf="menu.status === 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded-md shadow-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                        {{menu.status === 1 ? 'Mark as Occupied' : 'Mark as Available'}}
+                                        <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                                    </div>
+                                </button>
+                                
+                                <!-- Quick View Button -->
+                                <button (click)="quickViewTable(menu)" id="quickView-{{i}}" name="quickView-{{i}}"
+                                    class="relative inline-flex items-center justify-center w-8 h-8 text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg group/btn">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded-md shadow-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                        Quick View
+                                        <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty State for Table View -->
+                <div *ngIf="allTables.length === 0" class="px-6 py-16 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0V8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-300 mb-3">No tables found</h3>
+                    <p class="text-gray-400 text-sm mb-6">Get started by adding your first restaurant table.</p>
+                    <button (click)="openTableForm()" id="addFirstTableListBtn" name="addFirstTableListBtn"
+                        class="inline-flex items-center px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add Your First Table
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Pagination -->
+        <div class="bg-gray-800 rounded-xl border border-gray-700 p-4 shadow-lg">
+            <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
+                [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
+        </div>
     </div>
 </div>

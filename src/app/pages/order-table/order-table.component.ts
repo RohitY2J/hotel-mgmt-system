@@ -211,4 +211,35 @@ export class OrderTableComponent implements OnInit {
     this.filter.pagination.page = page;
     this.fetchTabels();
   }
+
+  quickViewTable(table: any): void {
+    // Implementation for quick view functionality
+    console.log('Quick view for table:', table);
+    // You could open a small modal or sidebar with table details
+  }
+
+  viewMode: 'grid' | 'table' = 'grid';
+  // Filter object
+  // filter:any = {
+  //   status: '',
+  //   tableNumber: '',
+  //   pagination: {
+  //     page: 1,
+  //     pageSize: 10,
+  //     dataCount: 0
+  //   }
+  // };
+
+  // New methods for enhanced functionality
+  setViewMode(mode: 'grid' | 'table'): void {
+    this.viewMode = mode;
+  }
+
+  toggleTableStatus(table: any): void {
+    // Toggle between available (1) and occupied (0)
+    table.status = table.status === 1 ? 0 : 1;
+    // Here you would typically call an API to update the status
+    console.log(`Table ${table.tableNumber} status changed to:`, table.status);
+    //this.showSuccessNotification(`Table ${table.tableNumber} status updated successfully`);
+  }
 }
