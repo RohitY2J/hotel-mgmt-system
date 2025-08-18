@@ -4,108 +4,262 @@
     md:overflow-y-auto 
     md:flex-row md:flex-nowrap 
     md:overflow-hidden 
-    shadow-xl bg-white flex 
+    shadow-2xl bg-gray-800 flex 
     flex-wrap items-center 
-    justify-between md:w-52 
-    dark:bg-gray-900"
+    justify-between md:w-64 
+    border-r border-gray-700"
   aria-label="Sidebar">
 
-  <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-    <a href="#" class="flex items-center justify-center mb-3">
-      <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 me-3 sm:h-7" alt="Flowbite Logo" /> -->
-      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{{this.clientName}}</span>
+  <div class="h-full px-4 py-4 overflow-y-auto bg-gray-800 w-full">
+    <!-- Logo/Brand Section -->
+    <a href="#" class="flex items-center justify-center mb-6 p-4 bg-gray-750 rounded-xl border border-gray-700">
+      <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+      </div>
+      <span class="text-xl font-bold text-white whitespace-nowrap">{{this.clientName}}</span>
     </a>
-    <hr class="mb-3">
-    <ul class="space-y-2 font-medium">
+    
+    <!-- Divider -->
+    <div class="h-px bg-gray-700 mb-6"></div>
+    
+    <!-- Navigation Menu -->
+    <ul class="space-y-3 font-medium">
+      <!-- Dashboard -->
       <li>
         <a [routerLink]="['/admin', { outlets: { main: 'dashboard' } }]" routerLinkActive="router-link-active"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-          <i class="fas fa-chart-pie opacity-75"></i>
-          <span class="ms-3">Dashboard</span>
+          class="flex items-center p-3 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group transition-all duration-200 border border-transparent hover:border-gray-600">
+          <div class="w-8 h-8 bg-blue-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fas fa-chart-pie text-blue-400 text-sm"></i>
+          </div>
+          <span class="font-semibold">Dashboard</span>
         </a>
       </li>
+      
+      <!-- Employee Dropdown -->
       <li>
         <button type="button"
-          class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+          class="flex items-center w-full p-3 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group transition-all duration-200 border border-transparent hover:border-gray-600"
           aria-controls="dropdown-example" data-collapse-toggle="employee-dropdown">
-          <i class="fas fa-user opacity-75"></i>
-          <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Employee</span>
-          <i class="fa-solid fa-caret-down ms-2"></i>
+          <div class="w-8 h-8 bg-blue-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fas fa-user text-blue-400 text-sm"></i>
+          </div>
+          <span class="flex-1 font-semibold text-left rtl:text-right whitespace-nowrap">Employee</span>
+          <i class="fa-solid fa-caret-down text-gray-400 group-hover:text-white transition-colors duration-200"></i>
         </button>
-        <ul id="employee-dropdown" class="hidden py-2 space-y-2">
+        <ul id="employee-dropdown" class="hidden py-2 space-y-1 ml-4 border-l-2 border-gray-700 pl-4 mt-2">
           <li>
             <a [routerLink]="['/admin', { outlets: { main: 'employee' } }]" routerLinkActive="router-link-active"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">List</a>
+              class="flex items-center w-full p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all duration-200 text-sm font-medium">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+              LIST
+            </a>
           </li>
-          <!-- <li>
-            <a [routerLink]="['/admin', { outlets: { main: 'employee-attendance' } }]" routerLinkActive="router-link-active"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">Schedule</a>
-          </li> -->
         </ul>
       </li>
+      
+      <!-- Reservation -->
       <li>
-        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        [routerLink]="['/admin', { outlets: { main: 'reservations' } }]"><i class="fa-solid fa-person-shelter text-sm"></i>
-          <span class="flex-1 ms-3 whitespace-nowrap">Reservation</span>
+        <a class="flex items-center p-3 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group transition-all duration-200 border border-transparent hover:border-gray-600"
+        [routerLink]="['/admin', { outlets: { main: 'reservations' } }]">
+          <div class="w-8 h-8 bg-blue-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fa-solid fa-person-shelter text-blue-400 text-sm"></i>
+          </div>
+          <span class="font-semibold whitespace-nowrap">Reservation</span>
         </a>
       </li>
+      
+      <!-- Rooms (Active State) -->
       <li>
-        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-          [routerLink]="['/admin', { outlets: { main: 'rooms' } }]" routerLinkActive="router-link-active"><i
-            class="fa-solid fa-door-open text-sm me-3"></i>
-          Rooms</a>
+        <a class="flex items-center p-3 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group transition-all duration-200 border border-transparent hover:border-gray-600"
+          [routerLink]="['/admin', { outlets: { main: 'rooms' } }]" routerLinkActive="router-link-active">
+          <div class="w-8 h-8 bg-blue-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fa-solid fa-door-open text-blue-400 text-sm"></i>
+          </div>
+          <span class="font-semibold">Rooms</span>
+        </a>
       </li>
 
+      <!-- Inventory -->
       <li>
-        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-          [routerLink]="['/admin', { outlets: { main: 'inventory' } }]" routerLinkActive="router-link-active"><i
-            class="fa-solid fa-boxes-stacked text-sm me-3"></i>
-          Inventory</a>
+        <a class="flex items-center p-3 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group transition-all duration-200 border border-transparent hover:border-gray-600"
+          [routerLink]="['/admin', { outlets: { main: 'inventory' } }]" routerLinkActive="router-link-active">
+          <div class="w-8 h-8 bg-blue-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fa-solid fa-boxes-stacked text-blue-400 text-sm"></i>
+          </div>
+          <span class="font-semibold">Inventory</span>
+        </a>
       </li>
+      
+      <!-- Order Dropdown -->
       <li>
         <button type="button"
-          class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+          class="flex items-center w-full p-3 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white group transition-all duration-200 border border-transparent hover:border-gray-600"
           aria-controls="order-dropdown" data-collapse-toggle="order-dropdown">
-          <i class="fas fa-utensils opacity-75"></i>
-          <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Order</span>
-          <i class="fa-solid fa-caret-down ms-2"></i>
+          <div class="w-8 h-8 bg-blue-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fas fa-utensils text-blue-400 text-sm"></i>
+          </div>
+          <span class="flex-1 font-semibold text-left rtl:text-right whitespace-nowrap">Order</span>
+          <i class="fa-solid fa-caret-down text-gray-400 group-hover:text-white transition-colors duration-200"></i>
         </button>
-        <ul id="order-dropdown" class="hidden py-2 space-y-2">
+        <ul id="order-dropdown" class="hidden py-2 space-y-1 ml-4 border-l-2 border-gray-700 pl-4 mt-2">
           <li>
             <a [routerLink]="['/admin', { outlets: { main: 'tables' } }]" routerLinkActive="router-link-active"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">
-              <i class="fas fa-chair opacity-75"></i>
-              <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Tables</span>
+              class="flex items-center w-full p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all duration-200 text-sm font-medium">
+              <div class="w-6 h-6 bg-blue-600 bg-opacity-20 rounded-md flex items-center justify-center mr-3">
+                <i class="fas fa-chair text-blue-400 text-xs"></i>
+              </div>
+              <span class="whitespace-nowrap">TABLES</span>
             </a>
           </li>
           <li>
             <a [routerLink]="['/admin', { outlets: { main: 'menus' } }]" routerLinkActive="router-link-active"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">
-              <i class="fas fa-burger opacity-75"></i>
-              <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Menu</span>
+              class="flex items-center w-full p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all duration-200 text-sm font-medium">
+              <div class="w-6 h-6 bg-blue-600 bg-opacity-20 rounded-md flex items-center justify-center mr-3">
+                <i class="fas fa-burger text-blue-400 text-xs"></i>
+              </div>
+              <span class="whitespace-nowrap">MENU</span>
             </a>
           </li>
           <li>
             <a [routerLink]="['/admin', { outlets: { main: 'order-bill' } }]" routerLinkActive="router-link-active"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 uppercase text-sm dark:text-white dark:hover:bg-gray-700">
-              <i class="fas fa-money-bill opacity-75"></i>
-              <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Bill</span>
+              class="flex items-center w-full p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all duration-200 text-sm font-medium">
+              <div class="w-6 h-6 bg-blue-600 bg-opacity-20 rounded-md flex items-center justify-center mr-3">
+                <i class="fas fa-money-bill text-blue-400 text-xs"></i>
+              </div>
+              <span class="whitespace-nowrap">BILL</span>
             </a>
           </li>
         </ul>
       </li>
 
-      <hr class="my-4 md:min-w-full" />
+      <!-- Separator -->
+      <li class="pt-4 mt-6">
+        <div class="h-px bg-gray-700 mb-4"></div>
+      </li>
 
+      <!-- Sign Out -->
       <li>
-        <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-          (click) = "logout()"
+        <a class="flex items-center p-3 text-gray-300 rounded-lg hover:bg-red-600 hover:text-white group transition-all duration-200 border border-transparent hover:border-red-500"
+          (click)="logout()"
           [routerLink]="['/dashboard']" 
           routerLinkActive="router-link-active">
-          <i class="fas fa-right-from-bracket opacity-75"></i>
-          <span class="flex-1 ms-3 whitespace-nowrap">Sign out</span>
+          <div class="w-8 h-8 bg-red-600 bg-opacity-20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-opacity-30 transition-all duration-200">
+            <i class="fas fa-right-from-bracket text-red-400 text-sm"></i>
+          </div>
+          <span class="font-semibold whitespace-nowrap">Sign Out</span>
         </a>
       </li>
     </ul>
   </div>
 </aside>
+
+<!-- Enhanced Active State Styling -->
+<style>
+/* Active router link styling */
+.router-link-active {
+  background-color: rgb(55, 65, 81) !important;
+  color: white !important;
+  border-color: rgb(59, 130, 246) !important;
+}
+
+.router-link-active .text-blue-400,
+.router-link-active i {
+  color: rgb(96, 165, 250) !important;
+}
+
+.router-link-active .bg-blue-600 {
+  background-color: rgb(37, 99, 235) !important;
+  background-opacity: 0.4 !important;
+}
+
+/* Dropdown active states */
+.router-link-active .w-2 {
+  background-color: rgb(96, 165, 250) !important;
+}
+
+/* Smooth transitions for all elements */
+* {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Custom scrollbar for sidebar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgb(31, 41, 55);
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgb(75, 85, 99);
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgb(96, 165, 250);
+}
+
+/* Enhanced focus states */
+button:focus,
+a:focus {
+  outline: 2px solid rgb(59, 130, 246);
+  outline-offset: 2px;
+}
+
+/* Dropdown animation */
+.hidden {
+  display: none;
+}
+
+/* Icon container hover effects */
+.group:hover .w-8,
+.group:hover .w-6 {
+  transform: scale(1.05);
+}
+
+/* Text hover effects */
+.group:hover span {
+  transform: translateX(2px);
+}
+
+/* Enhanced dropdown styling */
+#employee-dropdown,
+#order-dropdown {
+  border-left-color: rgb(59, 130, 246);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  aside {
+    width: 100% !important;
+  }
+  
+  .md\:w-64 {
+    width: 100%;
+  }
+}
+
+/* Special styling for logout button */
+.hover\:bg-red-600:hover .bg-red-600 {
+  background-color: rgb(220, 38, 38) !important;
+  background-opacity: 0.4 !important;
+}
+
+/* Improved contrast for better accessibility */
+.text-gray-300 {
+  color: rgb(209, 213, 219);
+}
+
+.text-gray-400 {
+  color: rgb(156, 163, 175);
+}
+
+.bg-gray-750 {
+  background-color: rgb(55, 65, 81);
+}
+</style>
