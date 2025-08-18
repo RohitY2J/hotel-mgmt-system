@@ -22,7 +22,7 @@ test.describe('Login Flow E2E Tests', () => {
     await page.click('button[type="submit"]');
 
     // Wait for navigation to dashboard
-    await page.waitForURL(`${testEnv.FRONTEND_URL}/admin/dashboard`);
+    await page.waitForURL(`${testEnv.FRONTEND_URL}/admin/dashboard`, {timeout: 5000});
 
     // Verify dashboard is loaded
     expect(await page.url()).toBe(`${testEnv.FRONTEND_URL}/admin/dashboard`);
