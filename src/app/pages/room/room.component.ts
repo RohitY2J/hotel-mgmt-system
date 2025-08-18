@@ -133,27 +133,22 @@ export class RoomComponent implements OnInit {
       }
       else{
         this.isLoading = true;
-        this.httpService
-        .httpPost(`room/createRoom`, this.createRoomRequest.value)
-        .pipe(finalize(() => {
-          //this.isLoading = false;
-        }))
-        .subscribe({
-          next: (res) => {
-            this.triggerNotification({
+        this.httpService.httpPostAsync(`room/createRoom`, this.createRoomRequest.value)
+        .then(res => {
+           this.triggerNotification({
               message: 'Room added successfully',
               error: false,
             });
             this.fetchRooms();
             this.closeModal();
-          },
-          error: (err) => {
-            this.triggerNotification({
-              message: err.error,
-              error: true,
-            });
-          },
-        });
+        })
+        .catch(err => {
+          this.isLoading = false;
+          this.triggerNotification({
+            message: err.error,
+            error: true,
+          });
+        })
       }
     }
     else{
