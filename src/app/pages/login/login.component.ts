@@ -49,12 +49,16 @@ export class LoginComponent implements OnInit {
       appId: environment.APPLICATION_ID,
       tenantId: environment.TENANT_ID
     }).then(response => {
-      this.isLoading = false;
       console.log(response.data)
       this.router.navigate(['/callback'], {queryParams: { code:  response.data.code}})
+      this.notificationParams = {message: `Logged in successfully.`, error: false}
     }
     ).catch(err => {
       console.log(err);
+      this.notificationParams = {message: `Error logging in: ${err?.error?.msg}`, error: true}
     })
+    .finally( () => {
+      this.isLoading = false;
+    } )
   }
 }
