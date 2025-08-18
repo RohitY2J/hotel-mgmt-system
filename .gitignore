@@ -180,3 +180,5 @@ server/uploads/
 
 .wwebjs_cache/
 .wwebjs_auth/
+
+/test-results
