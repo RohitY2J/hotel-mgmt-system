@@ -12,7 +12,8 @@
     "test:backend": "mocha server/tests/**/*.test.js",
     "test:frontend": "ng test --include=src/app/**/**/*.spec.ts --browsers=ChromeHeadless --watch=false",
     "test": "mocha server/tests/**/*.test.js",
-    "test:single": "mocha server/tests/admin_api.test.js"
+    "test:single": "mocha server/tests/admin_api.test.js",
+    "playwright:test": "playwright test tests/login.test.ts --headed"
   },
   "keywords": [],
   "author": "",
@@ -52,6 +53,7 @@
     "nodemon": "^3.1.4",
     "passport": "^0.5.3",
     "passport-local": "^1.0.0",
+    "playright": "^0.0.22",
     "rxjs": "~7.8.0",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
