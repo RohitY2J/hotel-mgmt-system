@@ -112,12 +112,11 @@ export class ReservationComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.getReservationsAsync();
     this.initialStatus = [
       { item_id: 0, item_text: 'Booked' },
       { item_id: 1, item_text: 'Checked In' },
     ];
-
+    
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -127,6 +126,8 @@ export class ReservationComponent implements OnInit {
       itemsShowLimit: 3,
       allowSearchFilter: true,
     };
+    await this.getReservationsAsync();
+    await this.getRoomsAsync();
   }
 
   async updateFilterOptions(value: string) {
@@ -179,6 +180,15 @@ export class ReservationComponent implements OnInit {
     }
 
     this.isLoading = false;
+  }
+
+  async getRoomsAsync() {
+    let response = await this.httpService
+                              .httpPostAsync(`room/getRooms?pageSize=100&pageNo=1`, {
+                                occupancyStatus: 0,
+                              });
+
+    this.allRooms = response;
   }
 
   closeReservationModal() {
