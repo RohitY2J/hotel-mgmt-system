@@ -1,20 +1,26 @@
-<app-loader *ngIf="isLoading"></app-loader>
+<!-- Loading Component -->
+<app-loader *ngIf="isLoading" id="main-loader"></app-loader>
 
-<app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
+<!-- Notification Component -->
+<app-notification *ngIf="showNotification" id="main-notification" [notificationData]="notificationParams">
+</app-notification>
 
+<!-- Order Component Modal -->
 <ng-container *ngIf="isOrderComponentVisible">
-    <div tabindex="-1" aria-hidden="true"
-        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40 mt-10">
-        <div class="w-full ">
+    <div id="order-modal-backdrop" tabindex="-1" aria-hidden="true"
+        class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm flex items-center justify-center z-40">
+        <div class="w-full max-w-6xl mx-4">
             <!-- Modal content -->
-            <div class="bg-white rounded-lg shadow dark:bg-gray-700 order-component-modal">
+            <div id="order-modal-content" class="bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
                 <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                <div id="order-modal-header"
+                    class="flex items-center justify-between p-6 border-b border-gray-600 rounded-t-xl">
+                    <h3 id="order-modal-title" class="text-xl font-semibold text-white">
                         Place Orders
                     </h3>
-                    <button (click)="closeOrderComponent()" type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <button id="order-modal-close-btn" name="close-order-modal" (click)="closeOrderComponent()"
+                        type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-700 hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center transition-colors duration-200">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -24,275 +30,354 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-
-                <app-order-item [isReservationView]="true" [selectedRadioValue]="'forReservation'" (onClose)="closeOrderComponent()"
-                    [reservationId]="selectedReservation.id"></app-order-item>
+                <div id="order-modal-body" class="p-0">
+                    <app-order-item id="order-item-component" [isReservationView]="true"
+                        [selectedRadioValue]="'forReservation'" (onClose)="closeOrderComponent()"
+                        [reservationId]="selectedReservation.id">
+                    </app-order-item>
+                </div>
             </div>
         </div>
     </div>
 </ng-container>
 
-<app-modal [title]="'Checkout'" [isVisible]="isCheckOutFormVisible" (close)="closeCheckOutForm()" [modalWidth]="'750px'"
-    [isLargeModal]="true">
-    <div class="grid gap-1 mb-4 grid-cols-5">
-        <div class="col-span-4 grid gap-1 my-2 grid-cols-2 border-r-0" style="border-right: 1px solid #fff;">
-            <div class="col-span-1 px-5 py-5">
-                <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount
-                    (%)</label>
-                <input type="number"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Discount in percentage" style="transition: all 0.15s ease 0s;"
-                    [(ngModel)]="checkOutModel.discount" (change)="onCheckOutFormChange()" />
+<!-- Checkout Modal -->
+<app-modal id="checkout-modal" [title]="'Checkout'" [isVisible]="isCheckOutFormVisible" (close)="closeCheckOutForm()"
+    [modalWidth]="'900px'" [isLargeModal]="true">
+    <div id="checkout-form-container" class="space-y-6">
+        <div class="grid gap-6 grid-cols-1 lg:grid-cols-5">
+            <!-- Checkout Form Fields -->
+            <div class="lg:col-span-3 bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h4 id="checkout-details-title"
+                    class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">
+                    Checkout Details
+                </h4>
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+                    <!-- Discount Percentage -->
+                    <div class="space-y-2">
+                        <label for="discount-percentage" class="block text-sm font-medium text-gray-300">
+                            Discount (%)
+                        </label>
+                        <input type="number" id="discount-percentage" name="discountPercentage"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-colors duration-200"
+                            placeholder="Enter discount percentage" [(ngModel)]="checkOutModel.discount"
+                            (change)="onCheckOutFormChange()" />
+                    </div>
 
+                    <!-- Flat Discount -->
+                    <div class="space-y-2">
+                        <label for="flat-discount" class="block text-sm font-medium text-gray-300">
+                            Flat Discount
+                        </label>
+                        <input type="number" id="flat-discount" name="flatDiscount"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-colors duration-200"
+                            placeholder="Enter flat discount amount" [(ngModel)]="checkOutModel.flatDiscount"
+                            (change)="onCheckOutFormChange()" />
+                    </div>
+
+                    <!-- Checkout Date -->
+                    <div class="space-y-2">
+                        <label for="checkout-date" class="block text-sm font-medium text-gray-300">
+                            Checkout Date (optional)
+                        </label>
+                        <input type="date" id="checkout-date" name="checkoutDate"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-colors duration-200"
+                            [(ngModel)]="checkOutModel.checkOutDate" (change)="onCheckOutFormChange()" />
+                    </div>
+
+                    <!-- Amount Paid -->
+                    <div class="space-y-2">
+                        <label for="amount-paid" class="block text-sm font-medium text-gray-300">
+                            Amount Paid
+                        </label>
+                        <input type="number" id="amount-paid" name="amountPaid"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-colors duration-200"
+                            placeholder="Enter paid amount" [(ngModel)]="checkOutModel.paidAmount"
+                            (change)="onCheckOutFormChange()" />
+                    </div>
+                </div>
             </div>
-            <div class="col-span-1 px-5 py-5">
-                <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Flat
-                    Discount</label>
-                <input type="number"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
-                    [(ngModel)]="checkOutModel.flatDiscount" (change)="onCheckOutFormChange()" />
 
-            </div>
-
-            <div class="col-span-1 px-5 py-5">
-                <label for="checkOutDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Checkout
-                    Date (optional) </label>
-                <input type="date"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Customer Full Name" style="transition: all 0.15s ease 0s;"
-                    [(ngModel)]="checkOutModel.checkOutDate" (change)="onCheckOutFormChange()" />
-
-            </div>
-
-            <div class="col-span-1 px-5 py-5">
-                <label for="discount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
-                    Paid</label>
-                <input type="number"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Flat discount" style="transition: all 0.15s ease 0s;"
-                    [(ngModel)]="checkOutModel.paidAmount" (change)="onCheckOutFormChange()" />
-
+            <!-- Order Summary -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h4 id="order-summary-title"
+                    class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">
+                    Order Summary
+                </h4>
+                <div id="invoice-summary-container" class="max-h-80 overflow-y-auto">
+                    <app-invoice-component id="checkout-invoice" [reservation]="selectedReservation"
+                        [showSummaryOnly]="true">
+                    </app-invoice-component>
+                </div>
             </div>
         </div>
-        <div class="col-span-1">
-            <h3 class="mt-4 text-lg font-bold text-white">Order Summary</h3>
-            <app-invoice-component [reservation]="selectedReservation" [showSummaryOnly]="true"></app-invoice-component>
-        </div>
-    </div>
 
-    <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 px-5"
-        style="margin: -1.25rem; margin-top: 0.5rem">
-        <button type="submit" (click)="checkOutAndPrintInvoice()"
-            class="ml-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">
-            Checkout</button>
-        <button type="submit" (click)="showInvoice(selectedReservation)"
-            class="ml-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Order
-            Detail</button>
-        <button (click)="closeCheckOutForm()" type="button"
-            class="ml-5 py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+        <!-- Action Buttons -->
+        <div id="checkout-actions" class="flex flex-wrap gap-3 pt-4 border-t border-gray-600">
+            <button type="button" id="checkout-submit-btn" name="checkoutSubmit" (click)="checkOutAndPrintInvoice()"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-6 py-3 transition-colors duration-200 focus:ring-4 focus:ring-blue-500/50">
+                Checkout & Print
+            </button>
+            <button type="button" id="order-detail-btn" name="orderDetail" (click)="showInvoice(selectedReservation)"
+                class="bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg text-sm px-6 py-3 transition-colors duration-200 focus:ring-4 focus:ring-green-500/50">
+                Order Detail
+            </button>
+            <button id="checkout-close-btn" name="checkoutClose" (click)="closeCheckOutForm()" type="button"
+                class="bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg text-sm px-6 py-3 transition-colors duration-200 focus:ring-4 focus:ring-gray-500/50">
+                Close
+            </button>
+        </div>
     </div>
 </app-modal>
 
-<app-modal [applyBackdropFilter]="true" [isTitleVisible]="false" [title]="isUpdateMode ? 'Update Reservation' : 'Create Reservation'" [modalWidth]="'750px'"
-    [isLargeModal]="true" [isVisible]="isReservationFormOpen" (close)="isReservationFormOpen = !isReservationFormOpen">
-    <app-reservation-form [allRooms]="allRooms" (onLoader)="toggleLoader($event)" [openMode]="'create'"
-        (onAlert)="triggerNotification($event)" (onModalClose)="closeReservationModal()" />
+<!-- Reservation Form Modal -->
+<app-modal id="reservation-form-modal" [applyBackdropFilter]="true" [isTitleVisible]="false"
+    [title]="isUpdateMode ? 'Update Reservation' : 'Create Reservation'" [modalWidth]="'900px'" [isLargeModal]="true"
+    [isVisible]="isReservationFormOpen" (close)="isReservationFormOpen = !isReservationFormOpen">
+    <app-reservation-form id="reservation-form-component" [allRooms]="allRooms" (onLoader)="toggleLoader($event)"
+        [openMode]="'create'" (onAlert)="triggerNotification($event)" (onModalClose)="closeReservationModal()" />
 </app-modal>
 
+<!-- Order Form -->
 <ng-container *ngIf="selectedReservation!=null && selectedReservation!=undefined">
-    <app-order-form [reservation]="selectedReservation" [isVisible]="isOrdersFormVisible"
+    <app-order-form id="order-form-component" [reservation]="selectedReservation" [isVisible]="isOrdersFormVisible"
         (showNotification)="triggerNotification($event)" (closeForm)="closeOrdersForm()"
-        (updateReservation)="getReservationsAsync()"></app-order-form>
+        (updateReservation)="getReservationsAsync()">
+    </app-order-form>
 </ng-container>
 
-<app-modal *ngIf="selectedReservation!=null" [title]="'Order Summary'" [isVisible]="isInvoiceComponentVisible"
-    (close)="isInvoiceComponentVisible = !isInvoiceComponentVisible" [modalWidth]="'750px'" [isLargeModal]="true">
-    <app-invoice-component [reservation]="selectedReservation"></app-invoice-component>
+<!-- Invoice Modal -->
+<app-modal *ngIf="selectedReservation!=null" id="invoice-modal" [title]="'Order Summary'"
+    [isVisible]="isInvoiceComponentVisible" (close)="isInvoiceComponentVisible = !isInvoiceComponentVisible"
+    [modalWidth]="'900px'" [isLargeModal]="true">
+    <app-invoice-component id="invoice-component" [reservation]="selectedReservation">
+    </app-invoice-component>
 </app-modal>
 
+<!-- Main Content -->
+<div class="flex-1 p-6 bg-gray-900 min-h-screen" id="reservation-main-container">
 
-<div class="flex h-screen">
-
-    <div class="flex-1 p-4 bg-gray-800">
-        <div class="flex items-center justify-between mb-2">
-            <div class="text-lg font-semibold dark:text-white">Reservation</div>
-            <!-- <app-multi-select [customTemplate]="customOptionTemplate">
-                <ng-template #customOptionTemplate let-options="options" let-toggleOption="toggleOption" let-isSelected="isSelected">
-                  <div *ngFor="let option of options" class="custom-option" (click)="toggleOption(option)">
-                    <input type="checkbox" [checked]="isSelected(option)" class="mr-2">
-                    <span>{{ option }}</span>
-                  </div>
-                </ng-template>
-              </app-multi-select> -->
+    <!-- Header Section -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white mb-2">Reservation Management</h1>
+                <p class="text-gray-400">Manage hotel reservations and bookings</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-2 px-4 py-2 bg-gray-800 rounded-lg border border-gray-700">
+                    <i class="fas fa-bed text-blue-400"></i>
+                    <span class="text-sm text-gray-300">Total: {{ reservations.length }}</span>
+                </div>
+            </div>
         </div>
-        <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100">
+        <div class="h-px bg-gray-700"></div>
+    </div>
 
-        <div class="flex items-center justify-between py-4">
-            <div class="flex w-60">
-                <button (click)="isReservationFormOpen = true"
-                    class="block mr-5 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+    <!-- Action Bar -->
+    <div id="action-bar" class="bg-gray-800 rounded-lg p-4 mb-6 border border-gray-700">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+
+            <!-- Add Reservation Button -->
+            <div id="add-reservation-section">
+                <button id="add-reservation-btn" name="addReservation" (click)="isReservationFormOpen = true"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-6 py-3 transition-colors duration-200 focus:ring-4 focus:ring-blue-500/50"
                     type="button">
+                    <i class="fas fa-plus mr-2"></i>
                     Add Reservation
                 </button>
             </div>
 
-            <div class="flex items-center w-full justify-end">
-                <div class="flex me-1">
-                    <select id="role" [(ngModel)]="filter.filterObj.status"
-                        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+            <!-- Filters Section -->
+            <div id="filters-section" class="flex flex-wrap items-center gap-3">
+
+                <!-- Status Filter -->
+                <div id="status-filter-container">
+                    <select id="status-filter" name="statusFilter" [(ngModel)]="filter.filterObj.status"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5 transition-colors duration-200">
                         <option class="text-gray-400" value="" selected>All Bookings</option>
-                        <option *ngFor="let status of reservationStatusDropDown"
-                            [value]="status.key">{{ status.value }}
+                        <option *ngFor="let status of reservationStatusDropDown" [value]="status.key">
+                            {{ status.value }}
                         </option>
                     </select>
                 </div>
-                <div class="flex me-1">
-                    <select id="role" [(ngModel)]="filter.filterObj.paymentStatus"
-                        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-40 p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+
+                <!-- Payment Status Filter -->
+                <div id="payment-filter-container">
+                    <select id="payment-filter" name="paymentFilter" [(ngModel)]="filter.filterObj.paymentStatus"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5 transition-colors duration-200">
                         <option class="text-gray-400" value="" selected>All Payments</option>
-                        <option *ngFor="let status of paymentStatusDropDown"
-                            [value]="status.key">{{ status.value }}
+                        <option *ngFor="let status of paymentStatusDropDown" [value]="status.key">
+                            {{ status.value }}
                         </option>
                     </select>
                 </div>
 
-                <label for="simple-search" class="sr-only">Search</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <i class="fas fa-user text-white"></i>
+                <!-- Search Section -->
+                <div id="search-section" class="flex items-center gap-2">
+                    <label for="customer-search" class="sr-only">Search customers</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        <app-autocomplete id="customer-search" [placeHolder]="'Search customer name..'"
+                            [searchControl]="searchControl" [filteredOptions]="filteredOptions"
+                            (callback)="updateFilterOptions($event)">
+                        </app-autocomplete>
                     </div>
-                    <!-- <input type="text" id="simple-search" [(ngModel)]="filter.searchText"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Search customer name.." required /> -->
-                    <app-autocomplete [placeHolder]="'Search customer name..'" [searchControl]="searchControl"
-                        [filteredOptions]="filteredOptions" (callback)="updateFilterOptions($event)"></app-autocomplete>
 
+                    <button type="button" id="search-btn" name="searchButton" (click)="search()" (change)="search()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-lg transition-colors duration-200 focus:ring-4 focus:ring-blue-500/50">
+                        <i class="fas fa-search"></i>
+                        <span class="sr-only">Search</span>
+                    </button>
+
+                    <button type="button" id="clear-filter-btn" name="clearFilter" (click)="clearFilter()"
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 focus:ring-4 focus:ring-gray-500/50">
+                        <span>Clear</span>
+                    </button>
                 </div>
-                <button type="button" (click)="search()" (change)="search()"
-                    class="p-2.5 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <i class="fas fa-search text-white"></i>
-                    <span class="sr-only">Search</span>
-                </button>
-                <button type="button" (click)="clearFilter()"
-                    class="p-2.5 px-4 ms-1 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
-                    <!-- <i class="fas fa-search text-white"></i> -->
-                    <span>Clear</span>
-                </button>
-
-
             </div>
-
         </div>
+    </div>
 
-        <div class="overflow-x-auto shadow-md sm:rounded-lg min-h-80">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+
+    <!-- Reservations Table -->
+    <div id="reservations-table-container"
+        class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
+        <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table id="reservations-table" class="w-full text-sm text-left text-gray-300">
+                <thead class="text-xs text-gray-300 uppercase bg-gray-700 sticky top-0 z-10">
                     <tr>
-                        <th scope="col" class="p-4">
+                        <!-- <th scope="col" class="p-4">
                             <div class="flex items-center">
-                                <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                <input id="checkbox-all-search" name="selectAll" type="checkbox"
+                                    class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2">
+                                <label for="checkbox-all-search" class="sr-only">Select all</label>
                             </div>
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Customer Name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Room Number
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Status
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Check In Date
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Contact
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Payment Status
-                        </th>
-
-                        <th scope="col" class="px-6 py-3">
-                            Orders
-                        </th>
-
-                        <th scope="col" class="px-6 py-3">
-                            Actions
-                        </th>
+                        </th> -->
+                        <th scope="col" class="px-6 py-4 font-medium">Customer Name</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Room Number</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Status</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Check In Date</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Contact</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Payment Status</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Orders</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngIf="reservations.length === 0">
-                        <td colspan="9" class="text-center text-xl py-16">
-                            No records found
+                <tbody id="reservations-table-body">
+                    <!-- No Records Row -->
+                    <tr *ngIf="reservations.length === 0" id="no-records-row">
+                        <td colspan="9" class="text-center text-xl py-16 text-gray-400">
+                            <div class="flex flex-col items-center space-y-2">
+                                <i class="fas fa-inbox text-4xl text-gray-500"></i>
+                                <span>No reservations found</span>
+                            </div>
                         </td>
                     </tr>
-                    <tr *ngFor="let reservationItem of reservations"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="w-4 p-4">
+
+                    <!-- Reservation Rows -->
+                    <tr *ngFor="let reservationItem of reservations; let i = index"
+                        [id]="'reservation-row-' + reservationItem.id"
+                        class="bg-gray-800 border-b border-gray-700 hover:bg-gray-750 transition-colors duration-200">
+
+                        <!-- <td class="w-4 p-4">
                             <div class="flex items-center">
-                                <input id="checkbox-table-search-{{ reservationItem.id }}" type="checkbox"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox-table-search-{{ reservationItem.id }}"
-                                    class="sr-only">checkbox</label>
+                                <input [id]="'checkbox-table-search-' + reservationItem.id"
+                                    [name]="'select-reservation-' + reservationItem.id" type="checkbox"
+                                    class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2">
+                                <label [for]="'checkbox-table-search-' + reservationItem.id" class="sr-only">
+                                    Select reservation
+                                </label>
+                            </div>
+                        </td> -->
+
+                        <td class="px-6 py-4 font-medium text-white" [id]="'customer-name-' + reservationItem.id">
+                            {{ reservationItem.customerFullName }}
+                        </td>
+
+                        <td class="px-6 py-4" [id]="'room-numbers-' + reservationItem.id">
+                            <div class="flex flex-wrap gap-1">
+                                <span *ngFor="let room of reservationItem.rooms; let j = index"
+                                    [id]="'room-number-' + reservationItem.id + '-' + j"
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-300 border border-blue-700">
+                                    {{ room.roomNumber }}
+                                </span>
                             </div>
                         </td>
-                        <td class="w-4 p-4">
-                            {{ reservationItem.customerFullName}}
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="room-number-card-mini"
-                                *ngFor="let room of reservationItem.rooms">{{room.roomNumber}} &nbsp;</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ constService.getStatusString('reservationStatus', reservationItem.status) }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                {{ reservationItem.checkInDate | date}}
 
+                        <td class="px-6 py-4" [id]="'status-' + reservationItem.id">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-300 border border-green-700">
+                                {{ constService.getStatusString('reservationStatus', reservationItem.status) }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-gray-300" [id]="'checkin-date-' + reservationItem.id">
+                            {{ reservationItem.checkInDate | date }}
+                        </td>
+
+                        <td class="px-6 py-4 text-gray-300" [id]="'contact-' + reservationItem.id">
+                            {{ reservationItem.customerContact.phone }}
+                        </td>
+
+                        <td class="px-6 py-4 text-center" [id]="'payment-status-' + reservationItem.id">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300 border border-yellow-700">
+                                {{ constService.getStatusString('paymentStatus', reservationItem.paymentStatus) }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4" [id]="'orders-' + reservationItem.id">
+                            <div class="flex items-center space-x-2">
+                                <ng-container *ngIf="reservationItem.status != 2">
+                                    <button type="button" [id]="'add-order-btn-' + reservationItem.id"
+                                        [name]="'addOrder-' + reservationItem.id"
+                                        (click)="orderButtonClicked(reservationItem)"
+                                        class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">
+                                        Add
+                                    </button>
+                                    <span class="text-gray-600">|</span>
+                                </ng-container>
+                                <button type="button" [id]="'view-order-btn-' + reservationItem.id"
+                                    [name]="'viewOrder-' + reservationItem.id" (click)="showInvoice(reservationItem)"
+                                    class="text-green-400 hover:text-green-300 font-medium transition-colors duration-200">
+                                    View
+                                </button>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <!-- Modal toggle -->
-                            {{ reservationItem.customerContact.phone}}
-                        </td>
-                        <td class="text-center">
-                            {{ constService.getStatusString('paymentStatus', reservationItem.paymentStatus) }}
-                        </td>
 
-                        <td class="px-6 py-4">
-                            <ng-container *ngIf="reservationItem.status != 2">
-                                <button type="button" (click)="orderButtonClicked(reservationItem)"
-                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Add</button> |
-                            </ng-container>
-                            <button type="button" (click)="showInvoice(reservationItem)"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</button>
-
-                        </td>
-                        <td>
-
-                            <ng-container *ngIf="reservationItem.status != 2">
-                                <button *ngIf="reservationItem.status == 0" type="button"
-                                    (click)="checkIn(reservationItem)"
-                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkin</button>
-                                <button *ngIf="reservationItem.status == 1" type="button"
-                                    (click)="openCheckOutForm(reservationItem)"
-                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Checkout</button>
-                                <!-- |
-                        
-                                <button type="button" (click)="openCheckOutForm(reservationItem)"
-                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button> -->
-
-                            </ng-container>
+                        <td class="px-6 py-4" [id]="'actions-' + reservationItem.id">
+                            <div class="flex items-center space-x-2">
+                                <ng-container *ngIf="reservationItem.status != 2">
+                                    <button *ngIf="reservationItem.status == 0" type="button"
+                                        [id]="'checkin-btn-' + reservationItem.id"
+                                        [name]="'checkin-' + reservationItem.id" (click)="checkIn(reservationItem)"
+                                        class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">
+                                        Check In
+                                    </button>
+                                    <button *ngIf="reservationItem.status == 1" type="button"
+                                        [id]="'checkout-btn-' + reservationItem.id"
+                                        [name]="'checkout-' + reservationItem.id"
+                                        (click)="openCheckOutForm(reservationItem)"
+                                        class="text-green-400 hover:text-green-300 font-medium transition-colors duration-200">
+                                        Check Out
+                                    </button>
+                                </ng-container>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
-
             </table>
         </div>
-        <app-pagination [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
-            [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)"></app-pagination>
+
+        <!-- Pagination -->
+        <div class="mt-6">
+            <app-pagination id="reservations-pagination" name="reservationsPagination"
+                [dataCount]="filter.pagination.dataCount" [page]="filter.pagination.page"
+                [pageSize]="filter.pagination.pageSize" (callback)="updatePaginationPage($event)">
+            </app-pagination>
+        </div>
     </div>
 </div>
