@@ -26,6 +26,7 @@ export class ReservationFormComponent implements OnInit {
   @Output() onAlert = new EventEmitter<any>();
   @Output() onModalClose = new EventEmitter<void>();
   @Input({ required: true }) openMode: String = 'create';
+  @Input({required: true}) allRooms: any = [];
 
   constructor(
     private httpService: HttpService,
@@ -34,11 +35,10 @@ export class ReservationFormComponent implements OnInit {
     this._constService = constService;
   }
   async ngOnInit(){
-    await this.getRooms();
+    //await this.getRooms();
   }
 
   _constService: any = null;
-  allRooms: any = [];
   selectedRoom: any = {};
   selectedRooms: any[] = [];
   showAddRooms: boolean = false;
