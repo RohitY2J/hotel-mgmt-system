@@ -263,19 +263,25 @@ export class MenuItemComponent implements OnInit {
   getInventoryStatus(menu: any) {
     if (menu.inventory != null && menu.inventory.availableUnit < 10) {
       if (menu.inventory.availableUnit <= 0) {
-        return "OutOfStock";
+        return "Out Of Stock";
       } else {
-        return "LowInStock";
+        return "Low In Stock";
       }
     }
     else {
-      return "InStock"
+      return "In Stock"
     }
   }
 
   updatePaginationPage(page: number) {
     this.filter.pagination.page = page;
     this.fetchMenuItems();
+  }
+
+  viewMode: 'grid' | 'list' = 'grid';
+  // New methods for enhanced functionality
+  setViewMode(mode: 'grid' | 'list'): void {
+    this.viewMode = mode;
   }
 }
 
