@@ -94,7 +94,7 @@
     </div>
 </app-modal>
 
-<app-modal [title]="isUpdateMode ? 'Update Reservation' : 'Create Reservation'" [modalWidth]="'750px'"
+<app-modal [applyBackdropFilter]="true" [isTitleVisible]="false" [title]="isUpdateMode ? 'Update Reservation' : 'Create Reservation'" [modalWidth]="'750px'"
     [isLargeModal]="true" [isVisible]="isReservationFormOpen" (close)="isReservationFormOpen = !isReservationFormOpen">
     <app-reservation-form [allRooms]="allRooms" (onLoader)="toggleLoader($event)" [openMode]="'create'"
         (onAlert)="triggerNotification($event)" (onModalClose)="closeReservationModal()" />

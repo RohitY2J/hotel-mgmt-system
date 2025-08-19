@@ -1,160 +1,370 @@
-<form [formGroup]="createReservationRequest" class="p-4 md:p-5">
-    <div class="grid gap-4 mb-4 grid-cols-3">
-        <div class="col-span-1">
-            <label for="fullName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer Full
-                Name</label>
-            <input type="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Customer Full Name" formControlName="customerFullName" />
-            <div
-                *ngIf="createReservationRequest.get('customerFullName')?.invalid && (createReservationRequest.get('customerFullName')?.dirty || createReservationRequest.get('customerFullName')?.touched)">
-                <div *ngIf="createReservationRequest.get('customerFullName')?.errors?.['required']"
-                    class="text-red-500 text-xs italic">
-                    Customer Full Name is Required.</div>
-            </div>
-        </div>
-        <div class="col-span-1">
-            <label for="noOfIndividuals" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number of
-                individuals</label>
-            <input type="number"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Number of individuals" formControlName="numberOfIndividuals" />
-        </div>
-        <ng-container formGroupName="customerContact">
-            <div class="col-span-2 sm:col-span-1">
-                <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
-                    Number</label>
-                <input type="text"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Phone Number" formControlName="phone" />
-                <div
-                    *ngIf="createReservationRequest.get('customerContact.phone')?.invalid && (createReservationRequest.get('customerContact.phone')?.dirty || createReservationRequest.get('customerContact.phone')?.touched)">
-                    <div *ngIf="createReservationRequest.get('customerContact.phone')?.errors?.['required']"
-                        class="text-red-500 text-xs italic">
-                        Phone number is required.</div>
-                </div>
-            </div>
-            <div class="col-span-2 sm:col-span-1">
-                <label for="address"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                <input type="text"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Address" formControlName="address" />
-                <div
-                    *ngIf="createReservationRequest.get('customerContact.address')?.invalid && (createReservationRequest.get('customerContact.address')?.dirty || createReservationRequest.get('customerContact.address')?.touched)">
-                    <div *ngIf="createReservationRequest.get('customerContact.address')?.errors?.['required']"
-                        class="text-red-500 text-xs italic">
-                        Address is required.</div>
-                </div>
-            </div>
-        </ng-container>
-        <div class="col-span-1">
-            <label for="checkInDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Check In
-                Date</label>
-            <input type="date"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                formControlName="checkInDate" />
-            <div
-                *ngIf="createReservationRequest.get('checkInDate')?.invalid && (createReservationRequest.get('checkInDate')?.dirty || createReservationRequest.get('checkInDate')?.touched)">
-                <div *ngIf="createReservationRequest.get('checkInDate')?.errors?.['required']"
-                    class="text-red-500 text-xs italic">
-                    Check In Date is Required</div>
-            </div>
-        </div>
-        <div class="col-span-1">
-            <label for="checkOutDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Check Out
-                Date</label>
-            <input type="date"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                formControlName="checkOutDate" />
-            <div
-                *ngIf="createReservationRequest.get('checkOutDate')?.invalid && (createReservationRequest.get('checkOutDate')?.dirty || createReservationRequest.get('checkOutDate')?.touched)">
-                <div *ngIf="createReservationRequest.get('checkOutDate')?.errors?.['required']"
-                    class="text-red-500 text-xs italic">
-                    Check In Date is Required</div>
-            </div>
-            <div *ngIf="createReservationRequest.errors?.['dateRangeInvalid']" class="text-red-500 text-xs italic">
-                Check-out date must be later than check-in date.
-            </div>
-        </div>
-
-        <div class="col-span-1">
-            <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-            <select id="role" formControlName="status"
-                class="me-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                <option class="text-gray-400" value="" selected>Status</option>
-                <option *ngFor="let status of initialStatus" [value]="status.item_id">{{ status.item_text }}
-                </option>
-            </select>
-        </div>
-        <div class="col-span-1">
-            <label for="paidAmt" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount
-                Paid</label>
-            <input type="number"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Paid Amount" formControlName="totalPaidAmount" />
-        </div>
-
-    </div>
-    <div class="flex items-right p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
-        style="margin: -1.25rem; margin-top: 0.5rem">
-        <button (click)="showAddRooms=true"
-            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Add
-            Room</button>
-        <button type="submit" (click)="submit()"
-            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg ms-3 text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Save</button>
-        <button (click)="closeModal()" type="button"
-            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+<form [formGroup]="createReservationRequest" class="bg-gray-900 text-white min-h-screen">
+    <!-- Header Section -->
+    <div class="bg-gray-800 border-b border-gray-700 p-6">
+        <h2 class="text-2xl font-bold text-white mb-2">Create New Reservation</h2>
+        <p class="text-gray-400 text-sm">Fill in the details below to create a new reservation</p>
     </div>
 
+    <!-- Scrollable Form Content -->
+    <div class="max-h-[calc(100vh-200px)] overflow-y-auto p-6">
+        <!-- Customer Information Section -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+            <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                </svg>
+                Customer Information
+            </h3>
+            
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2">
+                <!-- Customer Full Name -->
+                <div class="lg:col-span-1">
+                    <label for="customerFullName" class="block mb-2 text-sm font-medium text-gray-300">
+                        Customer Full Name <span class="text-red-400">*</span>
+                    </label>
+                    <input 
+                        type="text"
+                        id="customerFullName"
+                        name="customerFullName"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-all duration-200 hover:border-gray-500"
+                        placeholder="Enter customer full name" 
+                        formControlName="customerFullName" />
+                    <div *ngIf="createReservationRequest.get('customerFullName')?.invalid && (createReservationRequest.get('customerFullName')?.dirty || createReservationRequest.get('customerFullName')?.touched)">
+                        <div *ngIf="createReservationRequest.get('customerFullName')?.errors?.['required']" class="text-red-400 text-xs mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Customer Full Name is Required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Number of Individuals -->
+                <div class="lg:col-span-1">
+                    <label for="numberOfIndividuals" class="block mb-2 text-sm font-medium text-gray-300">
+                        Number of Individuals
+                    </label>
+                    <input 
+                        type="number"
+                        id="numberOfIndividuals"
+                        name="numberOfIndividuals"
+                        min="1"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-all duration-200 hover:border-gray-500"
+                        placeholder="Enter number of individuals" 
+                        formControlName="numberOfIndividuals" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700" formGroupName="customerContact">
+            <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                </svg>
+                Contact Information
+            </h3>
+            
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2">
+                <!-- Phone Number -->
+                <div class="lg:col-span-1">
+                    <label for="customerPhone" class="block mb-2 text-sm font-medium text-gray-300">
+                        Phone Number <span class="text-red-400">*</span>
+                    </label>
+                    <input 
+                        type="tel"
+                        id="customerPhone"
+                        name="customerPhone"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block w-full p-3 placeholder-gray-400 transition-all duration-200 hover:border-gray-500"
+                        placeholder="Enter phone number" 
+                        formControlName="phone" />
+                    <div *ngIf="createReservationRequest.get('customerContact.phone')?.invalid && (createReservationRequest.get('customerContact.phone')?.dirty || createReservationRequest.get('customerContact.phone')?.touched)">
+                        <div *ngIf="createReservationRequest.get('customerContact.phone')?.errors?.['required']" class="text-red-400 text-xs mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Phone number is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="lg:col-span-1">
+                    <label for="customerAddress" class="block mb-2 text-sm font-medium text-gray-300">
+                        Address <span class="text-red-400">*</span>
+                    </label>
+                    <input 
+                        type="text"
+                        id="customerAddress"
+                        name="customerAddress"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block w-full p-3 placeholder-gray-400 transition-all duration-200 hover:border-gray-500"
+                        placeholder="Enter address" 
+                        formControlName="address" />
+                    <div *ngIf="createReservationRequest.get('customerContact.address')?.invalid && (createReservationRequest.get('customerContact.address')?.dirty || createReservationRequest.get('customerContact.address')?.touched)">
+                        <div *ngIf="createReservationRequest.get('customerContact.address')?.errors?.['required']" class="text-red-400 text-xs mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Address is required
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reservation Details Section -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+            <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                </svg>
+                Reservation Details
+            </h3>
+            
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-3">
+                <!-- Check In Date -->
+                <div class="lg:col-span-1">
+                    <label for="checkInDate" class="block mb-2 text-sm font-medium text-gray-300">
+                        Check In Date <span class="text-red-400">*</span>
+                    </label>
+                    <input 
+                        type="date"
+                        id="checkInDate"
+                        name="checkInDate"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-500"
+                        formControlName="checkInDate" />
+                    <div *ngIf="createReservationRequest.get('checkInDate')?.invalid && (createReservationRequest.get('checkInDate')?.dirty || createReservationRequest.get('checkInDate')?.touched)">
+                        <div *ngIf="createReservationRequest.get('checkInDate')?.errors?.['required']" class="text-red-400 text-xs mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Check In Date is Required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Check Out Date -->
+                <div class="lg:col-span-1">
+                    <label for="checkOutDate" class="block mb-2 text-sm font-medium text-gray-300">
+                        Check Out Date <span class="text-red-400">*</span>
+                    </label>
+                    <input 
+                        type="date"
+                        id="checkOutDate"
+                        name="checkOutDate"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-500"
+                        formControlName="checkOutDate" />
+                    <div *ngIf="createReservationRequest.get('checkOutDate')?.invalid && (createReservationRequest.get('checkOutDate')?.dirty || createReservationRequest.get('checkOutDate')?.touched)">
+                        <div *ngIf="createReservationRequest.get('checkOutDate')?.errors?.['required']" class="text-red-400 text-xs mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Check Out Date is Required
+                        </div>
+                    </div>
+                    <div *ngIf="createReservationRequest.errors?.['dateRangeInvalid']" class="text-red-400 text-xs mt-1 flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        Check-out date must be later than check-in date
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="lg:col-span-1">
+                    <label for="reservationStatus" class="block mb-2 text-sm font-medium text-gray-300">
+                        Status
+                    </label>
+                    <select 
+                        id="reservationStatus" 
+                        name="reservationStatus"
+                        formControlName="status"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-500">
+                        <option value="" class="text-gray-400">Select Status</option>
+                        <option *ngFor="let status of initialStatus" [value]="status.item_id" class="text-white">
+                            {{ status.item_text }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Information Section -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+            <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"></path>
+                </svg>
+                Payment Information
+            </h3>
+            
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2">
+                <div class="lg:col-span-1">
+                    <label for="totalPaidAmount" class="block mb-2 text-sm font-medium text-gray-300">
+                        Amount Paid
+                    </label>
+                    <input 
+                        type="number"
+                        id="totalPaidAmount"
+                        name="totalPaidAmount"
+                        min="0"
+                        step="0.01"
+                        class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block w-full p-3 placeholder-gray-400 transition-all duration-200 hover:border-gray-500"
+                        placeholder="Enter paid amount" 
+                        formControlName="totalPaidAmount" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed Footer with Action Buttons -->
+    <div class="bg-gray-800 border-t border-gray-700 p-6 flex flex-wrap gap-3 justify-end">
+        <button 
+            type="button"
+            (click)="showAddRooms=true"
+            class="inline-flex items-center px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/30 rounded-lg transition-all duration-200 focus:outline-none">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+            </svg>
+            Add Room
+        </button>
+        
+        <button 
+            type="submit" 
+            (click)="submit()"
+            class="inline-flex items-center px-6 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-500/30 rounded-lg transition-all duration-200 focus:outline-none">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Save Reservation
+        </button>
+        
+        <button 
+            type="button"
+            (click)="closeModal()"
+            class="inline-flex items-center px-6 py-3 text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:ring-4 focus:ring-gray-500/30 rounded-lg transition-all duration-200 focus:outline-none border border-gray-600">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            Close
+        </button>
+    </div>
 </form>
 
+<!-- Enhanced Add Rooms Modal -->
+<app-modal [modalWidth]="'700px'" [title]="'Add Rooms'" [isVisible]="showAddRooms" (close)="showAddRooms = !showAddRooms">
+    <div class="bg-gray-900 text-white">
+        <form [formGroup]="addRoomForm" class="p-6">
+            <!-- Room Selection Section -->
+            <div class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                    Room Selection
+                </h3>
+                
+                <div class="grid gap-6 grid-cols-1 lg:grid-cols-4">
+                    <!-- Room Dropdown -->
+                    <div class="col-span-2">
+                        <label for="roomNumber" class="block mb-2 text-sm font-medium text-gray-300">
+                            Available Rooms
+                        </label>
+                        <ng-multiselect-dropdown 
+                            id="roomNumber"
+                            name="roomNumber"
+                            class="text-sm"
+                            [placeholder]="'Select Available Rooms'" 
+                            [settings]="dropdownSettings" 
+                            [data]="allRooms"
+                            formControlName="roomNumber" 
+                            (onSelect)="onRoomSelect($event)">
+                        </ng-multiselect-dropdown>
+                    </div>
 
-<app-modal [title]="'Add Rooms'" [isVisible]="showAddRooms" (close)="showAddRooms = !showAddRooms">
+                    <!-- Price Input -->
+                    <div class="col-span-1">
+                        <label for="roomPrice" class="block mb-2 text-sm font-medium text-gray-300">
+                            Per Room Price
+                        </label>
+                        <input 
+                            type="number"
+                            id="roomPrice"
+                            name="roomPrice"
+                            min="0"
+                            step="0.01"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 placeholder-gray-400 transition-all duration-200 hover:border-gray-500"
+                            placeholder="Enter price" 
+                            formControlName="price" />
+                    </div>
 
-    <form [formGroup]="addRoomForm" class="p-4 md:p-5">
+                    <!-- Add Button -->
+                    <div class="lg:col-span-1 flex items-end">
+                        <button 
+                            type="button" 
+                            (click)="addRooms()"
+                            class="w-full inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-500/30 rounded-lg transition-all duration-200 focus:outline-none">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            Add Room
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-        <div class="grid gap-4 mb-4 grid-cols-5">
-            <div class="col-span-2">
-                <label for="rooms" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Room</label>
-                <ng-multiselect-dropdown class="dark:bg-gray-500 dark:text-gray-400 text-sm z-0"
-                    [placeholder]="'Available Rooms'" [settings]="dropdownSettings" [data]="allRooms"
-                    formControlName="roomNumber" (onSelect)="onRoomSelect($event)">
-                </ng-multiselect-dropdown>
+            <!-- Selected Rooms Section -->
+            <div class="bg-gray-800 rounded-lg border border-gray-700">
+                <div class="p-4 border-b border-gray-700">
+                    <h4 class="text-lg font-semibold text-green-400 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Selected Rooms
+                    </h4>
+                </div>
+                
+                <!-- Scrollable Table Container -->
+                <div class="max-h-64 overflow-y-auto">
+                    <table class="w-full text-sm text-left text-gray-300">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700 sticky top-0">
+                            <tr>
+                                <th class="px-6 py-3">Room Number</th>
+                                <th class="px-6 py-3">Price</th>
+                                <th class="px-6 py-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700">
+                            <tr *ngIf="selectedRooms.length == 0" class="bg-gray-800">
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-400">
+                                    <div class="flex flex-col items-center">
+                                        <svg class="w-8 h-8 mb-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v1h5V8z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        No rooms selected yet
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let room of selectedRooms" class="bg-gray-800 hover:bg-gray-750 transition-colors duration-150">
+                                <td class="px-6 py-4 font-medium text-white">{{room.roomNumber}}</td>
+                                <td class="px-6 py-4 text-green-400">${{room.price}}</td>
+                                <td class="px-6 py-4">
+                                    <button 
+                                        type="button"
+                                        (click)="removeRoom(room)"
+                                        class="inline-flex items-center px-3 py-1 text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-md transition-all duration-200">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-span-2">
-                <label for="paidAmt" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Per Room
-                    Price</label>
-                <input type="number"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-1.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Price" formControlName="price" />
-            </div>
-            <div class="col-span-1">
-                <button type="submit" (click)="addRooms()"
-                    class="mt-7 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-md text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700">Add</button>
-            </div>
-            <div class="col-span-5">
-                <h4 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selected Rooms</h4>
-                <hr/>
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 col-span-5 mt-2">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <th>Room</th>
-                        <th>Price</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody >
-                        <tr *ngIf="selectedRooms.length == 0" class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
-                            <td colspan="3" class="p-3"> No rooms selected</td>
-                        </tr>
-                        <tr *ngFor="let room of selectedRooms">
-                            <td>{{room.roomNumber}}</td>
-                            <td>{{room.price}}</td>
-                            <td class="text-blue-500 cursor-pointer" (click)="removeRoom(room)">Remove</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-      
-    </form>
+        </form>
+    </div>
 </app-modal>
