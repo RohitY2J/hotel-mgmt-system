@@ -1,6 +1,7 @@
 <div *ngIf="isVisible" tabindex="-1" aria-hidden="true"
-    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40">
-    <div class="relative p-4 w-full max-w-md max-h-full" [ngClass]="{largeModal: isLargeModal}">
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-40"
+    [ngClass]="{'backdrop-blur-[2px]':applyBackdropFilter}">
+    <div class="p-4 max-h-full" [ngClass]="{largeModal: isLargeModal}">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" [ngStyle]="{width: modalWidth}" style="width: 500px">
             <!-- Modal header -->

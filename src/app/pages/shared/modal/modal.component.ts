@@ -15,6 +15,7 @@ export class ModalComponent {
   @Input() modalWidth: string = '500px';
   @Input() isLargeModal: boolean = false;
   @Output() close = new EventEmitter<void>();
+  @Input() applyBackdropFilter: boolean = false;
 
   closeModal() {
     this.isVisible = false;
