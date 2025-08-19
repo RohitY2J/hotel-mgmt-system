@@ -1,110 +1,197 @@
-<app-loader *ngIf="isLoading"></app-loader>
-<div class="container h-full mx-auto dark:bg-gray-700">
-    <div class="flex items-center justify-between mb-2 ps-4 pt-4">
-        <div class="text-lg font-semibold dark:text-white">Dashboard</div>
-
+<app-loader *ngIf="isLoading" id="dashboard-loader"></app-loader>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800" id="dashboard-container">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none" id="bg-decoration">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse animation-delay-2000"></div>
     </div>
 
-    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-100 ms-4">
-    <div class="grid grid-cols-4 gap-4 p-4">
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-gray-500 dark:text-blue-700">
-                    Cash In Hand
+    <div class="relative z-10 container mx-auto px-6 py-8" id="dashboard-content">
+        <!-- Header Section -->
+        <div class="mb-12" id="dashboard-header">
+            <div class="flex items-center justify-between" id="header-content">
+                <div id="title-section">
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent" id="dashboard-title">
+                        Dashboard
+                    </h1>
+                    <p class="text-gray-400 mt-2" id="dashboard-subtitle">Real-time business insights</p>
                 </div>
-                <div class="text-xl py-1 font-bold">
-                    Rs. {{this.dashboardData.billToday}}
+                <div class="flex items-center space-x-4" id="header-actions">
+                    <div class="relative" id="status-indicator">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <div class="absolute inset-0 w-3 h-3 bg-green-400 rounded-full animate-ping opacity-75"></div>
+                    </div>
+                    <span class="text-sm text-gray-400">Live</span>
                 </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-dollar-sign fa-3x dark:text-green-400"></i>
             </div>
         </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-blue-700">
-                    No. of Reservations
-                </div>
-                <div class="text-xl py-1 font-bold">
-                    {{this.dashboardData.reservationToday}}
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-solid fa-person-shelter fa-3x dark:text-yellow-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-blue-700">
-                    No. of Orders
-                </div>
-                <div class="text-xl py-1 font-bold">
-                    {{this.dashboardData.orderToday}}
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-utensils fa-3x dark:text-brown-400"></i>
-            </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow flex justify-between">
-            <div class="flex flex-col justify-center w-40">
-                <div class="text-md text-blue-700">
-                    Total Sales
-                </div>
-                <div class="text-xl py-1 font-bold">
-                    Rs {{this.dashboardData.salesToday}}
-                </div>
-                <div class="text-sm text-gray-500">
-                    Today
-                </div>
-            </div>
-            <div class="flex-1">
-                <i class="fas fa-money-bill fa-3x dark:text-green-400"></i>
-            </div>
-        </div>
-    </div>
 
-    <div class="flex justify-between p-4">
-        <div class="w-full me-4 rounded shadow">
-
-            <div class="w-full rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-                <div class="flex justify-between mb-5">
-                    <div class="grid gap-4 grid-cols-2">
-                        <div>
-                            <h5
-                                class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
-                                Reservation This Week
-                            </h5>
-                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold
-                                flex justify-center">{{this.totalReservationThisWeek}}</p>
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12" id="dashboard-stats-grid">
+            <!-- Cash In Hand Card -->
+            <div class="group relative overflow-hidden" id="cash-in-hand-card">
+                <div class="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-green-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                    <div class="flex items-start justify-between" id="cash-in-hand-content">
+                        <div class="flex-1" id="cash-data">
+                            <div class="flex items-center space-x-2 mb-3" id="cash-header">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <p class="text-sm font-medium text-gray-300">Cash In Hand</p>
+                            </div>
+                            <p class="text-3xl font-bold text-white mb-1" id="cash-in-hand-value">
+                                Rs. {{this.dashboardData.billToday}}
+                            </p>
+                            <p class="text-xs text-gray-400 flex items-center" id="cash-in-hand-period">
+                                <span class="w-1 h-1 bg-gray-400 rounded-full mr-1"></span>
+                                Today
+                            </p>
                         </div>
-                        <div>
-                            <h5
-                                class="inline-flex items-center text-gray-500 dark:text-gray-400 leading-none font-normal mb-2">
-                                No. of Order This Week
-                            </h5>
-                            <p class="text-gray-900 dark:text-white text-2xl leading-none font-bold
-                                flex justify-center">{{this.totalOrderThisWeek}}</p>
+                        <div class="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center group-hover:bg-green-500/20 transition-colors duration-300" id="cash-in-hand-icon">
+                            <i class="fas fa-dollar-sign text-green-400 text-lg"></i>
                         </div>
                     </div>
                 </div>
-                <div id="line-chart" #lineChart></div>
-                <div
-                    class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between mt-2.5">
-                    <div class="pt-5">
+            </div>
+
+            <!-- Reservations Card -->
+            <div class="group relative overflow-hidden" id="reservations-card">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-blue-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                    <div class="flex items-start justify-between" id="reservations-content">
+                        <div class="flex-1" id="reservation-data">
+                            <div class="flex items-center space-x-2 mb-3" id="reservation-header">
+                                <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                <p class="text-sm font-medium text-gray-300">Reservations</p>
+                            </div>
+                            <p class="text-3xl font-bold text-white mb-1" id="reservations-value">
+                                {{this.dashboardData.reservationToday}}
+                            </p>
+                            <p class="text-xs text-gray-400 flex items-center" id="reservations-period">
+                                <span class="w-1 h-1 bg-gray-400 rounded-full mr-1"></span>
+                                Today
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center group-hover:bg-blue-500/20 transition-colors duration-300" id="reservations-icon">
+                            <i class="fas fa-calendar-alt text-blue-400 text-lg"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Orders Card -->
+            <div class="group relative overflow-hidden" id="orders-card">
+                <div class="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-amber-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-orange-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                    <div class="flex items-start justify-between" id="orders-content">
+                        <div class="flex-1" id="order-data">
+                            <div class="flex items-center space-x-2 mb-3" id="order-header">
+                                <div class="w-2 h-2 bg-orange-400 rounded-full"></div>
+                                <p class="text-sm font-medium text-gray-300">Orders</p>
+                            </div>
+                            <p class="text-3xl font-bold text-white mb-1" id="orders-value">
+                                {{this.dashboardData.orderToday}}
+                            </p>
+                            <p class="text-xs text-gray-400 flex items-center" id="orders-period">
+                                <span class="w-1 h-1 bg-gray-400 rounded-full mr-1"></span>
+                                Today
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center group-hover:bg-orange-500/20 transition-colors duration-300" id="orders-icon">
+                            <i class="fas fa-utensils text-orange-400 text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Sales Card -->
+            <div class="group relative overflow-hidden" id="sales-card">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-purple-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                    <div class="flex items-start justify-between" id="sales-content">
+                        <div class="flex-1" id="sales-data">
+                            <div class="flex items-center space-x-2 mb-3" id="sales-header">
+                                <div class="w-2 h-2 bg-purple-400 rounded-full"></div>
+                                <p class="text-sm font-medium text-gray-300">Total Sales</p>
+                            </div>
+                            <p class="text-3xl font-bold text-white mb-1" id="sales-value">
+                                Rs {{this.dashboardData.salesToday}}
+                            </p>
+                            <p class="text-xs text-gray-400 flex items-center" id="sales-period">
+                                <span class="w-1 h-1 bg-gray-400 rounded-full mr-1"></span>
+                                Today
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center group-hover:bg-purple-500/20 transition-colors duration-300" id="sales-icon">
+                            <i class="fas fa-chart-line text-purple-400 text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="relative" id="dashboard-chart-section">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-2xl"></div>
+            <div class="relative bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8" id="chart-container">
+                <!-- Chart Header -->
+                <div class="mb-8" id="chart-header">
+                    <div class="flex items-center justify-between flex-wrap gap-4" id="chart-title-section">
+                        <div id="chart-title-content">
+                            <h2 class="text-2xl font-bold text-white mb-2">Weekly Analytics</h2>
+                            <p class="text-gray-400">Track your business performance over time</p>
+                        </div>
+                        <div class="flex items-center space-x-6" id="chart-stats">
+                            <div class="text-center" id="reservation-week-stats">
+                                <div class="flex items-center space-x-2 mb-2" id="reservation-week-header">
+                                    <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+                                    <p class="text-sm font-medium text-gray-300" id="reservation-week-label">Reservations</p>
+                                </div>
+                                <p class="text-2xl font-bold text-white" id="reservation-week-value">
+                                    {{this.totalReservationThisWeek}}
+                                </p>
+                                <p class="text-xs text-gray-400">This Week</p>
+                            </div>
+                            <div class="w-px h-12 bg-slate-600"></div>
+                            <div class="text-center" id="order-week-stats">
+                                <div class="flex items-center space-x-2 mb-2" id="order-week-header">
+                                    <div class="w-3 h-3 bg-orange-400 rounded-full"></div>
+                                    <p class="text-sm font-medium text-gray-300" id="order-week-label">Orders</p>
+                                </div>
+                                <p class="text-2xl font-bold text-white" id="order-week-value">
+                                    {{this.totalOrderThisWeek}}
+                                </p>
+                                <p class="text-xs text-gray-400">This Week</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Content -->
+                <div class="relative" id="chart-wrapper">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent rounded-2xl pointer-events-none"></div>
+                    <div class="bg-slate-900/30 rounded-2xl p-6 border border-slate-700/30" id="chart-content">
+                        <div id="line-chart" #lineChart class="min-h-[300px]"></div>
+                    </div>
+                </div>
+
+                <!-- Chart Footer -->
+                <div class="mt-6 pt-6 border-t border-slate-700/50" id="chart-footer">
+                    <div class="flex items-center justify-center space-x-8 text-sm text-gray-400" id="chart-footer-content">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span>Reservations</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-orange-400 rounded-full"></div>
+                            <span>Orders</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span>Revenue</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
