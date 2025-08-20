@@ -1,5 +1,5 @@
 <app-loader *ngIf="isLoading" id="dashboard-loader"></app-loader>
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800" id="dashboard-container">
+<div class="min-h-screen" id="dashboard-container">
     <!-- Animated Background Elements -->
     <div class="absolute overflow-hidden pointer-events-none" id="bg-decoration">
         <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
@@ -29,9 +29,9 @@
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12" id="dashboard-stats-grid">
             <!-- Cash In Hand Card -->
-            <div class="group relative overflow-hidden" id="cash-in-hand-card">
+            <div class="group relative overflow-hidden p-2 border border-slate-700/50 rounded-2xl" id="cash-in-hand-card">
                 <div class="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-green-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="relative border-slate-700/50 rounded-2xl p-6 hover:border-green-400/30 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="flex items-start justify-between" id="cash-in-hand-content">
                         <div class="flex-1" id="cash-data">
                             <div class="flex items-center space-x-2 mb-3" id="cash-header">
@@ -54,9 +54,9 @@
             </div>
 
             <!-- Reservations Card -->
-            <div class="group relative overflow-hidden" id="reservations-card">
+            <div class="group relative overflow-hidden p-2 border border-slate-700/50 rounded-2xl" id="reservations-card">
                 <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-blue-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="relative border-slate-700/50 rounded-2xl p-6 hover:border-blue-400/30 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="flex items-start justify-between" id="reservations-content">
                         <div class="flex-1" id="reservation-data">
                             <div class="flex items-center space-x-2 mb-3" id="reservation-header">
@@ -79,9 +79,9 @@
             </div>
 
             <!-- Orders Card -->
-            <div class="group relative overflow-hidden" id="orders-card">
+            <div class="group relative overflow-hidden p-2 border border-slate-700/50 rounded-2xl" id="orders-card">
                 <div class="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-amber-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-orange-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="relative border-slate-700/50 rounded-2xl p-6 hover:border-orange-400/30 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="flex items-start justify-between" id="orders-content">
                         <div class="flex-1" id="order-data">
                             <div class="flex items-center space-x-2 mb-3" id="order-header">
@@ -104,9 +104,9 @@
             </div>
 
             <!-- Total Sales Card -->
-            <div class="group relative overflow-hidden" id="sales-card">
+            <div class="group relative overflow-hidden p-2 border border-slate-700/50 rounded-2xl" id="sales-card">
                 <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div class="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-purple-400/30 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="relative border-slate-700/50 rounded-2xl p-6 hover:border-purple-400/30 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="flex items-start justify-between" id="sales-content">
                         <div class="flex-1" id="sales-data">
                             <div class="flex items-center space-x-2 mb-3" id="sales-header">
@@ -131,7 +131,7 @@
 
         <!-- Chart Section -->
         <div class="relative" id="dashboard-chart-section">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-2xl"></div>
+            <div class="absolute inset-0 bg-gradient-to-r rounded-3xl blur-2xl"></div>
             <div class="relative bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8" id="chart-container">
                 <!-- Chart Header -->
                 <div class="mb-8" id="chart-header">
