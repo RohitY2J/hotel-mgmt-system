@@ -269,55 +269,55 @@
                             </div>
                         </div>
 
-                        <!-- Enhanced Tab Buttons -->
-                        <div id="tab-section" class="mt-6">
-                            <div class="bg-gray-700 p-1 rounded-lg border border-gray-600">
-                                <div class="flex gap-1">
-                                    <button 
-                                        id="view-tab-btn"
-                                        [disabled]="isButtonDisabled()" 
-                                        (click)="loadOrder()" 
-                                        [class]="'flex-1 py-3 px-4 text-sm font-medium text-center rounded-md transition-all duration-300 focus:outline-none flex items-center justify-center gap-2 ' + 
-                                                (isView === true ? 
-                                                    'bg-blue-600 text-white shadow-lg ring-2 ring-blue-500 ring-opacity-50' : 
-                                                    'bg-transparent text-gray-300 hover:text-white hover:bg-gray-600'
-                                                ) + 
-                                                (isButtonDisabled() ? ' opacity-50 cursor-not-allowed' : '')">
-                                        <i class="fas fa-eye text-xs"></i>
-                                        <span>View Orders</span>
-                                        <div *ngIf="isView === true" class="w-2 h-2 bg-blue-300 rounded-full animate-pulse"></div>
-                                    </button>
-                                    <button 
-                                        id="order-tab-btn"
-                                        [disabled]="isButtonDisabled()" 
-                                        (click)="placeOrder()" 
-                                        [class]="'flex-1 py-3 px-4 text-sm font-medium text-center rounded-md transition-all duration-300 focus:outline-none flex items-center justify-center gap-2 ' + 
-                                                (isView === false ? 
-                                                    'bg-green-600 text-white shadow-lg ring-2 ring-green-500 ring-opacity-50' : 
-                                                    'bg-transparent text-gray-300 hover:text-white hover:bg-gray-600'
-                                                ) + 
-                                                (isButtonDisabled() ? ' opacity-50 cursor-not-allowed' : '')">
-                                        <i class="fas fa-plus-circle text-xs"></i>
-                                        <span>Place Order</span>
-                                        <div *ngIf="isView === false" class="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Tab Indicator -->
-                            <div class="mt-2 text-center">
-                                <span class="text-xs text-gray-400">
-                                    <i class="fas fa-info-circle mr-1"></i>
-                                    <span *ngIf="isView === true">Viewing existing orders</span>
-                                    <span *ngIf="isView === false">Adding new items to order</span>
-                                    <span *ngIf="isView === null || isView === undefined" class="text-amber-400">
-                                        <i class="fas fa-arrow-up mr-1"></i>
-                                        Select a mode to continue
-                                    </span>
-                                </span>
+                    </ng-container>
+                    <!-- Enhanced Tab Buttons -->
+                    <div id="tab-section" class="mt-6">
+                        <div class="bg-gray-700 p-1 rounded-lg border border-gray-600">
+                            <div class="flex gap-1">
+                                <button 
+                                    id="view-tab-btn"
+                                    [disabled]="isButtonDisabled()" 
+                                    (click)="loadOrder()" 
+                                    [class]="'flex-1 py-3 px-4 text-sm font-medium text-center rounded-md transition-all duration-300 focus:outline-none flex items-center justify-center gap-2 ' + 
+                                            (isView === true ? 
+                                                'bg-blue-600 text-white shadow-lg ring-2 ring-blue-500 ring-opacity-50' : 
+                                                'bg-transparent text-gray-300 hover:text-white hover:bg-gray-600'
+                                            ) + 
+                                            (isButtonDisabled() ? ' opacity-50 cursor-not-allowed' : '')">
+                                    <i class="fas fa-eye text-xs"></i>
+                                    <span>View Orders</span>
+                                    <div *ngIf="isView === true" class="w-2 h-2 bg-blue-300 rounded-full animate-pulse"></div>
+                                </button>
+                                <button 
+                                    id="order-tab-btn"
+                                    [disabled]="isButtonDisabled()" 
+                                    (click)="placeOrder()" 
+                                    [class]="'flex-1 py-3 px-4 text-sm font-medium text-center rounded-md transition-all duration-300 focus:outline-none flex items-center justify-center gap-2 ' + 
+                                            (isView === false ? 
+                                                'bg-green-600 text-white shadow-lg ring-2 ring-green-500 ring-opacity-50' : 
+                                                'bg-transparent text-gray-300 hover:text-white hover:bg-gray-600'
+                                            ) + 
+                                            (isButtonDisabled() ? ' opacity-50 cursor-not-allowed' : '')">
+                                    <i class="fas fa-plus-circle text-xs"></i>
+                                    <span>Place Order</span>
+                                    <div *ngIf="isView === false" class="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+                                </button>
                             </div>
                         </div>
-                    </ng-container>
+                        
+                        <!-- Tab Indicator -->
+                        <div class="mt-2 text-center">
+                            <span class="text-xs text-gray-400">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                <span *ngIf="isView === true">Viewing existing orders</span>
+                                <span *ngIf="isView === false">Adding new items to order</span>
+                                <span *ngIf="isView === null || isView === undefined" class="text-amber-400">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    Select a mode to continue
+                                </span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Order Items List -->
