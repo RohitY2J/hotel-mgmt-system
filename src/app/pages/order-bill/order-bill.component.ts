@@ -81,8 +81,8 @@ export class OrderBillComponent implements OnInit {
   }
   
 
-  ngOnInit(): void {
-    this.fetchOrders();
+  async ngOnInit(){
+    await this.fetchOrders();
     this.filter.date = this.constantService.getDateTodayString();
 
     // set the target element of the input field or div
@@ -129,7 +129,7 @@ export class OrderBillComponent implements OnInit {
       this.filteredOptions = await this.filterOptions(value);
     });
 
-    this.fetchTables();
+    await this.fetchTables();
   }
 
   clearFilter() {
@@ -170,50 +170,38 @@ export class OrderBillComponent implements OnInit {
     });
   }
 
-  fetchOrders() {
+  async fetchOrders() {
     this.isLoading = true;
     this.showNotification = false;
     this.filter.customerName = this.searchControl.value;
-    this.httpService.httpPost("order/getOrders", this.filter)
-      .pipe(finalize(() => {
-        this.isLoading = false;
-      }))
-      .subscribe(
-        (response) => {
-          this.orders = (response as HttpListResponse).data;
-          this.filter.pagination.dataCount = this.orders.length;
-        },
-        (err) => {
-          this.triggerNotification({
-            error: true,
-            message: "Failed to retrieve orders"
-          })
-        }
-      )
+    let response = await this.httpService.httpPostAsync("order/getOrders", this.filter);
+    this.orders = (response as HttpListResponse).data;
+    this.filter.pagination.dataCount = this.orders.length;
+    
+    this.isLoading = false;
+    // .pipe(finalize(() => {
+    //     this.isLoading = false;
+    //   }))
+    //   .subscribe(
+    //     (response) => {
+          
+    //     },
+    //     (err) => {
+    //       this.triggerNotification({
+    //         error: true,
+    //         message: "Failed to retrieve orders"
+    //       })
+    //     }
+    //   )
   }
 
   async fetchTables() {
     this.isLoading = true;
-    this.httpService
-      .httpPost('table/getTables', {})
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          let response = res as HttpListResponse;
-          this.tableNumbers = response.data;
-          //this.filter.pagination.dataCount = response.data.length;
-        },
-        error: (err) =>
-          this.triggerNotification({
-            message: 'Failed to table data',
-            error: true,
-          }),
-      });
+    let response = await this.httpService
+      .httpPostAsync('table/getTables', {});
+    this.tableNumbers = (response as HttpListResponse).data;
+    
+    this.isLoading = false;
   }
 
   triggerNotification(notificationContent: any) {
