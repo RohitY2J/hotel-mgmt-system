@@ -60,7 +60,7 @@ export class OrderItemComponent implements OnInit {
   //   forReservation: false
   // }
   
-  isView: boolean = true;
+  isView: boolean | null = null;
 
   constructor(private httpService: HttpService, 
     private authService: AuthService, 
@@ -70,8 +70,8 @@ export class OrderItemComponent implements OnInit {
   async ngOnInit() {
     this.userDetails = this.authService.getUser();
     await this.fetchMenuItems();
-    this.fetchTables();
-    this.fetchReservations();
+    await this.fetchTables();
+    await this.fetchReservations();
     console.log(this.reservationId);
     if(this.reservationId)this.loadOrder();
   }
@@ -136,64 +136,31 @@ export class OrderItemComponent implements OnInit {
 
   async fetchTables() {
     this.isLoading = true;
-    this.httpService
-      .httpPost('table/getTables', {})
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          let response = res as HttpListResponse;
-          this.allTables = response.data;
-          //this.filter.pagination.dataCount = response.data.length;
-        },
-        error: (err) =>
-          this.toastrService.error('Failed to table data')
-      });
+    let response = await this.httpService
+                    .httpPostAsync('table/getTables', {}) as HttpListResponse;
+    this.allTables = response.data;
+    this.isLoading = false;
+    //this.toastrService.error('Failed to table data')
   }
 
   async fetchReservations(){
     this.isLoading = true;
-    this.httpService
-      .httpPost('reservation/getReservations', {status: 1}) //checkin
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.allReservations = res;
-        },
-        error: (err) =>
-          this.toastrService.error('Failed to table data')
-      });
+    this.allReservations = await this.httpService
+      .httpPostAsync('reservation/getReservations', {status: 1}); //checkin
+    
+    this.isLoading = false;
   }
 
   async fetchMenuItems() {
     this.isLoading = true;
     this.filter.menuName = this.searchControl.value;
-    this.httpService
-      .httpPost('menu/getMenuItems', this.filter)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          let response = res as HttpListResponse;
-          this.allMenus = response.data;
-          this.filter.pagination.dataCount = response.data.length;
-        },
-        error: (err) =>
-          this.toastrService.error('Failed to retrieve data')
-      });
+    let response = await this.httpService
+      .httpPostAsync('menu/getMenuItems', this.filter) as HttpListResponse;
+      
+    this.allMenus = response.data;
+    this.filter.pagination.dataCount = response.data.length;
+      
+    this.isLoading = false;
   }
 
   menuItemSelected(menu: any) {
@@ -433,6 +400,28 @@ export class OrderItemComponent implements OnInit {
       printWindow.onafterprint = () => {
         printWindow.close();
       };
+    }
+  }
+  
+  getCurrentTime(){
+    return new Date();
+  }
+
+  // Update the clickable check method
+  isMenuItemClickable(): boolean {
+    const hasDestination = this.tableNumber || this.reservationId;
+    const hasModeSelected = this.isView !== null && this.isView !== undefined;
+    return hasDestination && hasModeSelected;
+  }
+
+  // Get dynamic CSS classes for menu items
+  getMenuItemClasses(): string {
+    const baseClasses = 'group relative bg-gray-700 rounded-lg overflow-hidden shadow-md transition-all duration-300 border border-gray-600';
+    
+    if (this.isMenuItemClickable()) {
+      return baseClasses + ' hover:shadow-xl hover:scale-105 hover:border-blue-500 cursor-pointer';
+    } else {
+      return baseClasses + ' cursor-not-allowed opacity-75';
     }
   }
   
