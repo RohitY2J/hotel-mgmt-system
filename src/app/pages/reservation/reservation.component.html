@@ -9,7 +9,7 @@
 <ng-container *ngIf="isOrderComponentVisible">
     <div id="order-modal-backdrop" tabindex="-1" aria-hidden="true"
         class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm flex items-center justify-center z-40">
-        <div class="w-full max-w-6xl mx-4">
+        <div class="w-full max-w-6xl mx-4" [ngClass]="{'max-h-full overflow-y-scroll': isOrderComponentVisible}">
             <!-- Modal content -->
             <div id="order-modal-content" class="bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
                 <!-- Modal header -->
