@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class InvoiceComponentComponent implements OnChanges, DoCheck {
   @Input({ required: true }) reservation!: any;
   @Input() showSummaryOnly = false;
+  @Output() getRemainingAmount = new EventEmitter<Number>();
 
   private previousDscPer: any = 0;
   private previousDscFlat: any = 0;
@@ -103,9 +104,9 @@ export class InvoiceComponentComponent implements OnChanges, DoCheck {
     }
 
     this.totalPaidAmount = this.reservation.billing.totalPaidAmount;
-    this.totalRemainingAmount =
-      Number(this.totalPayable) - Number(this.totalPaidAmount);
+    this.totalRemainingAmount = Number(this.totalPayable) - Number(this.totalPaidAmount);
     this.totalRemainingAmountAbs = Math.abs(this.totalRemainingAmount);
+    this.getRemainingAmount.emit(this.totalRemainingAmount);
   }
 
   getOrderAmount() {

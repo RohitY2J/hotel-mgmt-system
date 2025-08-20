@@ -1,61 +1,181 @@
 <ng-container *ngIf="reservation != null">
-    <div class="relative overflow-x-auto p-4">
+    <div class="relative" [ngClass]="{'h-[85vh] overflow-y-scroll': !showSummaryOnly}">
         <ng-container *ngIf="!showSummaryOnly">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-400">
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-500">
-                        <th class="text-gray-700 font-bold uppercase py-2">Description</th>
-                        <th class="text-gray-700 font-bold uppercase py-2">Quantity</th>
-                        <th class="text-gray-700 font-bold uppercase py-2">Price</th>
-                        <th class="text-gray-700 font-bold uppercase py-2">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <tr *ngFor="let room of rooms" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <td>
-                            <p>{{room.roomNumber}} (Room)</p>
-                        </td>
-                        <td>{{room.qty}}</td>
-                        <td>{{room.price}}</td>
-                        <td>{{room.total}}</td>
-                    </tr>
-
-                    <tr *ngFor="let order of reservation?.billing?.orders"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <td>
-                            <p>{{order.name}}</p>
-                        </td>
-                        <td>{{order.qty}}</td>
-                        <td>{{order.price}}</td>
-                        <td>{{order.price * order.qty}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Full Invoice Table -->
+            <div class="bg-gray-800/30 rounded-xl border border-gray-700/50 overflow-hidden mb-6 backdrop-blur-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gradient-to-r from-gray-700 to-gray-800">
+                            <tr class="border-b border-gray-600/50">
+                                <th class="text-left py-4 px-6 text-gray-300 font-semibold uppercase tracking-wider text-xs">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                                        </svg>
+                                        Description
+                                    </span>
+                                </th>
+                                <th class="text-center py-4 px-4 text-gray-300 font-semibold uppercase tracking-wider text-xs">Qty</th>
+                                <th class="text-center py-4 px-4 text-gray-300 font-semibold uppercase tracking-wider text-xs">Price</th>
+                                <th class="text-right py-4 px-6 text-gray-300 font-semibold uppercase tracking-wider text-xs">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700/50">
+                            <!-- Room Items -->
+                            <tr *ngFor="let room of rooms; let i = index" 
+                                class="group hover:bg-gray-700/20 transition-colors duration-200"
+                                [class.bg-blue-900]="i % 2 === 0">
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-blue-500/30">
+                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-white font-medium">{{room.roomNumber}}</p>
+                                            <p class="text-gray-400 text-xs">Room Service</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 text-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-700/50 text-white text-sm font-medium">
+                                        {{room.qty}}
+                                    </span>
+                                </td>
+                                <td class="py-4 px-4 text-center text-gray-300 font-mono">{{room.price}}</td>
+                                <td class="py-4 px-6 text-right text-white font-semibold font-mono">{{room.total}}</td>
+                            </tr>
+                            
+                            <!-- Order Items -->
+                            <tr *ngFor="let order of reservation?.billing?.orders; let i = index" 
+                                class="group hover:bg-gray-700/20 transition-colors duration-200"
+                                [class.bg-emerald-900]="i % 2 === 0">
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center border border-emerald-500/30">
+                                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-white font-medium">{{order.name}}</p>
+                                            <p class="text-gray-400 text-xs">Order Item</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 text-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-700/50 text-white text-sm font-medium">
+                                        {{order.qty}}
+                                    </span>
+                                </td>
+                                <td class="py-4 px-4 text-center text-gray-300 font-mono">{{order.price}}</td>
+                                <td class="py-4 px-6 text-right text-white font-semibold font-mono">{{order.price * order.qty}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </ng-container>
-        <div class="flex justify-end">
-            <div class="text-white mr-2">Subtotal:</div>
-            <div class="text-white">{{subTotal + roomTotal}}</div>
-        </div>
-        <div class="flex justify-end">
-            <div class="text-white mr-2">Discount:</div>
-            <div class="text-white">{{discount}}</div>
-        </div>
-        <div class="flex justify-end items-center text-l">
-            <div class="text-white font-bold mr-2">Total:</div>
-            <div class="text-white font-bold text-xl">{{totalPayable}}</div>
-        </div>
-        <div class="flex justify-end">
-            <div class="text-white mr-2">Paid:</div>
-            <div class="text-white">{{reservation.billing.totalPaidAmount}}</div>
-        </div>
-        <div class="flex justify-end mb-8">
-            <div class="text-white mr-2">{{totalRemainingAmount < 0 ? 'Returnable:' : 'Remaining:' }}</div>
-                    <div class="text-white">{{totalRemainingAmountAbs}}</div>
+        
+        <!-- Summary Section -->
+        <div class="bg-gradient-to-br from-gray-800/60 to-gray-900/60 rounded-xl p-6 border border-gray-700/50 backdrop-blur-sm">
+            <div class="space-y-4">
+                <!-- Subtotal -->
+                <div class="flex justify-between items-center py-2 border-b border-gray-700/30">
+                    <div class="flex items-center gap-2 text-gray-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="font-medium">Subtotal</span>
+                    </div>
+                    <div class="text-white font-semibold font-mono">{{subTotal + roomTotal}}</div>
+                </div>
+                
+                <!-- Discount -->
+                <div class="flex justify-between items-center py-2 border-b border-gray-700/30">
+                    <div class="flex items-center gap-2 text-orange-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                        <span class="font-medium">Discount</span>
+                    </div>
+                    <div class="text-orange-400 font-semibold font-mono">-{{discount}}</div>
+                </div>
+                
+                <!-- Total -->
+                <div class="flex justify-between items-center py-3 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg px-4 border border-blue-500/20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white font-bold text-md">Total</span>
+                    </div>
+                    <div class="text-white font-bold text-md font-mono">{{totalPayable}}</div>
+                </div>
+                
+                <!-- Paid Amount -->
+                <div class="flex justify-between items-center py-2 border-b border-gray-700/30">
+                    <div class="flex items-center gap-2 text-green-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="font-medium">Paid</span>
+                    </div>
+                    <div class="text-green-400 font-semibold font-mono">{{reservation.billing.totalPaidAmount}}</div>
+                </div>
+                 
+                <!-- Remaining/Returnable -->
+                <div class="flex justify-between items-center p-2 rounded-lg border border-red-500/20">
+                    <div class="flex items-center gap-2 text-green-400">
+                        <div class="w-4 h-4 rounded-full flex items-center justify-center"
+                             [class.bg-gradient-to-br]="totalRemainingAmount !== 0"
+                             [class.from-red-500]="totalRemainingAmount > 0"
+                             [class.to-pink-600]="totalRemainingAmount > 0"
+                             [class.from-emerald-500]="totalRemainingAmount < 0"
+                             [class.to-teal-600]="totalRemainingAmount < 0"
+                             [class.bg-gray-600]="totalRemainingAmount === 0">
+                            <svg *ngIf="totalRemainingAmount > 0" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0h-3"></path>
+                            </svg>
+                            <svg *ngIf="totalRemainingAmount < 0" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                            </svg>
+                            <svg *ngIf="totalRemainingAmount === 0" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <span class="font-bold text-md"
+                              [class.text-red-400]="totalRemainingAmount > 0"
+                              [class.text-emerald-400]="totalRemainingAmount < 0"
+                              [class.text-gray-300]="totalRemainingAmount === 0">
+                            {{totalRemainingAmount < 0 ? 'Returnable' : 'Remaining'}}
+                        </span>
+                    </div>
+                    <div class="font-bold text-md font-mono"
+                         [class.text-red-400]="totalRemainingAmount > 0"
+                         [class.text-emerald-400]="totalRemainingAmount < 0"
+                         [class.text-gray-300]="totalRemainingAmount === 0">
+                        {{totalRemainingAmountAbs}}
+                    </div>
+                </div>
             </div>
-            <div *ngIf="!showSummaryOnly" class="w-full">
-                <button class="bg-blue-600 rounded text-white p-2 mb-2 box-border float-end"
-                    (click)="printInvoice()">Print</button>
+            
+            <!-- Print Button for Full Invoice -->
+            <div *ngIf="!showSummaryOnly" class="mt-8 flex justify-end">
+                <button class="group relative bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl px-8 py-4 transition-all duration-200 focus:ring-4 focus:ring-indigo-500/50 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 overflow-hidden"
+                    (click)="printInvoice()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-400/20 to-purple-500/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <span class="relative flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        Print Invoice
+                    </span>
+                </button>
             </div>
         </div>
+    </div>
 </ng-container>
