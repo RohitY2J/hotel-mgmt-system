@@ -1,4 +1,5 @@
-a. need to revamp the UI of the application ( expecially kitchen and order)
+a. need to revamp the UI of the application ( expecially kitchen and order) (done)
 b. need to redirect the loggged in user based on user role (done)
 c. need to add middleware for authorize based on roles (done)
-d. error while adding in inventory
+d. error while adding in inventory (done)
+e. no image in inventory
