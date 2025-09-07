@@ -185,19 +185,19 @@ For Admin and Waiter login
 For No login
 1. Go to kitchen page `http://localhost:8000/kitchen` to check for any order placed to kitchen.
 
-![Admin Dashboard Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png)
-![Admin Employee Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png)
-![Admin Reservation Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png)
-![Admin Rooms Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png)
-![Admin Inventory Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/inventory.png)
-![Admin Tables Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/tables.png)
-![Admin Menu Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/menu.png)
-![Admin Table Bill Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/bill.png)
+![Admin Dashboard Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png | width=100)
+![Admin Employee Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png | width=100)
+![Admin Reservation Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png | width=100)
+![Admin Rooms Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png | width=100)
+![Admin Inventory Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/inventory.png | width=100)
+![Admin Tables Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/tables.png | width=100)
+![Admin Menu Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/menu.png | width=100)
+![Admin Table Bill Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/bill.png | width=100)
 
-![Waiter Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/waiter.png)
-![Order Menu Interface]([screenshots/booking.png](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/order%20menu.png))
+![Waiter Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/waiter.png | width=100)
+![Order Menu Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/order%20menu.png | width=100)
 
-![Kitchen Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/kitchen.png)
+![Kitchen Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/kitchen.png | width=100)
 
 
 
