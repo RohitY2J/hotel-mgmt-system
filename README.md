@@ -34,6 +34,7 @@ This is a management system designed specifically for hotels and resorts. It str
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Users](#users)
+- [Usage](#usage)
 
 
 ## Authors
