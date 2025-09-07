@@ -212,7 +212,7 @@
                 <div class="flex flex-wrap items-center gap-4">
                     <!-- Availability Status Filter -->
                     <div class="flex flex-col">
-                        <label class="text-xs font-medium text-gray-400 mb-2">Filter by Availability</label>
+                        <!-- <label class="text-xs font-medium text-gray-400 mb-2">Filter by Availability</label> -->
                         <select id="availableStatusFilter" name="availableStatusFilter" [(ngModel)]="filter.availableStatus"
                             class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-3 min-w-40 cursor-pointer transition-all duration-200 hover:bg-gray-650">
                             <option class="bg-gray-800" value="" selected>Available Status</option>
@@ -223,7 +223,7 @@
                     
                     <!-- Search Input -->
                     <div class="flex flex-col">
-                        <label class="text-xs font-medium text-gray-400 mb-2">Search Menu Items</label>
+                        <!-- <label class="text-xs font-medium text-gray-400 mb-2">Search Menu Items</label> -->
                         <app-autocomplete [searchControl]="searchControl" [filteredOptions]="filteredOptions"
                             (callback)="updateFilterOptions($event)" id="menuSearchInput" name="menuSearchInput"
                             class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block placeholder-gray-400 transition-all duration-200 hover:bg-gray-650"></app-autocomplete>
@@ -231,7 +231,7 @@
 
                     <!-- Action Buttons -->
                     <div class="flex flex-col">
-                        <label class="text-xs font-medium text-gray-400 mb-2 opacity-0">Actions</label>
+                        <!-- <label class="text-xs font-medium text-gray-400 mb-2 opacity-0">Actions</label> -->
                         <div class="flex gap-3">
                             <button type="button" (click)="searchButtonClicked()" id="applyFilterBtn" name="applyFilterBtn"
                                 class="inline-flex items-center px-5 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
