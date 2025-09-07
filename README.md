@@ -21,7 +21,15 @@ This is a management system designed specifically for hotels and resorts. It str
    - Admin is able to add inventory item, edit the number of quantity based on stock added or reduced.
    - The inventory items are also available as menu item.
    - When the inventory menu item is order, the inventory stock dwindles.
-   - When the inventory item reaches below a particular number, a warning email is sent to appropriate authority. 
+   - When the inventory item reaches below a particular number, a warning email is sent to appropriate authority.
+
+## Table of Contents
+- [Authors](#authors)
+- [Architecture Diagram](#architecture-diagram)
+- [Deployment](#deployment)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Authors
 
