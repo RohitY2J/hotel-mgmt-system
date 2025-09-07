@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
   });
   notificationParams: any = {};
   
-  showNotification: boolean = false;
   constructor(
     private httpService: HttpService,
     private router: Router,
