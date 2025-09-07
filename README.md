@@ -27,9 +27,13 @@ This is a management system designed specifically for hotels and resorts. It str
 - [Authors](#authors)
 - [Architecture Diagram](#architecture-diagram)
 - [Deployment](#deployment)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
+- [To Run Locally](#to-run-locally)
+- [To Run On Docker](#to-run-on-docker)
+- [After integrating with CAS application](#after-integrating-with-cas-application)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Users](#users)
+
 
 ## Authors
 
@@ -94,7 +98,6 @@ After logging into the CAS system
 - Bill tracking and generation
 - Centralized Authentication Integration
 
-## Technologies Used
 
 ## Technologies Used
 
