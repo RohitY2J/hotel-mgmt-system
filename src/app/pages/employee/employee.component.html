@@ -335,9 +335,9 @@
 
     <!-- Action Bar -->
     <div class="bg-gray-800 rounded-xl border border-gray-700 p-6 mb-6">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center gap-4">
             <!-- Left Actions -->
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-wrap items-center gap-3 lg:w-[200px]">
                 <button 
                     (click)="openModalForCreatingEmployee()"
                     id="add-employee-btn"
@@ -359,10 +359,10 @@
             </div>
 
             <!-- Right Filters -->
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-wrap items-center gap-3 lg:w-[500px]">
                 <!-- Role Filter -->
                 <div class="flex flex-col space-y-1">
-                    <label for="role-filter" class="text-xs font-medium text-gray-400">Filter by Role</label>
+                    <!-- <label for="role-filter" class="text-xs font-medium text-gray-400">Filter by Role</label> -->
                     <select 
                         id="role-filter" 
                         name="roleFilter"
@@ -375,7 +375,7 @@
 
                 <!-- Search -->
                 <div class="flex flex-col space-y-1">
-                    <label for="employee-search" class="text-xs font-medium text-gray-400">Search Employees</label>
+                    <!-- <label for="employee-search" class="text-xs font-medium text-gray-400">Search Employees</label> -->
                     <div class="relative">
                         <app-autocomplete 
                             [(ngModel)]="filter.searchText" 
