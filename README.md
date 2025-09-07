@@ -35,7 +35,12 @@ This is a management system designed specifically for hotels and resorts. It str
 - [Technologies Used](#technologies-used)
 - [Users](#users)
 - [Usage](#usage)
-
+- [Test](#testing)
+- [Troubleshooting](#troubleshooting)
+- [Support](#support)
+- [Acknowledgements](#acknowledgements)
+- [Demo](#demo)
+- [Contribution](#contribution)
 
 ## Authors
 
@@ -168,7 +173,6 @@ After Integration with CAS application [Visit CAS repository](https://github.com
 - Waiter = Role_Waiter 
 - Admin = Role_Admin
 
-
 ## Usage
 For Admin login
 1. Access the admin panel at `http://localhost:8000/admin/dashboard` to get real-time business insights.
@@ -200,6 +204,40 @@ For No login
 <img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/order%20menu.png" alt="Order Menu Interface" width="600" height="800">
 
 <img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/kitchen.png" alt="Kitchen Interface" width="600" height="800">
+
+
+## Testing
+Run the test suite with:
+```bash
+  npm run test
+```
+
+## Troubleshooting
+- **Database connection error**: Ensure your database credentials and other variables are configured in files `env/` folder are correct.
+- **Dependency issues**: Run `npm run install` and `npm run build` to install all required packages and build project.
+
+## Support
+For questions or issues, please open a ticket on the [Issues](https://github.com/yourusername/hotel-management-system/issues) page or email us at rohitkauri13@gmail.com.
+
+## Acknowledgements
+- [MongoDB](https://www.mongodb.com/) for the robust NoSQL database.
+- [Express.js](https://expressjs.com/) for the lightweight server framework.
+- [Angular](https://angular.io/) for the powerful frontend framework.
+- [Node.js](https://nodejs.org/) for the scalable JavaScript runtime.
+- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework that streamlined styling.
+- Thanks to all contributors and the open-source community for their invaluable support and resources!
+
+## Demo
+Not available currently
+
+## Contribution
+We welcome contributions! Please follow these steps:
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -m "Add feature"`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Open a pull request.
+
 
 
 
