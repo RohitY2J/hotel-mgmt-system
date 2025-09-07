@@ -29,7 +29,6 @@ This is a management system designed specifically for hotels and resorts. It str
 - [Deployment](#deployment)
 - [To Run Locally](#to-run-locally)
 - [To Run On Docker](#to-run-on-docker)
-- [After integrating with CAS application](#after-integrating-with-cas-application)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Users](#users)
