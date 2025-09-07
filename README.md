@@ -21,7 +21,20 @@ This is a management system designed specifically for hotels and resorts. It str
    - Admin is able to add inventory item, edit the number of quantity based on stock added or reduced.
    - The inventory items are also available as menu item.
    - When the inventory menu item is order, the inventory stock dwindles.
-   - When the inventory item reaches below a particular number, a warning email is sent to appropriate authority. 
+   - When the inventory item reaches below a particular number, a warning email is sent to appropriate authority.
+
+## Table of Contents
+- [Authors](#authors)
+- [Architecture Diagram](#architecture-diagram)
+- [Configurations](#configurations)
+- [Deployment](#deployment)
+- [To Run Locally](#to-run-locally)
+- [To Run On Docker](#to-run-on-docker)
+- [After Integration With CAS](#after-integrating-with-cas-application-visit-cas-repository)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Users](#users)
+
 
 ## Authors
 
@@ -32,6 +45,32 @@ This is a management system designed specifically for hotels and resorts. It str
 
 ![Authentication Flow](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/architecture_diagram.gif)
 
+
+## Configurations
+1. Update a `env/environment.ts` file and  `env/nodeEnv.js` in the root directory and modify the following env variables:
+   ```env
+   // environment.ts file
+   export const environment = {
+    SERVER_URL: 'http://localhost:8000',
+    CAS_SERVER_URL: 'http://localhost:5000',
+    REDIRECT_URI: 'http://localhost:8000/callback', //redirect uri for authentication
+    BASE_HREF: '/',
+    APPLICATION_ID: '9bd07b95-87c5-4c56-8ed3-70f50ea9a9e8', // from cas 
+    TENANT_ID: 'c6cea979-afdf-4756-8dd7-90af6b3edeb7' // from cas and this application (clientid)
+   };
+   export const testEnv = {
+    FRONTEND_URL: 'http://localhost:8000',
+    BACKEND_URL: 'http://localhost:8000/api'
+   }
+
+   //nodeEnv.js
+   module.exports = {
+     serverUrl: 'http://localhost:8000',
+     serverPort: 8000,
+     databaseURL: 'mongodb://localhost:27017/hotel-mgmt-app'
+   };
+
+   
 ## Deployment
 
 To deploy this project run
@@ -60,21 +99,22 @@ To deploy this project run
 
 # After integrating with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
 
+After logging into the CAS system
 1. Create a user in the CAS system
-2. Create an application in CAS system, with proper 
+2. Create an application in CAS system, with the following valid property. 
   - Application URL: For solving cors,
   - Redirect URL: For callback
 3. Create a tenant in the CAS system
 4. Assign tenant to application
 5. Assign the user to the application and tenant
-6. Create a client with clientid set to the tenant id in this application.
+6. Create a client with clientid set to the tenant id in this application in the mongodb using query.
 
 
 ## Features
 
 - Employee creation and tracking
-- Emoployee role creation and assignment
-- Emoloyee schedule, shift and job tracking
+- Employee role creation and assignment
+- Employee schedule, shift and job tracking
 - Room creation
 - Reservation creation for customer
 - Inventory creation, management and tracking
@@ -85,7 +125,6 @@ To deploy this project run
 - Bill tracking and generation
 - Centralized Authentication Integration
 
-## Technologies Used
 
 ## Technologies Used
 
@@ -99,8 +138,10 @@ To deploy this project run
 
 - **Node.js**:
   - Cookies-based authentication with Passport.js for secure session management.
+  - Integration with centralized authentication system for authentication (enhancement)
   - Integration with MongoDB for backend data persistence.
   - Testing with Mocha, Chai, Sinon, Supertest, Mongo-Memory-Server
+  - Handling file upload for profile and menu management
 
 - **Express**:
   - RESTful API development with route handling and middleware.
@@ -117,14 +158,46 @@ To deploy this project run
   - Dockerization for containerized deployment and testing of Angular and Node.js applications along with Mongodb Integration.
   
 ## Users
+Before integration with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
+- Waiter = 0
+- Admin = 1
 
-- Waiter
-- Admin 
+After Integration with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
+- Waiter = Role_Waiter 
+- Admin = Role_Admin
 
-## API
 
-|API | Description |
-|------|---------|
-| /api/login/create | To create login user |
-| /api/login | To login into user | 
+## Usage
+For Admin login
+1. Access the admin panel at `http://localhost:8000/admin/dashboard` to get real-time business insights.
+2. Access to employee page at `http://localhost:8000/admin/employee` to view, create and delete employees.
+3. Go to reservation page at `http://localhost:8000/admin/reservations` to view and create a reservation, book rooms, check in, order foods, checkout and payment.
+4. Go to rooms page at `http://localhost:8000/admin/rooms` to view and create rooms, update the room status availability and maintenance.
+5. Go to inventory page at `http://localhost:8000/admin/inventory` to create inventory, add stock, dispatch stock, check its history.
+6. Go to tables page at `http://localhost:8000/admin/tables` to view and create table and update the table status occupancy and description.
+7. Go to menu page at `http://localhost:8000/admin/menus` to view and add menus, update the menus.
+8. Go to bill page at `http://localhost:8000/admin/order-bill` to settle the bill related to table and food order without room reservations.
+
+For Admin and Waiter login
+1. Go to waiter page `http://localhost:8000/waiter` to view table status and monitor if any table is free or need cleaning.
+2. Access to order page `http://localhost:8000/order` to order food to either table or for reservations.
+
+For No login
+1. Go to kitchen page `http://localhost:8000/kitchen` to check for any order placed to kitchen.
+
+![Admin Dashboard Interface](screenshots/booking.png)
+![Admin Employee Interface](screenshots/booking.png)
+![Admin Reservation Interface](screenshots/booking.png)
+![Admin Rooms Interface](screenshots/booking.png)
+![Admin Inventory Interface](screenshots/booking.png)
+![Admin Tables Interface](screenshots/booking.png)
+![Admin Menu Interface](screenshots/booking.png)
+![Admin Table Bill Interface](screenshots/booking.png)
+
+![Waiter Interface](screenshots/booking.png)
+![Order Menu Interface](screenshots/booking.png)
+
+![Kitchen Interface](screenshots/booking.png)
+
+
 
