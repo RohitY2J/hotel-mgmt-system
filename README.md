@@ -61,7 +61,7 @@ To deploy this project run
 # After integrating with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
 
 1. Create a user in the CAS system
-2. Create an application in CAS system, with proper 
+2. Create an application in CAS system, with the following valid property. 
   - Application URL: For solving cors,
   - Redirect URL: For callback
 3. Create a tenant in the CAS system
@@ -73,8 +73,8 @@ To deploy this project run
 ## Features
 
 - Employee creation and tracking
-- Emoployee role creation and assignment
-- Emoloyee schedule, shift and job tracking
+- Employee role creation and assignment
+- Employee schedule, shift and job tracking
 - Room creation
 - Reservation creation for customer
 - Inventory creation, management and tracking
