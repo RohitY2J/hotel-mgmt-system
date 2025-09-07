@@ -128,10 +128,3 @@ After Integration with CAS application [Visit CAS repository](https://github.com
 - Waiter = Role_Waiter 
 - Admin = Role_Admin
 
-## API
-
-|API | Description |
-|------|---------|
-| /api/login/create | To create login user |
-| /api/login | To login into user | 
-
