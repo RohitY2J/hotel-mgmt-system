@@ -185,19 +185,19 @@ For Admin and Waiter login
 For No login
 1. Go to kitchen page `http://localhost:8000/kitchen` to check for any order placed to kitchen.
 
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png" alt="Admin Dashboard Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png" alt="Admin Employee Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png" alt="Admin Reservation Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png" alt="Admin Rooms Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/inventory.png" alt="Admin Inventory Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/tables.png" alt="Admin Tables Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/menu.png" alt="Admin Menu Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/bill.png" alt="Admin Table Bill Interface" width="400" height="300">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png" alt="Admin Dashboard Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png" alt="Admin Employee Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png" alt="Admin Reservation Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png" alt="Admin Rooms Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/inventory.png" alt="Admin Inventory Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/tables.png" alt="Admin Tables Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/menu.png" alt="Admin Menu Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/bill.png" alt="Admin Table Bill Interface" width="400" height="800">
 
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/waiter.png" alt="Waiter Interface" width="400" height="300">
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/order%20menu.png" alt="Order Menu Interface" width="400" height="300">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/waiter.png" alt="Waiter Interface" width="400" height="800">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/order%20menu.png" alt="Order Menu Interface" width="400" height="800">
 
-<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/kitchen.png" alt="Kitchen Interface" width="400" height="300">
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/kitchen.png" alt="Kitchen Interface" width="400" height="800">
 
 
 
