@@ -100,8 +100,10 @@ After logging into the CAS system
 
 - **Node.js**:
   - Cookies-based authentication with Passport.js for secure session management.
+  - Integration with centralized authentication system for authentication (enhancement)
   - Integration with MongoDB for backend data persistence.
   - Testing with Mocha, Chai, Sinon, Supertest, Mongo-Memory-Server
+  - Handling file upload for profile and menu management
 
 - **Express**:
   - RESTful API development with route handling and middleware.
@@ -118,9 +120,13 @@ After logging into the CAS system
   - Dockerization for containerized deployment and testing of Angular and Node.js applications along with Mongodb Integration.
   
 ## Users
+Before integration with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
+- Waiter = 0
+- Admin = 1
 
-- Waiter
-- Admin 
+After Integration with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
+- Waiter = Role_Waiter 
+- Admin = Role_Admin
 
 ## API
 
