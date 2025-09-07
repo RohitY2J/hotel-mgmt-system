@@ -43,7 +43,8 @@ This is a management system designed specifically for hotels and resorts. It str
 
 ## Architecture Diagram
 
-![Authentication Flow](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/architecture_diagram.gif)
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/architecture_diagram.gif" alt="Admin Dashboard Interface" width="800" height="800">
+
 
 
 ## Configurations
