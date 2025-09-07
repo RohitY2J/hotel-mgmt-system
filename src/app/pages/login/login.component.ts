@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
     }
     ).catch(err => {
       console.log(err);
-      this.notificationParams = {message: `Error logging in: ${err?.error?.msg}`, error: true}
+      this.notificationParams = {message: `${err?.response?.data.message}`, error: true}
     })
     .finally( () => {
       this.isLoading = false;
