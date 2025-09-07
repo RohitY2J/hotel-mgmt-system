@@ -29,6 +29,7 @@ This is a management system designed specifically for hotels and resorts. It str
 - [Deployment](#deployment)
 - [To Run Locally](#to-run-locally)
 - [To Run On Docker](#to-run-on-docker)
+- [After Integration With CAS](#after-integrating-with-cas-application-visit-cas-repositoryhttpsgithubcomrohity2jcentralizedauthenticationsystem)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Users](#users)
