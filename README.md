@@ -185,7 +185,7 @@ For Admin and Waiter login
 For No login
 1. Go to kitchen page `http://localhost:8000/kitchen` to check for any order placed to kitchen.
 
-![Admin Dashboard Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png|width=100)
+<img src="https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png" alt="Admin Dashboard" width="300" height="200">
 ![Admin Employee Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png=250x250)
 ![Admin Reservation Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png |width=100)
 ![Admin Rooms Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png =250x250)
