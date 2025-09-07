@@ -60,6 +60,7 @@ To deploy this project run
 
 # After integrating with CAS application [Visit CAS repository](https://github.com/RohitY2J/Centralized-Authentication-System)
 
+After logging into the CAS system
 1. Create a user in the CAS system
 2. Create an application in CAS system, with the following valid property. 
   - Application URL: For solving cors,
@@ -67,7 +68,7 @@ To deploy this project run
 3. Create a tenant in the CAS system
 4. Assign tenant to application
 5. Assign the user to the application and tenant
-6. Create a client with clientid set to the tenant id in this application.
+6. Create a client with clientid set to the tenant id in this application in the mongodb using query.
 
 
 ## Features
