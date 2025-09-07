@@ -185,10 +185,10 @@ For Admin and Waiter login
 For No login
 1. Go to kitchen page `http://localhost:8000/kitchen` to check for any order placed to kitchen.
 
-![Admin Dashboard Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png | width=100)
-![Admin Employee Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png | width=100)
-![Admin Reservation Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png | width=100)
-![Admin Rooms Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png | width=100)
+![Admin Dashboard Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/admin_dashboard.png|width=100)
+![Admin Employee Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/employee.png=250x250)
+![Admin Reservation Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/reservation.png |width=100)
+![Admin Rooms Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/room.png =250x250)
 ![Admin Inventory Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/inventory.png | width=100)
 ![Admin Tables Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/tables.png | width=100)
 ![Admin Menu Interface](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/images/menu.png | width=100)
