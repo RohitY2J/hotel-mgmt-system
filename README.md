@@ -26,6 +26,7 @@ This is a management system designed specifically for hotels and resorts. It str
 ## Table of Contents
 - [Authors](#authors)
 - [Architecture Diagram](#architecture-diagram)
+- [Configurations](#configurations)
 - [Deployment](#deployment)
 - [To Run Locally](#to-run-locally)
 - [To Run On Docker](#to-run-on-docker)
@@ -44,6 +45,32 @@ This is a management system designed specifically for hotels and resorts. It str
 
 ![Authentication Flow](https://github.com/RohitY2J/hotel-mgmt-system/blob/main/architecture_diagram.gif)
 
+
+## Configurations
+1. Update a `env/environment.ts` file and  `env/nodeEnv.js` in the root directory and modify the following env variables:
+   ```env
+   // environment.ts file
+   export const environment = {
+    SERVER_URL: 'http://localhost:8000',
+    CAS_SERVER_URL: 'http://localhost:5000',
+    REDIRECT_URI: 'http://localhost:8000/callback', //redirect uri for authentication
+    BASE_HREF: '/',
+    APPLICATION_ID: '9bd07b95-87c5-4c56-8ed3-70f50ea9a9e8', // from cas 
+    TENANT_ID: 'c6cea979-afdf-4756-8dd7-90af6b3edeb7' // from cas and this application (clientid)
+   };
+   export const testEnv = {
+    FRONTEND_URL: 'http://localhost:8000',
+    BACKEND_URL: 'http://localhost:8000/api'
+   }
+
+   //nodeEnv.js
+   module.exports = {
+     serverUrl: 'http://localhost:8000',
+     serverPort: 8000,
+     databaseURL: 'mongodb://localhost:27017/hotel-mgmt-app'
+   };
+
+   
 ## Deployment
 
 To deploy this project run
