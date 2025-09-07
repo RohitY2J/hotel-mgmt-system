@@ -1,17 +1,119 @@
 <app-notification *ngIf="showNotification" [notificationData]="notificationParams"></app-notification>
 <app-loader *ngIf="isLoading"></app-loader>
 
-<div class="w-screen h-screen bg-gray-700 p-4">
+<div class="min-h-screen bg-slate-900 p-6">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-white mb-2">Kitchen Orders</h1>
+    <div class="flex items-center gap-4 text-slate-300">
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+        <span class="text-sm">Live Orders</span>
+      </div>
+      <div class="text-sm">{{orders.length}} Active Tables</div>
+    </div>
+  </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-    <div *ngFor="let order of orders" class="h-fit bg-gray-200 p-4 rounded">
-      <h3 class="font-bold">Table no. {{order.table.tableNumber}}</h3>
-      <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-500">
-      <div *ngFor="let menu of order.orders" class="flex justify-between">
-        <span>{{menu.name}}</span>
-        <span>{{menu.qty}}</span>
+  <!-- Controls -->
+  <div class="mb-6 flex justify-between items-center">
+    <div class="flex gap-3">
+      <button (click)="refreshOrders()" 
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        Refresh
+      </button>
+      <button (click)="sortOrdersByPriority()" 
+              class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+        Sort by Priority
+      </button>
+    </div>
+  </div>
+
+  <!-- Orders Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+    <div *ngFor="let order of orders; trackBy: trackByOrderId" 
+         class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+         [class.ring-2]="getOrderPriority(order) === 'high'"
+         [class.ring-red-400]="getOrderPriority(order) === 'high'">
+      
+      <!-- Card Header -->
+      <div class="bg-slate-800 text-white p-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-bold">Table {{order.table.tableNumber}}</h3>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full"
+                 [class.bg-red-400]="getOrderPriority(order) === 'high'"
+                 [class.bg-yellow-400]="getOrderPriority(order) === 'medium'"
+                 [class.bg-green-400]="getOrderPriority(order) === 'low'"></div>
+            <span class="text-xs text-slate-300 capitalize">{{order.status}}</span>
+          </div>
+        </div>
+        <div class="flex justify-between items-center mt-2">
+          <span class="text-sm text-slate-300">
+            {{getTotalQuantity(order)}} items
+          </span>
+          <span class="text-xs text-slate-400">
+            {{getOrderAge(order)}} min ago
+          </span>
+        </div>
+      </div>
+
+      <!-- Order Items -->
+      <div class="p-4 space-y-3 max-h-60 overflow-y-auto">
+        <div *ngFor="let menu of order.orders; trackBy: trackByMenuItem" 
+             class="bg-gray-400 flex justify-between items-center p-3 rounded-lg border border-slate-100 hover:bg-slate-500 transition-colors duration-200">
+          <div class="flex-1 min-w-0">
+            <span class="font-medium text-slate-800 block truncate">{{menu.name}}</span>
+            <span class="text-xs text-slate-500" *ngIf="menu.specialInstructions">
+              Note: {{menu.specialInstructions}}
+            </span>
+          </div>
+          <div class="ml-3 flex-shrink-0">
+            <span class="inline-flex items-center justify-center w-8 h-8 text-white text-sm font-bold rounded-full"
+                  [class.bg-blue-600]="menu.status === 'pending'"
+                  [class.bg-yellow-600]="menu.status === 'preparing'"
+                  [class.bg-green-600]="menu.status === 'ready'">
+              {{menu.qty}}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200">
+        <div class="flex gap-2 mb-2" *ngIf="order.estimatedTime">
+          <div class="text-xs text-slate-600 flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            ETA: {{getEstimatedTime(order)}}
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button (click)="markOrderReady(order)"
+                  [disabled]="isLoading || order.status === 'ready'"
+                  class="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200">
+            {{order.status === 'ready' ? 'Ready' : 'Mark Ready'}}
+          </button>
+          <button (click)="viewOrderDetails(order)"
+                  class="flex-1 bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200">
+            Details
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Empty State -->
+  <div *ngIf="orders.length === 0" class="text-center py-20">
+    <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+      </svg>
+    </div>
+    <h3 class="text-xl font-medium text-white mb-2">No Active Orders</h3>
+    <p class="text-slate-400">Orders will appear here when customers place them</p>
+  </div>
 </div>
