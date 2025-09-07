@@ -150,18 +150,6 @@
             
             <!-- Stats Summary -->
             <div class="hidden md:flex items-center space-x-6">
-                <!-- <div class="text-center">
-                    <div class="text-2xl font-bold text-green-400" id="availableTablesCount">
-                         {{(allTables | filter: { status: 1 }).length}} 
-                    </div>
-                    <div class="text-xs text-gray-400 font-medium">Available</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-2xl font-bold text-red-400" id="occupiedTablesCount">
-                        {{(allTables | filter: { status: 0 }).length}}
-                    </div>
-                    <div class="text-xs text-gray-400 font-medium">Occupied</div>
-                </div> -->
                 <div class="text-center">
                     <div class="text-2xl font-bold text-blue-400" id="totalTablesCount">{{allTables.length}}</div>
                     <div class="text-xs text-gray-400 font-medium">Total</div>
@@ -191,7 +179,7 @@
                 <div class="flex flex-wrap items-center gap-4">
                     <!-- Availability Status Filter -->
                     <div class="flex flex-col">
-                        <label class="text-xs font-medium text-gray-400 mb-2">Filter by Status</label>
+                        <!-- <label class="text-xs font-medium text-gray-400 mb-2">Filter by Status</label> -->
                         <select id="availableStatus" name="availableStatus" [(ngModel)]="filter.status"
                             class="bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-3 min-w-40 cursor-pointer transition-all duration-200 hover:bg-gray-650">
                             <option class="bg-gray-800" value="" selected>All Status</option>
@@ -202,7 +190,7 @@
                     
                     <!-- Search Input -->
                     <div class="flex flex-col">
-                        <label class="text-xs font-medium text-gray-400 mb-2">Search Tables</label>
+                        <!-- <label class="text-xs font-medium text-gray-400 mb-2">Search Tables</label> -->
                         <div class="relative">
                             <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,7 +205,7 @@
 
                     <!-- Action Buttons -->
                     <div class="flex flex-col">
-                        <label class="text-xs font-medium text-gray-400 mb-2 opacity-0">Actions</label>
+                        <!-- <label class="text-xs font-medium text-gray-400 mb-2 opacity-0">Actions</label> -->
                         <div class="flex gap-3">
                             <button type="button" (click)="searchButtonClicked()" id="applyFilterBtn" name="applyFilterBtn"
                                 class="inline-flex items-center px-5 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
