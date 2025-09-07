@@ -3,3 +3,7 @@ b. need to redirect the loggged in user based on user role (done)
 c. need to add middleware for authorize based on roles (done)
 d. error while adding in inventory (done)
 e. no image in inventory
+f. making view consistent (done)
+g. while logging in if error gives no valid information (done)
+h. need to update notification (done)
+i. need to update loader window, add animation
