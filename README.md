@@ -166,3 +166,38 @@ After Integration with CAS application [Visit CAS repository](https://github.com
 - Waiter = Role_Waiter 
 - Admin = Role_Admin
 
+
+## Usage
+For Admin login
+1. Access the admin panel at `http://localhost:8000/admin/dashboard` to get real-time business insights.
+2. Access to employee page at `http://localhost:8000/admin/employee` to view, create and delete employees.
+3. Go to reservation page at `http://localhost:8000/admin/reservations` to view and create a reservation, book rooms, check in, order foods, checkout and payment.
+4. Go to rooms page at `http://localhost:8000/admin/rooms` to view and create rooms, update the room status availability and maintenance.
+5. Go to inventory page at `http://localhost:8000/admin/inventory` to create inventory, add stock, dispatch stock, check its history.
+6. Go to tables page at `http://localhost:8000/admin/tables` to view and create table and update the table status occupancy and description.
+7. Go to menu page at `http://localhost:8000/admin/menus` to view and add menus, update the menus.
+8. Go to bill page at `http://localhost:8000/admin/order-bill` to settle the bill related to table and food order without room reservations.
+
+For Admin and Waiter login
+1. Go to waiter page `http://localhost:8000/waiter` to view table status and monitor if any table is free or need cleaning.
+2. Access to order page `http://localhost:8000/order` to order food to either table or for reservations.
+
+For No login
+1. Go to kitchen page `http://localhost:8000/kitchen` to check for any order placed to kitchen.
+
+![Admin Dashboard Interface](screenshots/booking.png)
+![Admin Employee Interface](screenshots/booking.png)
+![Admin Reservation Interface](screenshots/booking.png)
+![Admin Rooms Interface](screenshots/booking.png)
+![Admin Inventory Interface](screenshots/booking.png)
+![Admin Tables Interface](screenshots/booking.png)
+![Admin Menu Interface](screenshots/booking.png)
+![Admin Table Bill Interface](screenshots/booking.png)
+
+![Waiter Interface](screenshots/booking.png)
+![Order Menu Interface](screenshots/booking.png)
+
+![Kitchen Interface](screenshots/booking.png)
+
+
+
