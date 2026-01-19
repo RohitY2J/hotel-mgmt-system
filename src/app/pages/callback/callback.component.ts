@@ -26,6 +26,7 @@ export class CallbackComponent implements OnInit {
 
   async ngOnInit() {
     const code = this.route.snapshot.queryParamMap.get('code');
+    console.log("Call back called");
     if (code) {
       await this.authService.handleCallback(code);
     }

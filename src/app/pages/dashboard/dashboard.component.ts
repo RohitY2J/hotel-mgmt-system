@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   constructor(private httpService: HttpService) {}
   ngOnInit(): void {
 
+    console.log("Dashboard initialized..");
     this.options = {
       chart: {
         height: "100%",
