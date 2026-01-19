@@ -141,14 +141,17 @@ export class AuthService {
   }
 
 
-  logout(){
-
+  logout(logoutMsg?: string){
+    console.log('Logging out...');
     localStorage.removeItem('accessToken');
-        localStorage.removeItem('idToken');
-        localStorage.removeItem('clientName');
-        this.userService.setUser(null);
-        //this.userDetails = null;
-        this.router.navigateByUrl('/login');
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('clientName');
+    this.userService.setUser(null);
+    //this.userDetails = null;
+    if (logoutMsg) {
+      localStorage.setItem('logoutMsg', logoutMsg);
+    } 
+    this.router.navigateByUrl('/login');
     // return this.httpService.httpGet('User/Logout').pipe(
     //   tap(() => {
         

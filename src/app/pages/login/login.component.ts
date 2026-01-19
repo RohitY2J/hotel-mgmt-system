@@ -27,14 +27,21 @@ export class LoginComponent implements OnInit {
   constructor(
     private httpService: HttpService,
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+
+    let errorMsg = localStorage.getItem("logoutMsg");
+    if(errorMsg){
+      this.notificationParams = { message: errorMsg, error: true };
+    }
+    localStorage.removeItem("logoutMsg");
+    
+  }
 
 
   login() {
-    //if (this.loginRequest.invalid) this.isFormValid = false;
     if (this.loginRequest.invalid) {
       this.isFormValid = false;
       return;

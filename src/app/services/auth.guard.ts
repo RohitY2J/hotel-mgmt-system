@@ -8,12 +8,15 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService) as AuthService;
   const router = inject(Router) as Router;
   var isAuthenticated = (await authService.isAuthenticated());
+  
+  const roles = authService.getUser()?.roles || [];
+  
   if (state.url === '/login' || state.url === '/') {
-    if (isAuthenticated && authService.getUser()?.roles?.find(x => x == Roles.Admin)) {
+  if (isAuthenticated && roles.includes(Roles.Admin)) {
       router.navigate(['/admin', { outlets: { main: ['dashboard'] } }]);
       return false;
     }
-    else if(isAuthenticated && authService.getUser()?.roles?.find(x => x == Roles.Waiter)){
+    else if(isAuthenticated && roles.includes(Roles.Waiter)){
         router.navigate(['/waiter'])
         return false;
     }
@@ -34,9 +37,11 @@ export const authGuard: CanActivateFn = async (route, state) => {
       return false;
     }
     else if(!authService.getUser()?.roles?.find(x => x == Roles.Admin)){
-      router.navigate(['/login']);
+      console.log('No roles assigned to your user. Please contact administrator.');
+      authService.logout('No roles assigned to your user. Please contact administrator.');
+      return false;
     }
-  }     
-  
+  }
+ 
   return true;
 };
