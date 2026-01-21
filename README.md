@@ -115,6 +115,21 @@ After logging into the CAS system
 4. Assign tenant to application
 5. Assign the user to the application and tenant
 6. Create a client with clientid set to the tenant id in this application in the mongodb using query.
+Ex: 
+Tenant in CAS System
+postgres=# select * from "Tenants";
+                  Id                  | Name  |         ClientApplicationId          |           CreatedDate            |         LastUpdatedDate
+--------------------------------------+-------+--------------------------------------+----------------------------------+----------------------------------
+ 65d7e28f-8e98-457d-a57c-6f22f22cdf2a | Resto | 35f8889b-615a-4cc0-9974-77d0e6374d6d | 2026-01-19 21:35:44.434688+05:45 | 2026-01-19 21:35:44.434689+05:45
+
+Client in Hotel Mgmt System
+{
+  "_id": {
+    "$oid": "697087b6b03df94edbe4f41d"
+  },
+  "clientName": "Resto",
+  "clientId": "65d7e28f-8e98-457d-a57c-6f22f22cdf2a"
+}
 
 
 ## Features
